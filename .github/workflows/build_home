@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     name: build project
-    runs-on: [home]
+    runs-on: self-hosted
 
     steps:
       - uses: actions/checkout@v3
