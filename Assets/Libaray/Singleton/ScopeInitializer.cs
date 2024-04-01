@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
-using XRProject.Utils.Log;
 
 namespace IndieLINY.Singleton
 {
@@ -20,7 +19,7 @@ namespace IndieLINY.Singleton
                 var att = _singletons[i].GetType().GetCustomAttributes<SingletonAttribute>();
                 if (att is SingletonAttribute sAtt && sAtt.Type != ESingletonType.Scope)
                 {
-                    XLog.LogError($"Singleton attribute가 없거나, 올바르지 않은 SingletonType attribute 입니다. ({_singletons[i].GetType().Name})", "Singleton");
+                    Debug.LogError($"Singleton attribute가 없거나, 올바르지 않은 SingletonType attribute 입니다. ({_singletons[i].GetType().Name})");
                     continue;
                 }
                 
@@ -30,7 +29,7 @@ namespace IndieLINY.Singleton
                     
                     if (_singletons[i].GetType() == _singletons[j].GetType())
                     {
-                        XLog.LogError($"동일한 타입의 ScopeSingleton 객체({_singletons[i].GetType().Name})가 포함되어있습니다.", "Singleton");
+                        Debug.LogError($"동일한 타입의 ScopeSingleton 객체({_singletons[i].GetType().Name})가 포함되어있습니다.");
                         return false;
                     }
                 }

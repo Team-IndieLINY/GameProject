@@ -1,8 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.SceneManagement;
-using XRProject.Utils.Log;
 using Object = UnityEngine.Object;
 
 namespace IndieLINY.Singleton
@@ -58,7 +58,7 @@ namespace IndieLINY.Singleton
 
             if (initlaizers.Length > 1)
             {
-                XLog.LogError("scope initializer가 scene에 2개 이상입니다.", "Singleton");
+                Debug.LogError("scope initializer가 scene에 2개 이상입니다.");
             }
 
             if (initlaizers.Length == 0) return;
