@@ -1,0 +1,33 @@
+name: 'Unity Build'
+
+on:
+  push:
+    tags:
+      - 'v.**'
+
+jobs:
+  build:
+    name: build project
+    runs-on: [home]
+
+    steps:
+      - uses: actions/checkout@v3
+      - run: '& "C:\Program Files\PowerShell\7\pwsh.exe" F:\__INDIELINY__\CI\BuildRun.ps1'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Build
+          path:  F:\__INDIELINY__\CI\__BUILD_OUTPUT__
+
+  notify:
+    name: discord notification
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Discord notification
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          
+        uses: Ilshidur/action-discord@master
+        with:
+          args: "프로토타입 빌드 완료!. \n빌드 링크: https://github.com/{{GITHUB_REPOSITORY}}/actions/runs/{{GITHU
