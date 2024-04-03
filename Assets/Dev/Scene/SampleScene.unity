@@ -367,8 +367,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _data:
-    _json: '{"declarations":{"Kind":"Object","collection":{"$content":[],"$version":"A"},"$version":"A"}}'
-    _objectReferences: []
+    _json: '{"declarations":{"Kind":"Object","collection":{"$content":[{"name":"patrollData","value":{"$content":0,"$type":"UnityEngine.Object"},"typeHandle":{"Identification":"IndieLINY.AI.SampleData,
+      IndieLINY.AI, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null","$version":"A"},"$version":"A"}],"$version":"A"},"$version":"A"}}'
+    _objectReferences:
+    - {fileID: 11400000, guid: 050f5d215365a6c429378b4fc699156c, type: 2}
 --- !u!4 &1434552785
 Transform:
   m_ObjectHideFlags: 0
