@@ -18,24 +18,30 @@ namespace IndieLINY.AI.Sample
         private TraceData _data;
         private Transform _transform;
         private NavMeshAgent _agent;
-        
-        protected override void OnEnter(Flow flow)
+
+        protected override ControlOutput OnEnter(Flow flow)
         {
             _data = flow.GetValue<TraceData>(TraceData);
             _transform = flow.GetValue<Transform>(Target);
             _agent = flow.GetValue<NavMeshAgent>(Agent);
+            
+            return null;
         }
 
-        protected override void OnUpdate(Flow flow)
+        protected override ControlOutput OnUpdate(Flow flow)
         {
-            if (_transform == false) return;
-            if (_agent.transform == false) return;
+            if (_transform == false) return null;
+            if (_agent.transform == false) return null;
 
             _agent.SetDestination(_transform.position);
+            
+            return null;
         }
 
-        protected override void OnExit(Flow flow)
+        protected override ControlOutput OnExit(Flow flow)
         {
+            
+            return null;
         }
 
         protected override void OnDefinition()

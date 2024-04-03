@@ -19,33 +19,42 @@ namespace IndieLINY.AI.Sample
         
         [DoNotSerialize] public ValueOutput FindedTarget;
 
+        [DoNotSerialize] public ControlOutput Found;
+        [DoNotSerialize] public ControlOutput NotFound;
+
         private DetectionData _data;
         private LayerMask _layerMask;
         private NavMeshAgent _agent;
 
         private Vector2 _desiredVelocityLasted;
         private CollisionInteraction _interaction;
-        protected override void OnEnter(Flow flow)
+
+        protected override ControlOutput OnEnter(Flow flow)
         {
             _data = flow.GetValue<DetectionData>(DetectionData);
             _layerMask = flow.GetValue<LayerMask>(TargetLayerMask);
             _agent = flow.GetValue<NavMeshAgent>(Agent);
 
             _desiredVelocityLasted = _agent.desiredVelocity;
+
+            return null;
         }
 
-        protected override void OnUpdate(Flow flow)
+        protected override ControlOutput OnUpdate(Flow flow)
         {
             if (Mathf.Approximately(_agent.desiredVelocity.sqrMagnitude, 0f) == false)
             {
                 _desiredVelocityLasted = _agent.desiredVelocity;
             }
+
             _interaction = FindCloserFilterBlockWithFov(_agent.transform.position, _desiredVelocityLasted.normalized, _data.FOV, _data.MaxDistance, _layerMask.value);
 
+            return _interaction != null ? Found : NotFound;
         }
 
-        protected override void OnExit(Flow flow)
+        protected override ControlOutput OnExit(Flow flow)
         {
+            return null;
         }
 
         protected override void OnDefinition()
@@ -57,6 +66,9 @@ namespace IndieLINY.AI.Sample
             {
                 return _interaction != null ? _interaction.transform : null;
             });
+
+            Found = ControlOutput("Found");
+            NotFound = ControlOutput("Not Found");
         }
         
         

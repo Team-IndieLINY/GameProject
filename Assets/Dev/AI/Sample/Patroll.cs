@@ -22,16 +22,17 @@ namespace IndieLINY.AI.Sample
 
         private int _currentIndex;
 
-        protected override void OnEnter(Flow flow)
+        protected override ControlOutput OnEnter(Flow flow)
         {
             _agent = flow.GetValue<NavMeshAgent>(Agent);
             _data = flow.GetValue<PatrollData>(PatrollData);
             _patrollPoints = flow.GetValue<AotList>(PatrollPoints).OfType<Transform>().ToList();
             _currentIndex = 0;
-            
+
+            return null;
         }
 
-        protected override void OnUpdate(Flow flow)
+        protected override ControlOutput OnUpdate(Flow flow)
         {
             Debug.Assert(_patrollPoints != null);
             Debug.Assert(_patrollPoints[_currentIndex]);
@@ -53,13 +54,17 @@ namespace IndieLINY.AI.Sample
             
             point = _patrollPoints[_currentIndex];
             _agent.SetDestination(point.position);
+            
+            return null;
         }
 
-        protected override void OnExit(Flow flow)
+        protected override ControlOutput OnExit(Flow flow)
         {
             _agent = null;
             _patrollPoints = null;
             _currentIndex = 0;
+            
+            return null;
         }
 
         protected override void OnDefinition()
