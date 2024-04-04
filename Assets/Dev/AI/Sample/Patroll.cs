@@ -8,7 +8,7 @@ using UnityEngine.AI;
 
 namespace IndieLINY.AI.Sample
 {
-    [UnitCategory("IndieLINY/AI")]
+    [UnitCategory("IndieLINY/AI/Action")]
     [UnitTitle("SamplePatroll")]
     public class Patroll : UBaseEnterUpdateExit
     {
@@ -37,6 +37,8 @@ namespace IndieLINY.AI.Sample
             Debug.Assert(_patrollPoints != null);
             Debug.Assert(_patrollPoints[_currentIndex]);
 
+            
+            
             var point = _patrollPoints[_currentIndex];
             
             Debug.Assert(point);

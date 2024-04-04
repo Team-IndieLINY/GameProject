@@ -1,0 +1,24 @@
+{
+    "name": "IndieLINY.AI",
+    "rootNamespace": "",
+    "references": [
+        "GUID:6dfffdeca0f41044ab1e81833b5fc950",
+        "GUID:2dd7013428f0ed740bb25983271b47a0",
+        "GUID:299beb10465c46f41abeaf10478b4727",
+        "GUID:8c4dd21966739024fbd72155091d199e",
+        "GUID:21b0c8d1703a94250bfac916590cea4f",
+        "GUID:ea715009a4efd4c6cbc85be3ae097dd3",
+        "GUID:315d634a9ac6d460a9515f5a56be6311",
+        "GUID:2bafac87e7f4b9b418d9448d219b01ab",
+        "GUID:a078dd6e911d68a498fa31c509ed06b0"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

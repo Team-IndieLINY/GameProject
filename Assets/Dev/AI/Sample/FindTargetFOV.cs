@@ -9,7 +9,7 @@ using UnityEngine.AI;
 
 namespace IndieLINY.AI.Sample
 {
-    [UnitCategory("IndieLINY/AI")]
+    [UnitCategory("IndieLINY/AI/Transition")]
     [UnitTitle("FindTargetFOV")]
     public class FindTargetFOV : UBaseEnterUpdateExit
     {
@@ -27,7 +27,6 @@ namespace IndieLINY.AI.Sample
         private NavMeshAgent _agent;
 
         private Vector2 _desiredVelocityLasted;
-        private CollisionInteraction _interaction;
 
         protected override ControlOutput OnEnter(Flow flow)
         {
@@ -46,10 +45,12 @@ namespace IndieLINY.AI.Sample
             {
                 _desiredVelocityLasted = _agent.desiredVelocity;
             }
+            
+            var interaction = FindCloserFilterBlockWithFov(_agent.transform.position, _desiredVelocityLasted.normalized, _data.FOV, _data.MaxDistance, _layerMask.value);
 
-            _interaction = FindCloserFilterBlockWithFov(_agent.transform.position, _desiredVelocityLasted.normalized, _data.FOV, _data.MaxDistance, _layerMask.value);
-
-            return _interaction != null ? Found : NotFound;
+            flow.SetValue(FindedTarget, interaction);
+            
+            return interaction != null ? Found : NotFound;
         }
 
         protected override ControlOutput OnExit(Flow flow)
@@ -62,10 +63,7 @@ namespace IndieLINY.AI.Sample
             DetectionData = ValueInput<DetectionData>("detection data", null);
             TargetLayerMask = ValueInput<LayerMask>("layer mask", default);
             Agent = ValueInput<NavMeshAgent>("nav agent", null);
-            FindedTarget = ValueOutput("finded target", x =>
-            {
-                return _interaction != null ? _interaction.transform : null;
-            });
+            FindedTarget = ValueOutput<CollisionInteraction>("finded target");
 
             Found = ControlOutput("Found");
             NotFound = ControlOutput("Not Found");

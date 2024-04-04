@@ -7,7 +7,7 @@ using UnityEngine.AI;
 
 namespace IndieLINY.AI.Sample
 {
-    [UnitCategory("IndieLINY/AI")]
+    [UnitCategory("IndieLINY/AI/Action")]
     [UnitTitle("SampleTrace")]
     public class Trace : UBaseEnterUpdateExit
     {
