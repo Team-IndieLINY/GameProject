@@ -13,8 +13,8 @@ namespace IndieLINY.Event
 
             cmd.groups.ForEach(x =>
             {
-                x.ForEach(y => Debug.Log(y));
-                Debug.Log("--");
+                //.ForEach(y => Debug.Log(y));
+                //ebug.Log("--");
             });
         }
     } 
