@@ -15,10 +15,10 @@ namespace IndieLINY.Singleton
         Scope
     }
 
-    [System.AttributeUsage(AttributeTargets.Class)]
+    [AttributeUsage(AttributeTargets.Class)]
     public class SingletonAttribute : Attribute
     {
-        internal int InitializeOrder = 0;
+        internal int InitializeOrder;
         internal ESingletonType Type;
 
         public SingletonAttribute(ESingletonType type, int initializeOrder = 0)
@@ -31,7 +31,7 @@ namespace IndieLINY.Singleton
     public class Singleton : MonoBehaviour
     {
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-        static void BeforeSplashScreen()
+        private static void BeforeSplashScreen()
         {
             Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
