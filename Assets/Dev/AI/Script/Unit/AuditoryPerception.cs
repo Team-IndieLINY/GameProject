@@ -15,6 +15,7 @@ namespace IndieLINY.AI
         private AotList _contractList = new AotList();
         protected override ControlOutput OnExecute(Flow flow)
         {
+            Debug.Assert(_vAuditoryPerceptionComponent != null);
             var perception = flow.GetValue<AuditoryPerception>(_vAuditoryPerceptionComponent);
             
             _contractList.Clear();

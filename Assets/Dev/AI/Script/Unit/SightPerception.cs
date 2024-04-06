@@ -15,6 +15,7 @@ namespace IndieLINY.AI
         private AotList _contractList = new AotList();
         protected override ControlOutput OnExecute(Flow flow)
         {
+            Debug.Assert(_vSightPerceptionComponent != null);
             var perception = flow.GetValue<SightPerception>(_vSightPerceptionComponent);
             
             _contractList.Clear();
