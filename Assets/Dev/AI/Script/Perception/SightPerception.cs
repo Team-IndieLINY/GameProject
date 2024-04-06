@@ -16,24 +16,18 @@ namespace IndieLINY.AI
         
         [SerializeField] private PolygonCollider2D _collider;
 
-        public CollisionInteraction Interaction => _interaction;
+        public CollisionInteraction MasterInteraction => _interaction;
         [SerializeField] private CollisionInteraction _interaction;
+
+        public List<CollisionInteraction> Contracts { get; private set; }
 
         private void Awake()
         {
             MeshUpdate();
-        }
 
-        private void Start()
-        {
+            Contracts = new(2);
             _collider.isTrigger = true;
-
-            Interaction.SetContractInfo(
-                ListeningContractInfo.Create(transform, () => gameObject), 
-                this
-                );
         }
-
         private void OnValidate()
         {
             MeshUpdate();
@@ -81,6 +75,25 @@ namespace IndieLINY.AI
 
 
             _collider.SetPath(0, arr);
+        }
+
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            if (other.TryGetComponent<CollisionInteraction>(out var otherInteraction))
+            {
+                if (otherInteraction.ListeningOnly) return;
+                if (Contracts.Contains(otherInteraction)) return;
+                
+                Contracts.Add(otherInteraction);
+            }
+        }
+        private void OnTriggerExit2D(Collider2D other)
+        {
+            if (other.TryGetComponent<CollisionInteraction>(out var otherInteraction))
+            {
+                if (otherInteraction.ListeningOnly) return;
+                Contracts.Remove(otherInteraction);
+            }
         }
     }
 

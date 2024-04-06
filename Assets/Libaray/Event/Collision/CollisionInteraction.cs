@@ -12,9 +12,13 @@ namespace IndieLINY.Event
         public event Action<ActorContractInfo> OnContractActor;
         public event Action<ObjectContractInfo> OnContractObject;
         public event Action<ClickContractInfo> OnContractClick;
+        public event Action<ActorContractInfo> OnExitActor;
+        public event Action<ObjectContractInfo> OnExitObject;
+        public event Action<ClickContractInfo> OnExitClick;
         
         public LayerMask LayerMask { get; }
         public bool ListeningOnly { get; }
+        public bool DetectedOnly { get; }
         public BaseContractInfo ContractInfo { get; }
 
         public bool IsEnabled { get; set; }
@@ -23,6 +27,7 @@ namespace IndieLINY.Event
 
         public bool TryGetContractInfo<T>(out T info) where T : BaseContractInfo;
         public void Activate(BaseContractInfo info);
+        public void DeActivate(BaseContractInfo info);
 
         public void ClearContractEvent();
         public object Owner { get; }
@@ -34,23 +39,32 @@ namespace IndieLINY.Event
         public abstract event Action<ActorContractInfo> OnContractActor;
         public abstract event Action<ObjectContractInfo> OnContractObject;
         public abstract event Action<ClickContractInfo> OnContractClick;
+        public abstract event Action<ActorContractInfo> OnExitActor;
+        public abstract event Action<ObjectContractInfo> OnExitObject;
+        public abstract event Action<ClickContractInfo> OnExitClick;
         public abstract LayerMask LayerMask { get; }
         public abstract bool ListeningOnly { get; }
+        public abstract bool DetectedOnly { get; }
         public abstract BaseContractInfo ContractInfo { get; internal set; }
         
         public abstract bool IsEnabled { get; set; }
         public abstract T GetContractInfoOrNull<T>() where T : BaseContractInfo;
         public abstract bool TryGetContractInfo<T>(out T info) where T : BaseContractInfo;
         public abstract void Activate(BaseContractInfo info);
+        public abstract void DeActivate(BaseContractInfo info);
+
         public abstract void ClearContractEvent();
     }
 
     public static class CollisionInteractionUtil
     {
-        public static bool OnCollision(Collider2D other, ICollisionInteraction interaction, out CollisionInteraction result)
+        public static bool OnCollision(Collider2D other, ICollisionInteraction interaction, bool isActivating, out CollisionInteraction result)
         {
             result = null;
+            
+            if (interaction.DetectedOnly) return false;
             if (!interaction.IsEnabled) return false;
+            
             int layer = 1 << other.gameObject.layer;
             if ((layer & interaction.LayerMask.value) != layer) return false;
             
@@ -60,7 +74,15 @@ namespace IndieLINY.Event
                 if (com.ListeningOnly) return false;
 
                 result = com;
-                interaction.Activate(com.ContractInfo);
+
+                if (isActivating)
+                {
+                    interaction.Activate(com.ContractInfo);
+                }
+                else
+                {
+                    interaction.DeActivate(com.ContractInfo);
+                }
             }
 
             return true;
@@ -73,14 +95,19 @@ namespace IndieLINY.Event
         public override event Action<ActorContractInfo> OnContractActor;
         public override event Action<ObjectContractInfo> OnContractObject;
         public override event Action<ClickContractInfo> OnContractClick;
+        public override event Action<ActorContractInfo> OnExitActor;
+        public override event Action<ObjectContractInfo> OnExitObject;
+        public override event Action<ClickContractInfo> OnExitClick;
 
         public override LayerMask LayerMask => _layerMask;
         public override bool ListeningOnly => _listeningOnly;
+        public override bool DetectedOnly => _detectedOnly;
         public override BaseContractInfo ContractInfo { get; internal set; }
 
         [SerializeField] private bool _isBindChildProxy = true;
         [SerializeField] private LayerMask _layerMask;
         [SerializeField] private bool _listeningOnly;
+        [SerializeField] private bool _detectedOnly;
 
         private List<CollisionInteractionProxy> _proxies;
         public IReadOnlyCollection<CollisionInteractionProxy> Proxies => _proxies;
@@ -89,6 +116,7 @@ namespace IndieLINY.Event
         {
             Owner = owner;
             ContractInfo = info;
+            info._interaction = this;
         }
 
         public override bool IsEnabled
@@ -122,6 +150,24 @@ namespace IndieLINY.Event
                     OnContractObject?.Invoke(objectContractInfo);
                     break;
             }
+        }
+
+        public override void DeActivate(BaseContractInfo info)
+        {
+            Debug.Assert(info != null, "ContractInfo can't be null");
+            
+            switch (info)
+            {
+                case ActorContractInfo actorContractInfo:
+                    OnExitActor?.Invoke(actorContractInfo);
+                    break;
+                case ClickContractInfo clickContractInfo:
+                    OnExitClick?.Invoke(clickContractInfo);
+                    break;
+                case ObjectContractInfo objectContractInfo:
+                    OnExitObject?.Invoke(objectContractInfo);
+                    break;
+            } 
         }
 
         public override void ClearContractEvent()
@@ -191,7 +237,7 @@ namespace IndieLINY.Event
 
         private void OnCollisionEnter2D(Collision2D other)
         {
-            if (CollisionInteractionUtil.OnCollision(other.collider, this, out var com))
+            if (CollisionInteractionUtil.OnCollision(other.collider, this, true, out var com))
             {
                 _collisionBridge.Push(this, com);
             }
@@ -199,10 +245,19 @@ namespace IndieLINY.Event
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (CollisionInteractionUtil.OnCollision(other, this, out var com))
+            if (CollisionInteractionUtil.OnCollision(other, this, true, out var com))
             {
                 _collisionBridge.Push(this, com);
             }
+        }
+
+        private void OnTriggerExit2D(Collider2D other)
+        {
+            CollisionInteractionUtil.OnCollision(other, this, false, out var com);
+        }
+        private void OnCollisionExit2D(Collision2D other)
+        {
+            CollisionInteractionUtil.OnCollision(other.collider, this, false, out var com);
         }
     }
 }

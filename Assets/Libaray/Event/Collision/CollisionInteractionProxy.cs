@@ -31,10 +31,27 @@ namespace IndieLINY.Event
             add => MainInteraction.OnContractClick += value;
             remove => MainInteraction.OnContractClick -= value;
         }
+        public override event Action<ActorContractInfo> OnExitActor
+        {
+            add => MainInteraction.OnExitActor += value;
+            remove => MainInteraction.OnExitActor -= value;
+        }
+        public override event Action<ObjectContractInfo> OnExitObject
+        {
+            add => MainInteraction.OnExitObject += value;
+            remove => MainInteraction.OnExitObject -= value;
+        }
+        public override event Action<ClickContractInfo> OnExitClick
+        {
+            add => MainInteraction.OnExitClick += value;
+            remove => MainInteraction.OnExitClick -= value;
+        }
 
         public override LayerMask LayerMask => MainInteraction.LayerMask;
 
         public override bool ListeningOnly => MainInteraction.ListeningOnly;
+        public override bool DetectedOnly => MainInteraction.DetectedOnly;
+
         public override BaseContractInfo ContractInfo
         {
             get=> MainInteraction.ContractInfo;
@@ -65,6 +82,9 @@ namespace IndieLINY.Event
         public override void Activate(BaseContractInfo info)
             => MainInteraction.Activate(info);
 
+        public override void DeActivate(BaseContractInfo info)
+            => MainInteraction.DeActivate(info);
+
         public override void ClearContractEvent()
             => MainInteraction.ClearContractEvent();
 
@@ -77,7 +97,7 @@ namespace IndieLINY.Event
         }
         private void OnCollisionEnter2D(Collision2D other)
         {
-            if (CollisionInteractionUtil.OnCollision(other.collider, this, out var com))
+            if (CollisionInteractionUtil.OnCollision(other.collider, this, true, out var com))
             {
                 _collisionBridge.Push(MainInteraction, com);
             }
@@ -85,10 +105,19 @@ namespace IndieLINY.Event
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (CollisionInteractionUtil.OnCollision(other, this, out var com))
+            if (CollisionInteractionUtil.OnCollision(other, this, true, out var com))
             {
                 _collisionBridge.Push(MainInteraction, com);
             }
+        }
+
+        private void OnTriggerExit2D(Collider2D other)
+        {
+            CollisionInteractionUtil.OnCollision(other, this, false, out var com);
+        }
+        private void OnCollisionExit2D(Collision2D other)
+        {
+            CollisionInteractionUtil.OnCollision(other.collider, this, false, out var com);
         }
     }
 }

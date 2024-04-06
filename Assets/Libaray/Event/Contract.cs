@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using IndieLINY.Event;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -35,6 +36,9 @@ public enum EClickContractType
 
 public abstract class BaseContractInfo
 {
+
+    internal CollisionInteraction _interaction;
+    public CollisionInteraction Interaction => _interaction;
     public bool IsDestroyed => Check();
     
     protected Func<bool> _destroyChecker;

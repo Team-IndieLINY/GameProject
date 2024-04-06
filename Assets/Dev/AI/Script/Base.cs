@@ -1,5 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Security.Cryptography;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -12,6 +16,7 @@ namespace IndieLINY.AI
 
         protected virtual string InputDesc => "input";
         protected virtual string OutputDesc => "output";
+
         protected sealed override void Definition()
         {
             InputTrigger = ControlInput(InputDesc, OnExecute);
@@ -20,6 +25,31 @@ namespace IndieLINY.AI
             OnDefinition();
         }
 
+        protected abstract ControlOutput OnExecute(Flow flow);
+
+        protected abstract void OnDefinition();
+    }
+
+    public abstract class UBaseI1O1Start: Unit
+    {
+        [DoNotSerialize] public ControlInput InputTrigger;
+        [DoNotSerialize] public ControlInput StartTrigger;
+        [DoNotSerialize] public ControlOutput OutputTrigger;
+
+        protected virtual string InputDesc => "input";
+        protected virtual string OutputDesc => "output";
+        protected virtual string StartDesc => "Start";
+
+        protected sealed override void Definition()
+        {
+            InputTrigger = ControlInput(InputDesc, OnExecute);
+            StartTrigger = ControlInput(StartDesc, OnStart);
+            OutputTrigger = ControlOutput(OutputDesc);
+
+            OnDefinition();
+        }
+
+        protected abstract ControlOutput OnStart(Flow flow);
         protected abstract ControlOutput OnExecute(Flow flow);
 
         protected abstract void OnDefinition();
@@ -36,7 +66,7 @@ namespace IndieLINY.AI
             InputEnter = ControlInput("enter", OnEnter);
             InputUpdate = ControlInput("update", OnUpdate);
             InputExit = ControlInput("exit", OnExit);
-            
+
             OnDefinition();
         }
 
