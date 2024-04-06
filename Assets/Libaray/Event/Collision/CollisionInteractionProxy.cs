@@ -32,6 +32,9 @@ namespace IndieLINY.Event
             remove => MainInteraction.OnContractClick -= value;
         }
 
+        public override LayerMask LayerMask => MainInteraction.LayerMask;
+
+        public override bool ListeningOnly => MainInteraction.ListeningOnly;
         public override BaseContractInfo ContractInfo
         {
             get=> MainInteraction.ContractInfo;
@@ -74,24 +77,16 @@ namespace IndieLINY.Event
         }
         private void OnCollisionEnter2D(Collision2D other)
         {
-            if (!IsEnabled) return;
-            if (other.gameObject.TryGetComponent<CollisionInteraction>(out var com))
+            if (CollisionInteractionUtil.OnCollision(other.collider, this, out var com))
             {
-                if (!com.IsEnabled) return;
-                Activate(com.ContractInfo);
-
                 _collisionBridge.Push(MainInteraction, com);
             }
         }
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (!IsEnabled) return;
-            if (other.gameObject.TryGetComponent<CollisionInteraction>(out var com))
+            if (CollisionInteractionUtil.OnCollision(other, this, out var com))
             {
-                if (!com.IsEnabled) return;
-                Activate(com.ContractInfo);
-
                 _collisionBridge.Push(MainInteraction, com);
             }
         }

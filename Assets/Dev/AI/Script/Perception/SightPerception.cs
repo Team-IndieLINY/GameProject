@@ -7,7 +7,7 @@ using UnityEngine.Serialization;
 
 namespace IndieLINY.AI
 {
-    public class Perception : MonoBehaviour
+    public class SightPerception : MonoBehaviour
     {
         public float Fov;
         public float Distance;
@@ -16,8 +16,8 @@ namespace IndieLINY.AI
         
         [SerializeField] private PolygonCollider2D _collider;
 
-        public ICollisionInteraction Interaction => _interaction;
-        [SerializeField] private CollisionInteractionMono _interaction;
+        public CollisionInteraction Interaction => _interaction;
+        [SerializeField] private CollisionInteraction _interaction;
 
         private void Awake()
         {
@@ -28,10 +28,10 @@ namespace IndieLINY.AI
         {
             _collider.isTrigger = true;
 
-            Interaction.OnContractActor += x =>
-            {
-                Debug.Log("Asd");
-            };
+            Interaction.SetContractInfo(
+                ListeningContractInfo.Create(transform, () => gameObject), 
+                this
+                );
         }
 
         private void OnValidate()
@@ -43,6 +43,9 @@ namespace IndieLINY.AI
         {
             GenerateVisionMesh(Fov, Distance, Iteration, Forward);
         }
+
+        public Mesh CreateMesh(bool useBodyPosition, bool useBodyRotation)
+            => _collider.CreateMesh(useBodyPosition, useBodyRotation);
 
         private void GenerateVisionMesh(float fov, float distance, int iteration, Vector2 forward)
         {

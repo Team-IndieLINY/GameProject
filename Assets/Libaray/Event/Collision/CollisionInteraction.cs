@@ -12,6 +12,9 @@ namespace IndieLINY.Event
         public event Action<ActorContractInfo> OnContractActor;
         public event Action<ObjectContractInfo> OnContractObject;
         public event Action<ClickContractInfo> OnContractClick;
+        
+        public LayerMask LayerMask { get; }
+        public bool ListeningOnly { get; }
         public BaseContractInfo ContractInfo { get; }
 
         public bool IsEnabled { get; set; }
@@ -31,6 +34,8 @@ namespace IndieLINY.Event
         public abstract event Action<ActorContractInfo> OnContractActor;
         public abstract event Action<ObjectContractInfo> OnContractObject;
         public abstract event Action<ClickContractInfo> OnContractClick;
+        public abstract LayerMask LayerMask { get; }
+        public abstract bool ListeningOnly { get; }
         public abstract BaseContractInfo ContractInfo { get; internal set; }
         
         public abstract bool IsEnabled { get; set; }
@@ -39,6 +44,28 @@ namespace IndieLINY.Event
         public abstract void Activate(BaseContractInfo info);
         public abstract void ClearContractEvent();
     }
+
+    public static class CollisionInteractionUtil
+    {
+        public static bool OnCollision(Collider2D other, ICollisionInteraction interaction, out CollisionInteraction result)
+        {
+            result = null;
+            if (!interaction.IsEnabled) return false;
+            int layer = 1 << other.gameObject.layer;
+            if ((layer & interaction.LayerMask.value) != layer) return false;
+            
+            if (other.gameObject.TryGetComponent<CollisionInteraction>(out var com))
+            {
+                if (!com.IsEnabled) return false;
+                if (com.ListeningOnly) return false;
+
+                result = com;
+                interaction.Activate(com.ContractInfo);
+            }
+
+            return true;
+        }
+    }
     
     public class CollisionInteraction : CollisionInteractionMono
     {
@@ -46,9 +73,14 @@ namespace IndieLINY.Event
         public override event Action<ActorContractInfo> OnContractActor;
         public override event Action<ObjectContractInfo> OnContractObject;
         public override event Action<ClickContractInfo> OnContractClick;
+
+        public override LayerMask LayerMask => _layerMask;
+        public override bool ListeningOnly => _listeningOnly;
         public override BaseContractInfo ContractInfo { get; internal set; }
 
         [SerializeField] private bool _isBindChildProxy = true;
+        [SerializeField] private LayerMask _layerMask;
+        [SerializeField] private bool _listeningOnly;
 
         private List<CollisionInteractionProxy> _proxies;
         public IReadOnlyCollection<CollisionInteractionProxy> Proxies => _proxies;
@@ -76,6 +108,8 @@ namespace IndieLINY.Event
 
         public override void Activate(BaseContractInfo info)
         {
+            Debug.Assert(info != null, "ContractInfo can't be null");
+            
             switch (info)
             {
                 case ActorContractInfo actorContractInfo:
@@ -86,9 +120,6 @@ namespace IndieLINY.Event
                     break;
                 case ObjectContractInfo objectContractInfo:
                     OnContractObject?.Invoke(objectContractInfo);
-                    break;
-                default:
-                    //throw new ArgumentOutOfRangeException(nameof(ContractInfo));
                     break;
             }
         }
@@ -106,9 +137,27 @@ namespace IndieLINY.Event
         {
             if (_isBindChildProxy)
             {
-                var childs  =GetComponentsInChildren<CollisionInteractionProxy>(true);
+                InitProxies(transform);
+            }
+        }
+
+        private void InitProxies(Transform parent)
+        {
+            for (int i = 0; i < parent.childCount; i++)
+            {
+                var child = parent.GetChild(i);
+
+                if (child.GetComponent<CollisionInteraction>())
+                {
+                    continue;
+                }
                 
-                AddProxyRange(childs);
+                if (child.TryGetComponent(out CollisionInteractionProxy proxy))
+                {
+                    AddProxy(proxy);
+                }
+                
+                InitProxies(child);
             }
         }
 
@@ -142,24 +191,16 @@ namespace IndieLINY.Event
 
         private void OnCollisionEnter2D(Collision2D other)
         {
-            if (!IsEnabled) return;
-            if (other.gameObject.TryGetComponent<CollisionInteraction>(out var com))
+            if (CollisionInteractionUtil.OnCollision(other.collider, this, out var com))
             {
-                if (!com.IsEnabled) return;
-                Activate(com.ContractInfo);
-
                 _collisionBridge.Push(this, com);
             }
         }
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (!IsEnabled) return;
-            if (other.gameObject.TryGetComponent<CollisionInteraction>(out var com))
+            if (CollisionInteractionUtil.OnCollision(other, this, out var com))
             {
-                if (!com.IsEnabled) return;
-                Activate(com.ContractInfo);
-
                 _collisionBridge.Push(this, com);
             }
         }

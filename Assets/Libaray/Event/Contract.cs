@@ -19,6 +19,10 @@ public class ClickContractInfo: BaseContractInfo
     public int MouseButtonNumber;
     public EClickContractType clickType;
 }
+public class ListeningContractInfo: BaseContractT<INoBehaviour, ListeningContractInfo>
+{
+    
+}
 
 public enum EClickContractType
 {
