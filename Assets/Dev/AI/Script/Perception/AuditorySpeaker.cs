@@ -17,24 +17,57 @@ namespace IndieLINY.AI
         [SerializeField] private CollisionInteraction _interaction;
 
         private IEnumerator _coplay;
-        
-        public void Play(float duration, float radius)
+
+        public bool IsPlaying => _coplay != null;
+
+        private void Awake()
         {
             Contracts = new List<CollisionInteraction>(2);
-
+        }
+        public void Stop()
+        {
             if (_coplay != null)
             {
                 StopCoroutine(_coplay);
+                _coplay = null;
             }
-
-            StartCoroutine(_coplay = CoPlay(duration, radius));
         }
 
-        private IEnumerator CoPlay(float duration, float radius)
+        private float _savedRadialSpeed;
+        private float _savedRadius;
+        public void Play(float radialSpeed, float radius)
         {
-            _collider.radius = radius;
-            yield return new WaitForSeconds(duration);
+            _savedRadialSpeed = radialSpeed;
+            _savedRadius = radius;
+
+            Stop();
+            StartCoroutine(_coplay = CoPlay());
+        }
+
+        public void PlayWithNoStop(float radialSpeed, float radius)
+        {
+            _savedRadialSpeed = radialSpeed;
+            _savedRadius = radius;
+            
+            if (_coplay == null)
+            {
+                StartCoroutine(_coplay = CoPlay());
+            }
+        }
+
+        private IEnumerator CoPlay()
+        {
             _collider.radius = 0f;
+            
+            var wait =  new WaitForEndOfFrame();
+
+            
+            while (true)
+            {
+                _collider.radius = Mathf.MoveTowards(_collider.radius, _savedRadius, Time.deltaTime * _savedRadialSpeed);
+                
+                yield return wait;
+            }
         }
 
         private void OnTriggerEnter2D(Collider2D other)

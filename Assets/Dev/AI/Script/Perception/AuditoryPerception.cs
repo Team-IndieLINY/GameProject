@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using IndieLINY.Event;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace IndieLINY.AI
 {
@@ -15,7 +16,9 @@ namespace IndieLINY.AI
 
         [SerializeField] private List<AuditorySpeaker> _ignoreAuditorySpeakers;
         public List<AuditorySpeaker> IgnoreAuditorySpeakers => _ignoreAuditorySpeakers;
-        
+
+        [SerializeField] private PerceptionMeter _perceptionMeter;
+
         private void Awake()
         {
             Contracts = new List<CollisionInteraction>(2);
@@ -27,17 +30,23 @@ namespace IndieLINY.AI
             {
                 if (IgnoreAuditorySpeakers.Contains(speaker)) return;
                 if (Contracts.Contains(speaker.MasterInteraction)) return;
-                
+
                 Contracts.Add(speaker.MasterInteraction);
+                
+                if (_perceptionMeter)
+                    _perceptionMeter.Schedule(speaker.MasterInteraction, 1f);
             }
         }
+
         private void OnTriggerExit2D(Collider2D other)
         {
             if (other.TryGetComponent<AuditorySpeaker>(out var speaker))
             {
                 Contracts.Remove(speaker.MasterInteraction);
+                
+                if (_perceptionMeter)
+                    _perceptionMeter.UnSchedule(speaker.MasterInteraction);
             }
         }
     }
-
 }

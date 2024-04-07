@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using IndieLINY.Event;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 namespace IndieLINY.AI
 {
@@ -19,7 +21,11 @@ namespace IndieLINY.AI
         public CollisionInteraction MasterInteraction => _interaction;
         [SerializeField] private CollisionInteraction _interaction;
 
+        [SerializeField] private PerceptionMeter _perceptionMeter;
+        [SerializeField] private LayerMask _cullingLayer;
+
         public List<CollisionInteraction> Contracts { get; private set; }
+
 
         private void Awake()
         {
@@ -40,6 +46,20 @@ namespace IndieLINY.AI
 
         public Mesh CreateMesh(bool useBodyPosition, bool useBodyRotation)
             => _collider.CreateMesh(useBodyPosition, useBodyRotation);
+
+        public void LookAtPoint(Vector2 point)
+        {
+            //TODO: MasterInteraction의 transform으로 변경할 것
+
+            var dir = point - (Vector2)transform.position;
+
+            transform.right = dir;
+        }
+        public void LookAtDirection(Vector2 dir)
+        {
+            //TODO: MasterInteraction의 transform으로 변경할 것
+            transform.right = dir;
+        }
 
         private void GenerateVisionMesh(float fov, float distance, int iteration, Vector2 forward)
         {
@@ -77,22 +97,77 @@ namespace IndieLINY.AI
             _collider.SetPath(0, arr);
         }
 
-        private void OnTriggerEnter2D(Collider2D other)
+        private bool DoRaycastToTarget(Transform target)
+        {
+            Vector2 myPos =
+                MasterInteraction.transform.position;
+            Vector2 targetPos 
+                = target.position;
+
+            var hits = Physics2D.RaycastAll(
+                myPos,
+                targetPos - myPos,
+                Distance,
+                _cullingLayer.value
+            );
+
+            float minDis = Mathf.Infinity;
+            Transform minTransform = null;
+
+            foreach (var hit in hits)
+            {
+                var dis = Vector2.SqrMagnitude(hit.point - myPos);
+                Debug.DrawLine(myPos, hit.point);
+                if (dis <= minDis)
+                {
+                    minDis = dis;
+                    minTransform = hit.transform;
+                }
+            }
+            
+
+            if (minTransform == target) return true;
+
+            return false;
+        }
+
+        private void OnTriggerStay2D(Collider2D other)
         {
             if (other.TryGetComponent<CollisionInteraction>(out var otherInteraction))
             {
                 if (otherInteraction.ListeningOnly) return;
-                if (Contracts.Contains(otherInteraction)) return;
+
+                var raycastResult = DoRaycastToTarget(otherInteraction.ContractInfo.Transform);
+                var isContain = Contracts.Contains(otherInteraction);
+                
+                if (raycastResult == false)
+                {
+                    Contracts.Remove(otherInteraction);
+                
+                    if(_perceptionMeter)
+                        _perceptionMeter.UnSchedule(otherInteraction);
+
+                    return;
+                }
+                
+                if(isContain) return;
                 
                 Contracts.Add(otherInteraction);
+                
+                if(_perceptionMeter)
+                    _perceptionMeter.Schedule(otherInteraction, 1f);
             }
         }
+
         private void OnTriggerExit2D(Collider2D other)
         {
             if (other.TryGetComponent<CollisionInteraction>(out var otherInteraction))
             {
                 if (otherInteraction.ListeningOnly) return;
                 Contracts.Remove(otherInteraction);
+                
+                if(_perceptionMeter)
+                    _perceptionMeter.UnSchedule(otherInteraction);
             }
         }
     }

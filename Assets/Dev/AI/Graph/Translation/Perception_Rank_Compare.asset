@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95e66c6366d904e98bc83428217d4fd7, type: 3}
+  m_Name: Perception_Rank_Compare
+  m_EditorClassIdentifier: 
+  _data:
+    _json: '{"graph":{"variables":{"Kind":"Flow","collection":{"$content":[],"$version":"A"},"$version":"A"},"controlInputDefinitions":[{"key":"Update","label":null,"summary":null,"hideLabel":false}],"controlOutputDefinitions":[{"key":"Equal","label":null,"summary":null,"hideLabel":false},{"key":"Not
+      Equal","label":null,"summary":null,"hideLabel":false}],"valueInputDefinitions":[{"hasDefaultValue":false,"defaultValue":null,"_type":"IndieLINY.AI.PerceptionMeter","key":"PerceptionMeter","label":null,"summary":null,"hideLabel":false},{"hasDefaultValue":false,"defaultValue":{"$content":0,"$type":"System.Int32"},"_type":"System.Int32","key":"Rank","label":null,"summary":null,"hideLabel":false}],"valueOutputDefinitions":[{"_type":"System.Boolean","key":"IsEqual","label":null,"summary":null,"hideLabel":false}],"title":"Perception
+      Rank Compare","summary":null,"pan":{"x":162.0,"y":198.0},"zoom":1.0,"elements":[{"defaultValues":{},"position":{"x":-335.0,"y":65.0},"guid":"a5f12414-25a9-4aa8-ab55-fa663fdae146","$version":"A","$type":"Unity.VisualScripting.GraphInput","$id":"15"},{"member":{"name":"Rank","parameterTypes":null,"targetType":"IndieLINY.AI.PerceptionMeter","targetTypeName":"IndieLINY.AI.PerceptionMeter","$version":"A"},"defaultValues":{"target":null},"position":{"x":-131.0,"y":186.0},"guid":"37d1b646-05ac-4905-a4ec-d9e0b9eaeef9","$version":"A","$type":"Unity.VisualScripting.GetMember","$id":"17"},{"numeric":false,"defaultValues":{},"position":{"x":64.0,"y":192.0},"guid":"87c657d7-8574-4cef-b9c8-bca4d68a4d41","$version":"A","$type":"Unity.VisualScripting.Equal","$id":"20"},{"defaultValues":{},"position":{"x":367.0,"y":126.0},"guid":"a3cce7c7-b504-45a5-be3e-22ca9a87eb8c","$version":"A","$type":"Unity.VisualScripting.GraphOutput","$id":"22"},{"defaultValues":{},"position":{"x":210.0,"y":129.0},"guid":"6adcb930-eb4b-44ed-8e6a-a50a6289280a","$version":"A","$type":"Unity.VisualScripting.If","$id":"24"},{"sourceUnit":{"$ref":"24"},"sourceKey":"ifTrue","destinationUnit":{"$ref":"22"},"destinationKey":"Equal","guid":"31c9579b-7bc1-4692-ab9b-c255fa6dff12","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"24"},"sourceKey":"ifFalse","destinationUnit":{"$ref":"22"},"destinationKey":"Not
+      Equal","guid":"755adb93-bef6-4cf5-98ef-b1a65df794a9","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"15"},"sourceKey":"Update","destinationUnit":{"$ref":"24"},"destinationKey":"enter","guid":"23323288-7306-4d76-b867-3fea87269f28","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"17"},"sourceKey":"value","destinationUnit":{"$ref":"20"},"destinationKey":"a","guid":"ab1d5b77-9075-4ddc-9e53-fd5007bb5332","$type":"Unity.VisualScripting.ValueConnection"},{"sourceUnit":{"$ref":"15"},"sourceKey":"PerceptionMeter","destinationUnit":{"$ref":"17"},"destinationKey":"target","guid":"11d2b7a9-d79d-45fc-abdb-d7613eb595e7","$type":"Unity.VisualScripting.ValueConnection"},{"sourceUnit":{"$ref":"15"},"sourceKey":"Rank","destinationUnit":{"$ref":"20"},"destinationKey":"b","guid":"696eba76-5d13-4197-86d1-f5aff84a1feb","$type":"Unity.VisualScripting.ValueConnection"},{"sourceUnit":{"$ref":"20"},"sourceKey":"equal","destinationUnit":{"$ref":"22"},"destinationKey":"IsEqual","guid":"408ef2fb-e159-4b1c-9a1e-dffae9c27408","$type":"Unity.VisualScripting.ValueConnection"},{"sourceUnit":{"$ref":"20"},"sourceKey":"equal","destinationUnit":{"$ref":"24"},"destinationKey":"condition","guid":"7181e952-e38c-4039-bc27-9a8f3897b714","$type":"Unity.VisualScripting.ValueConnection"}],"$version":"A"}}'
+    _objectReferences: []
