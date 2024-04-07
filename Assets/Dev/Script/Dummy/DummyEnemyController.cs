@@ -19,7 +19,7 @@ public class DummyEnemyController : MonoBehaviour
         }
 
         _dir = Agent.desiredVelocity;
-        SightPerception.transform.right = _dir;
+        //SightPerception.transform.right = _dir;
 
 
     }

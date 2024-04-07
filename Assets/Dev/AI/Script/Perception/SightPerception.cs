@@ -47,17 +47,39 @@ namespace IndieLINY.AI
         public Mesh CreateMesh(bool useBodyPosition, bool useBodyRotation)
             => _collider.CreateMesh(useBodyPosition, useBodyRotation);
 
+
+        private Vector2 _lastValidLookatDir;
+        
         public void LookAtPoint(Vector2 point)
         {
             //TODO: MasterInteraction의 transform으로 변경할 것
 
             var dir = point - (Vector2)transform.position;
 
+            if (Mathf.Approximately(dir.sqrMagnitude, 0f))
+            {
+                dir = _lastValidLookatDir;
+            }
+            else
+            {
+                _lastValidLookatDir = dir;
+            }
+
             transform.right = dir;
         }
         public void LookAtDirection(Vector2 dir)
         {
             //TODO: MasterInteraction의 transform으로 변경할 것
+
+            if (Mathf.Approximately(dir.sqrMagnitude, 0f))
+            {
+                dir = _lastValidLookatDir;
+            }
+            else
+            {
+                _lastValidLookatDir = dir;
+            }
+
             transform.right = dir;
         }
 
