@@ -186,9 +186,9 @@ namespace IndieLINY.AI
             if (other.TryGetComponent<CollisionInteraction>(out var otherInteraction))
             {
                 if (otherInteraction.ListeningOnly) return;
-                Contracts.Remove(otherInteraction);
+                var success = Contracts.Remove(otherInteraction);
                 
-                if(_perceptionMeter)
+                if(success && _perceptionMeter)
                     _perceptionMeter.UnSchedule(otherInteraction);
             }
         }

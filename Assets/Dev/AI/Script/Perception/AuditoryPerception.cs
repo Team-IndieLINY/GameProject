@@ -42,9 +42,9 @@ namespace IndieLINY.AI
         {
             if (other.TryGetComponent<AuditorySpeaker>(out var speaker))
             {
-                Contracts.Remove(speaker.MasterInteraction);
+                bool success = Contracts.Remove(speaker.MasterInteraction);
                 
-                if (_perceptionMeter)
+                if (success && _perceptionMeter)
                     _perceptionMeter.UnSchedule(speaker.MasterInteraction);
             }
         }

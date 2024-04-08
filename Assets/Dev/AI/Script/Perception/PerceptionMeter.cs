@@ -120,17 +120,6 @@ namespace IndieLINY.AI
                 
                 Rank += 1;
             }   
-            //else if (Value <= 0f)
-            //{
-            //    Rank -= 1;
-            //    
-            //    if (Rank > 0)
-            //    {
-            //        _totalGage = _limitTime;
-            //        Value = 1f;
-            //    }
-            //    
-            //}
             _fillGage.fillAmount = Value;
         }
 
