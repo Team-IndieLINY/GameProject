@@ -1,0 +1,9 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Dev/Art/UIToolkit/USS/Inventory.uss?fileID=7433441132597879392&amp;guid=dc4a2bda5afbe6d4b91176bf0cc64e5b&amp;type=3#Inventory" />
+    <ui:VisualElement name="Container" style="flex-grow: 1; position: absolute; height: 715px; width: 682px; top: 142px; left: 448px;">
+        <ui:VisualElement name="Head" style="flex-grow: 0; height: 60px; background-color: rgb(195, 195, 195);">
+            <ui:Label tabindex="-1" text="Inventory" parse-escape-sequences="true" display-tooltip-when-elided="true" name="HeadLabel" style="font-size: 30px; -unity-font-style: bold;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="Body" style="flex-grow: 1; -unity-background-image-tint-color: rgb(0, 0, 0); background-color: rgb(103, 103, 103); flex-direction: row; flex-wrap: wrap;" />
+    </ui:VisualElement>
+</ui:UXML>
