@@ -7,7 +7,7 @@ using UnityEngine;
 public class Inventory : MonoBehaviour
 {
     [SerializeField] private InventoryData _inventoryData;
-    [SerializeField] private ItemData[] _itemDatas;
+    [SerializeField] private Slot[] _slots;
     
     private InventoryUI _inventoryUI;
 
@@ -33,6 +33,7 @@ public class Inventory : MonoBehaviour
 
     private void SetInventory()
     {
+        _slots = new Slot[_inventoryData.CellCount];
         _inventoryUI.SetInventoryUI(_inventoryData);
     }
 

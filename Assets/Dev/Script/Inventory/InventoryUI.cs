@@ -58,15 +58,23 @@ public class InventoryUI : MonoBehaviour
     {
         _rootVisualElement.style.visibility = Visibility.Hidden;
     }
-
+    
     public void SetInventoryUI(InventoryData inventoryData)
     {
         _headLabel.text = inventoryData.InventoryName;
 
         for (int i = 0; i < inventoryData.CellCount; i++)
             _bodyVisualElement.Add(GenerateSlotVisual());
+    }
 
+    public void ResetInventoryUI(InventoryData inventoryData)
+    {
+        while (_bodyVisualElement.childCount <= 0)
+        {
+            _bodyVisualElement.RemoveAt(0);
+        }
         
+        SetInventoryUI(inventoryData);
     }
     #endregion
     #region private method
