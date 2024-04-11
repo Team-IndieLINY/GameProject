@@ -14,6 +14,24 @@ public class SlotUI : VisualElement
         SetSlotUI();
     }
 
+    public void UpdateSlotUI(Item item)
+    {
+        if (item == null)
+        {
+            _itemIcon = null;
+            _itemAmountLabel.text = " ";
+            return;
+        }
+        
+        _itemIcon.style.backgroundImage = item.ItemData.ItemSprite.texture;
+
+        if (item is not CountableItem)
+        {
+            _itemAmountLabel.text = " ";
+        }
+
+        _itemAmountLabel.text = ((CountableItem)item).CurrentAmount.ToString();
+    }
 
     #endregion
 
@@ -27,6 +45,8 @@ public class SlotUI : VisualElement
             VisualElement itemFrameUI = new VisualElement();
             _itemIcon = new VisualElement();
             _itemAmountLabel = new Label();
+            _itemAmountLabel.style.fontSize = 25;
+            _itemAmountLabel.style.unityFontStyleAndWeight = FontStyle.Bold;
             
             Add(itemFrameUI);
             
@@ -37,7 +57,5 @@ public class SlotUI : VisualElement
             _itemIcon.Add(_itemAmountLabel);
 
         }
-    
-
     #endregion
 }

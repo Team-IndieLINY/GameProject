@@ -22,9 +22,9 @@ public class CountableItem : Item
 
     public void SetAmount(int amount)
     {
-        Debug.Assert(ItemData == null, "ItemData == null");
+        Debug.Assert(ItemData != null, "ItemData == null");
 
-        if (amount + _currentAmount >= ((CountableItemData)ItemData).MaxStack)
+        if (amount >= ((CountableItemData)ItemData).MaxStack)
         {
             _currentAmount = ((CountableItemData)ItemData).MaxStack;
             return;

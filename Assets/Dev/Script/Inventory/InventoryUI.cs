@@ -11,36 +11,14 @@ public abstract class InventoryUI : MonoBehaviour
     protected UIDocument _inventoryUIDocument;
     protected VisualElement _rootVisualElement;
     protected VisualElement _containerElement;
-    protected VisualElement _bodyVisualElement;
+    protected VisualElement _slotContainerVisualElement;
     protected Label _headLabel;
 
     protected Inventory _inventory;
     protected bool _isOpen;
 
-    public VisualElement BodyVisualElement => _bodyVisualElement;
+    public VisualElement SlotContainerVisualElement => _slotContainerVisualElement;
     
-    #region event method
-
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            if (_isOpen)
-            {
-                _isOpen = false;
-                CloseInventory();
-            }
-            else
-            {
-                _isOpen = true;
-                OpenInventory();
-            }
-        }
-    }
-
-    #endregion
-
     #region public method
     public void OpenInventory()
     {
@@ -59,9 +37,9 @@ public abstract class InventoryUI : MonoBehaviour
 
     public void ResetInventoryUI(InventoryData inventoryData)
     {
-        while (_bodyVisualElement.childCount <= 0)
+        while (_slotContainerVisualElement.childCount <= 0)
         {
-            _bodyVisualElement.RemoveAt(0);
+            _slotContainerVisualElement.RemoveAt(0);
         }
         
         SetInventoryUI(inventoryData);

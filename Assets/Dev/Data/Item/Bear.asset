@@ -9,12 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc725a49fed2003418cb0715b9c75264, type: 3}
-  m_Name: InventoryData
+  m_Script: {fileID: 11500000, guid: 0333cf9d7bb42244ca6716d2519269e2, type: 3}
+  m_Name: Bear
   m_EditorClassIdentifier: 
-  _inventoryName: Player Inventory
-  _rowCount: 4
-  _columnCount: 4
-  _cellCount: 10
-  _cellHorizontalSize: 1
-  _cellVerticalSize: 1
+  _itemName: Bear
+  _itemSprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  _lootingTime: 0
+  _maxStack: 3

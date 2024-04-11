@@ -5,6 +5,7 @@ using UnityEngine.UIElements;
 
 public class BoxInventoryUI : InventoryUI
 {
+    private Button _takeAllButton;
     private void Awake()
     {
         Debug.Assert(TryGetComponent(out BoxInventory inventory), "inventory is null");
@@ -14,8 +15,20 @@ public class BoxInventoryUI : InventoryUI
         _rootVisualElement = _inventoryUIDocument.rootVisualElement;
         _containerElement = _rootVisualElement.Q<VisualElement>("Container");
         _headLabel = _rootVisualElement.Q<Label>("HeadLabel");
-        _bodyVisualElement = _rootVisualElement.Q<VisualElement>("Body");
-
+        _slotContainerVisualElement = _rootVisualElement.Q<VisualElement>("SlotContainer");
+        
+        _takeAllButton = _rootVisualElement.Q<Button>("TakeAllButton");
+        _takeAllButton.RegisterCallback<ClickEvent>(OnClickTakeAllButton);
+        
+        _rootVisualElement.style.visibility = Visibility.Hidden;
+        
         _isOpen = _rootVisualElement.visible;
+    }
+    
+    
+
+    public void OnClickTakeAllButton(ClickEvent evt)
+    {
+        
     }
 }

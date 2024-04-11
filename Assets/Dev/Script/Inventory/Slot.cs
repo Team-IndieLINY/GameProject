@@ -5,6 +5,7 @@ using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+[Serializable]
 public class Slot
 {
     private Item _item;
@@ -24,7 +25,7 @@ public class Slot
             _item = item;
             return null;
         }
-
+        
         if (IsFull())
         {
             return item;
@@ -69,12 +70,14 @@ public class Slot
             return false;
         }
         
-        if (_item is not CountableItem countableItem)
+        if (_item is not CountableItem)
         {
             return true;
         }
+        
+        CountableItem countableItem = _item as CountableItem;
 
-        Debug.Assert(countableItem.ItemData == null, "countableItem.ItemData == null");
+        Debug.Assert(countableItem.ItemData != null, "countableItem.ItemData == null");
 
         if (countableItem.CurrentAmount >= ((CountableItemData)countableItem.ItemData).MaxStack)
         {

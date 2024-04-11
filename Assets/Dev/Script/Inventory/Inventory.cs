@@ -10,11 +10,34 @@ public abstract class Inventory : MonoBehaviour
     [SerializeField] private Slot[] _slots;
     
     protected InventoryUI _inventoryUI;
-
-    public Slot[] Slots => _slots;
     
     #region private method
+    #endregion
 
+    #region public method
+    
+    public void AddItem(Item item)
+    {
+        foreach (var slot in _slots)
+        {
+            item = slot.AddItem(item);
+            slot.SlotUI.UpdateSlotUI(slot.Item);
+
+            if (item == null)
+            {
+                return;
+            }
+        }
+        
+        Debug.Log("Inventory is Full");
+    }
+
+    public void RemoveAtItem(int slotIndex)
+    {
+        
+    }
+
+    #endregion
     protected void SetInventory()
     {
         _slots = new Slot[_inventoryData.CellCount];
@@ -26,12 +49,24 @@ public abstract class Inventory : MonoBehaviour
 
         foreach (var slot in _slots)
         {
-            _inventoryUI.BodyVisualElement.Add(slot.SlotUI);
+            _inventoryUI.SlotContainerVisualElement.Add(slot.SlotUI);
         }
         
         _inventoryUI.SetInventoryUI(_inventoryData);
     }
 
-    #endregion
+    protected bool IsFull()
+    {
+        foreach (var slot in _slots)
+        {
+            if (slot.IsFull() is not true)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
 
 }
