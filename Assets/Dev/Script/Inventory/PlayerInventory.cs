@@ -1,22 +1,35 @@
 using System.Collections;
 using System.Collections.Generic;
+using IndieLINY.Singleton;
 using UnityEngine;
 
 [RequireComponent(typeof(PlayerInventory))]
 public class PlayerInventory : Inventory
 {
-    [SerializeField] private CountableItemData _testItem;
+    private static PlayerInventory _instance = null;
+    public static PlayerInventory Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                return null;
+            }
+
+            return _instance;
+        }
+    }
     private void Awake()
     {
+        if (_instance == null)
+        {
+            _instance = this;
+        }
         _inventoryUI = GetComponent<PlayerInventoryUI>();
     }
 
     private void Start()
     {
         SetInventory();
-
-        AddItem(new CountableItem(_testItem, 3));
-        AddItem(new CountableItem(_testItem, 2));
-        AddItem(new CountableItem(_testItem, 2));
     }
 }

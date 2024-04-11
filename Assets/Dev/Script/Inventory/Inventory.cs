@@ -6,10 +6,12 @@ using UnityEngine.UIElements;
 
 public abstract class Inventory : MonoBehaviour
 {
-    [SerializeField] private InventoryData _inventoryData;
-    [SerializeField] private Slot[] _slots;
+    [SerializeField] protected InventoryData _inventoryData;
+    [SerializeField] protected Slot[] _slots;
     
     protected InventoryUI _inventoryUI;
+
+    public Slot[] Slots => _slots;
     
     #region private method
     #endregion
@@ -21,7 +23,7 @@ public abstract class Inventory : MonoBehaviour
         foreach (var slot in _slots)
         {
             item = slot.AddItem(item);
-            slot.SlotUI.UpdateSlotUI(slot.Item);
+            slot.SlotUI.UpdateSlotUI();
 
             if (item == null)
             {
@@ -45,6 +47,7 @@ public abstract class Inventory : MonoBehaviour
         for (int i = 0; i < _slots.Length; i++)
         {
             _slots[i] = new Slot();
+            _slots[i].SetSlotInSlotUI();
         }
 
         foreach (var slot in _slots)
@@ -55,7 +58,7 @@ public abstract class Inventory : MonoBehaviour
         _inventoryUI.SetInventoryUI(_inventoryData);
     }
 
-    protected bool IsFull()
+    public bool IsFull()
     {
         foreach (var slot in _slots)
         {

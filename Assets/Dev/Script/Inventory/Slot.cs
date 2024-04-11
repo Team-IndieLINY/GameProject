@@ -59,7 +59,31 @@ public class Slot
 
     public void RemoveItem()
     {
+        if (IsEmpty())
+        {
+            return;
+        }
+
+        if (_item is not CountableItem)
+        {
+            _item = null;
+            _slotUI.UpdateSlotUI();
+
+            return;
+        }
+
+        CountableItem countableItem = (CountableItem)_item;
         
+        countableItem.SetAmount(countableItem.CurrentAmount - 1);
+
+        _item = countableItem;
+
+        if (countableItem.CurrentAmount == 0)
+        {
+            _item = null;
+        }
+        
+        _slotUI.UpdateSlotUI();
     }
 
     //현재 슬롯이 꽉 차있는지 체크합니다. (카운트 가능한 아이템이 아닌 경우에도 true를 반환합니다.)
@@ -93,6 +117,11 @@ public class Slot
             return true;
 
         return false;
+    }
+
+    public void SetSlotInSlotUI()
+    {
+        _slotUI.Slot = this;
     }
     #endregion
 }

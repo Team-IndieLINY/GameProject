@@ -20,6 +20,18 @@
 
 .item_icon {
     flex-grow: 1;
-    align-items: flex-end;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: stretch;
+}
+
+.highlighted_slot {
+    flex-grow: 0;
+    border-left-color: rgb(255, 255, 255);
+    border-right-color: rgb(255, 255, 255);
+    border-top-color: rgb(255, 255, 255);
+    border-bottom-color: rgb(255, 255, 255);
+    border-top-width: 5px;
+    border-right-width: 5px;
+    border-bottom-width: 5px;
+    border-left-width: 5px;
 }
