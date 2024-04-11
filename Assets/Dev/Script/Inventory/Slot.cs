@@ -3,15 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Slot
 {
     private Item _item;
     public Item Item => _item;
 
+    private SlotUI _slotUI = new();
+    public SlotUI SlotUI => _slotUI;
+
     #region public method
-    
-    
+
     //아이템을 슬롯에 추가하고 남는 아이템을 반환합니다.
     [CanBeNull]
     public Item AddItem([NotNull] Item item)

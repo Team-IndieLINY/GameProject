@@ -2,38 +2,33 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
-[RequireComponent(typeof(InventoryUI))]
-public class Inventory : MonoBehaviour
+public abstract class Inventory : MonoBehaviour
 {
     [SerializeField] private InventoryData _inventoryData;
     [SerializeField] private Slot[] _slots;
     
-    private InventoryUI _inventoryUI;
+    protected InventoryUI _inventoryUI;
 
-    #region event method
-
-    private void Awake()
-    {
-        _inventoryUI = GetComponent<InventoryUI>();
-    }
-
-    private void Start()
-    {
-        SetInventory();
-    }
-
-    #endregion
-
-    #region public method
-
-    #endregion
+    public Slot[] Slots => _slots;
     
     #region private method
 
-    private void SetInventory()
+    protected void SetInventory()
     {
         _slots = new Slot[_inventoryData.CellCount];
+
+        for (int i = 0; i < _slots.Length; i++)
+        {
+            _slots[i] = new Slot();
+        }
+
+        foreach (var slot in _slots)
+        {
+            _inventoryUI.BodyVisualElement.Add(slot.SlotUI);
+        }
+        
         _inventoryUI.SetInventoryUI(_inventoryData);
     }
 

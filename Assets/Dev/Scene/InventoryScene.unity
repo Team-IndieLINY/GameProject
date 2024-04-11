@@ -133,8 +133,8 @@ GameObject:
   m_Component:
   - component: {fileID: 242370084}
   - component: {fileID: 242370083}
-  - component: {fileID: 242370082}
-  - component: {fileID: 242370081}
+  - component: {fileID: 242370086}
+  - component: {fileID: 242370085}
   m_Layer: 0
   m_Name: Inventory
   m_TagString: Untagged
@@ -142,32 +142,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &242370081
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 242370080}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d44cbb6422d8f34bbeb6bfe6fefcb15, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _inventoryData: {fileID: 11400000, guid: 73e560dc52a603845a69096f0a832083, type: 2}
-  _itemDatas: []
---- !u!114 &242370082
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 242370080}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ecd3484338f70d84fab3ab1f72078bab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &242370083
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -199,6 +173,31 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &242370085
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 242370080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6db51996ab806794f8f3f7aa01f7b407, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &242370086
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 242370080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d44cbb6422d8f34bbeb6bfe6fefcb15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _inventoryData: {fileID: 11400000, guid: 73e560dc52a603845a69096f0a832083, type: 2}
 --- !u!1 &882390335
 GameObject:
   m_ObjectHideFlags: 0

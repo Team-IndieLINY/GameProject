@@ -15,6 +15,6 @@ MonoBehaviour:
   _inventoryName: Player Inventory
   _rowCount: 4
   _columnCount: 4
-  _cellCount: 25
+  _cellCount: 10
   _cellHorizontalSize: 1
   _cellVerticalSize: 1

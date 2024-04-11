@@ -4,4 +4,13 @@ using UnityEngine;
 
 public class PlayerInventory : Inventory
 {
+    private void Awake()
+    {
+        _inventoryUI = GetComponent<PlayerInventoryUI>();
+    }
+
+    private void Start()
+    {
+        SetInventory();
+    }
 }
