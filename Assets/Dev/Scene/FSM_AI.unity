@@ -467,10 +467,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2045088588}
     m_Modifications:
-    - target: {fileID: 1494997594612827247, guid: b9fb7f4cf2f05ed47a0619939f924dea, type: 3}
-      propertyPath: _pathGenerator
-      value: 
-      objectReference: {fileID: 1887247662}
     - target: {fileID: 5723020753729806403, guid: b9fb7f4cf2f05ed47a0619939f924dea, type: 3}
       propertyPath: m_Name
       value: Agent
@@ -2284,6 +2280,11 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
+--- !u!4 &1288244225 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8450748673742919742, guid: b9fb7f4cf2f05ed47a0619939f924dea, type: 3}
+  m_PrefabInstance: {fileID: 1802335118}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1346508689
 GameObject:
   m_ObjectHideFlags: 0
@@ -2707,11 +2708,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!4 &1556976202 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8450748673742919742, guid: b9fb7f4cf2f05ed47a0619939f924dea, type: 3}
-  m_PrefabInstance: {fileID: 1749465009}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1620509642
 GameObject:
   m_ObjectHideFlags: 0
@@ -2813,7 +2809,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1001 &1749465009
+--- !u!1001 &1802335118
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -2821,21 +2817,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2045088588}
     m_Modifications:
-    - target: {fileID: 1494997594612827247, guid: b9fb7f4cf2f05ed47a0619939f924dea, type: 3}
-      propertyPath: _pathGenerator
-      value: 
-      objectReference: {fileID: 1887247662}
     - target: {fileID: 5723020753729806403, guid: b9fb7f4cf2f05ed47a0619939f924dea, type: 3}
       propertyPath: m_Name
       value: Agent (1)
       objectReference: {fileID: 0}
     - target: {fileID: 8450748673742919742, guid: b9fb7f4cf2f05ed47a0619939f924dea, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.26
+      value: 4.35
       objectReference: {fileID: 0}
     - target: {fileID: 8450748673742919742, guid: b9fb7f4cf2f05ed47a0619939f924dea, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -6.29
+      value: -7.98
       objectReference: {fileID: 0}
     - target: {fileID: 8450748673742919742, guid: b9fb7f4cf2f05ed47a0619939f924dea, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3561,7 +3553,7 @@ Transform:
   - {fileID: 1540315152}
   - {fileID: 1843681920}
   - {fileID: 747160232}
-  - {fileID: 1556976202}
+  - {fileID: 1288244225}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2127556994

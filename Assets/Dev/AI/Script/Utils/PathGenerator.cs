@@ -124,9 +124,14 @@ namespace IndieLINY.AI
         private Vector2 RightDownDir => transform.TransformDirection(_rightDownDir);
 
         private BoundNode _rootNode;
+        
+        //TODO: test 전용 코드, 수정 요망
+        public static PathGenerator Test_Instance { get; private set; }
 
         private void Awake()
         {
+            Test_Instance = this;
+            
             Generate();
             GenerateNeighbor(_rootNode);
             GenerateCorner();

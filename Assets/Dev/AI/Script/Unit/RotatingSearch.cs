@@ -134,7 +134,7 @@ namespace IndieLINY.AI
             _vSightPerception = ValueInput<SightPerception>("SightPerception");
             _vRotationDuration = ValueInput<float>("rotating duration");
             _vRotationAngle = ValueInput<float>("rotating angle");
-            _cUpdate = ControlOutput("End of update");
+            _cUpdate = ControlOutput("End of rotation");
         }
     }
     
