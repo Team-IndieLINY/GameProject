@@ -9,39 +9,60 @@ using UnityEngine.Serialization;
 
 namespace IndieLINY.AI
 {
-    [System.Serializable]
     public struct BoundPoint
     {
-        public Vector2 Pos;
-        public Vector2 Size;
+        internal Vector2 _Pos;
+        internal Vector2 _Size;
 
         // only leaf node having value of ContactCollider
-        public Collider2D ContactCollider;
-        public bool Collision;
-        public bool IsCorner;
+        internal Collider2D _ContactCollider;
+        internal bool _Collision;
+        internal bool _IsCorner;
+
+        public Vector2 Pos => _Pos;
+
+        public Vector2 Size => _Size;
+
+        public Collider2D ContactCollider => _ContactCollider;
+
+        public bool Collision => _Collision;
+
+        public bool IsCorner => _IsCorner;
 
         public Bounds GetBounds()
         {
-            return new Bounds(Pos, Size * 2f);
+            return new Bounds(_Pos, _Size * 2f);
         }
     }
 
     public class BoundNode
     {
-        public BoundPoint Bound;
-        public BoundNode Parent;
-        public BoundNode[] Childs = new BoundNode[4];
-        public List<BoundNode> Neighbor = new List<BoundNode>(4);
-        public int Depth = 1;
+        internal BoundPoint _Bound;
+        internal BoundNode _Parent;
+        internal BoundNode[] _Childs = new BoundNode[4];
+        internal List<BoundNode> _Neighbor = new List<BoundNode>(4);
+        internal List<BoundNode> _CornerNeighbor = new List<BoundNode>();
+        internal int _Depth = 1;
+
+        public BoundPoint Bound => _Bound;
+
+        public BoundNode Parent => _Parent;
+
+        public BoundNode[] Childs => _Childs;
+
+        public List<BoundNode> Neighbor => _Neighbor;
+        public List<BoundNode> CornerNeighbor => _CornerNeighbor;
+        
+        public int Depth => _Depth;
 
         public bool IsLeaf
         {
             get
             {
                 int count = 0;
-                for (int i = 0; i < Childs.Length; i++)
+                for (int i = 0; i < _Childs.Length; i++)
                 {
-                    if (Childs[i] != null) count++;
+                    if (_Childs[i] != null) count++;
                 }
 
                 return count == 0;
@@ -62,7 +83,7 @@ namespace IndieLINY.AI
             }
             else
             {
-                foreach (BoundNode child in Childs)
+                foreach (BoundNode child in _Childs)
                 {
                     if (child == null) continue;
                     child.GetLeafCondition(ref container, predicate);
@@ -82,11 +103,15 @@ namespace IndieLINY.AI
         [SerializeField] private int _outterCornerSampleingCount;
         [SerializeField] private int _innerCornerSampleingCount;
 
+        [SerializeField] private float _cornerConnectivityRadius;
+
 
         [SerializeField] private bool DEBUG_BoudingBox;
         [SerializeField] private bool DEBUG_NeighvorBoudingBox;
         [SerializeField] private bool DEBUG_CornerBoudingBox;
         [SerializeField] private bool DEBUG_NeighborLine;
+        [SerializeField] private bool DEBUG_CornerNeighborLine;
+        [SerializeField] private bool DEBUG_Reset;
 
         private Vector2 _leftUpDir;
         private Vector2 _rightUpDir;
@@ -105,15 +130,22 @@ namespace IndieLINY.AI
             Generate();
             GenerateNeighbor(_rootNode);
             GenerateCorner();
+            GenerateCornerEdge();
         }
 
-        private void OnValidate()
+        private void Update()
         {
-            if (Application.isPlaying)
+            if (DEBUG_Reset)
             {
-                Generate();
-                GenerateNeighbor(_rootNode);
-                GenerateCorner();
+                if (Application.isPlaying)
+                {
+                    Generate();
+                    GenerateNeighbor(_rootNode);
+                    GenerateCorner();
+                    GenerateCornerEdge();
+                }
+
+                DEBUG_Reset = false;
             }
         }
 
@@ -128,13 +160,13 @@ namespace IndieLINY.AI
 
             _rootNode = new BoundNode()
             {
-                Bound = new BoundPoint()
+                _Bound = new BoundPoint()
                 {
-                    Pos = transform.position,
-                    Size = _size,
-                    ContactCollider = null
+                    _Pos = transform.position,
+                    _Size = _size,
+                    _ContactCollider = null
                 },
-                Parent = null,
+                _Parent = null,
             };
 
             GeneratePoints(transform.position, _size, 1, _rootNode);
@@ -145,18 +177,18 @@ namespace IndieLINY.AI
             var list = new List<BoundNode>(100);
             _rootNode.GetLeafCondition(ref list, x =>
             {
-                if (x.Bound.Collision) return false;
+                if (x._Bound._Collision) return false;
 
-                var count = x.Neighbor.Count(y => y.Bound.Collision);
+                var count = x._Neighbor.Count(y => y._Bound._Collision);
                 if (count == 0) return false;
 
                 return count < _outterCornerSampleingCount ||
-                       count >= _innerCornerSampleingCount;
+                       (count >= _innerCornerSampleingCount && _innerCornerSampleingCount != 0);
             });
 
             foreach (BoundNode node in list)
             {
-                node.Bound.IsCorner = true;
+                node._Bound._IsCorner = true;
             }
         }
 
@@ -164,8 +196,8 @@ namespace IndieLINY.AI
         {
             var overlapCollider =
                 Physics2D.OverlapBox(parentPoint, parentSize * 2f, transform.eulerAngles.z, _wallLayer.value);
-            
-            parentNode.Bound.Collision = overlapCollider;
+
+            parentNode._Bound._Collision = overlapCollider;
 
             bool pass = false;
 
@@ -184,8 +216,8 @@ namespace IndieLINY.AI
 
             if (pass == false)
             {
-                parentNode.Bound.Collision = overlapCollider;
-                parentNode.Bound.ContactCollider = overlapCollider;
+                parentNode._Bound._Collision = overlapCollider;
+                parentNode._Bound._ContactCollider = overlapCollider;
 
                 return;
             }
@@ -194,51 +226,51 @@ namespace IndieLINY.AI
             float magnitude = parentSize.magnitude * 0.5f;
             Vector2 size = parentSize * 0.5f;
 
-            parentNode.Childs[0] = new BoundNode()
+            parentNode._Childs[0] = new BoundNode()
             {
-                Bound = new BoundPoint()
+                _Bound = new BoundPoint()
                 {
-                    Pos = parentPoint + LeftUpDir * magnitude,
-                    Size = size,
+                    _Pos = parentPoint + LeftUpDir * magnitude,
+                    _Size = size,
                 },
-                Parent = parentNode,
-                Depth = depth
+                _Parent = parentNode,
+                _Depth = depth,
             };
-            parentNode.Childs[1] = new BoundNode()
+            parentNode._Childs[1] = new BoundNode()
             {
-                Bound = new BoundPoint()
+                _Bound = new BoundPoint()
                 {
-                    Pos = parentPoint + RightUpDir * magnitude,
-                    Size = size
+                    _Pos = parentPoint + RightUpDir * magnitude,
+                    _Size = size
                 },
-                Parent = parentNode,
-                Depth = depth
+                _Parent = parentNode,
+                _Depth = depth
             };
-            parentNode.Childs[2] = new BoundNode()
+            parentNode._Childs[2] = new BoundNode()
             {
-                Bound = new BoundPoint()
+                _Bound = new BoundPoint()
                 {
-                    Pos = parentPoint + LeftDownDir * magnitude,
-                    Size = size
+                    _Pos = parentPoint + LeftDownDir * magnitude,
+                    _Size = size
                 },
-                Parent = parentNode,
-                Depth = depth
+                _Parent = parentNode,
+                _Depth = depth
             };
-            parentNode.Childs[3] = new BoundNode()
+            parentNode._Childs[3] = new BoundNode()
             {
-                Bound = new BoundPoint()
+                _Bound = new BoundPoint()
                 {
-                    Pos = parentPoint + RightDownDir * magnitude,
-                    Size = size
+                    _Pos = parentPoint + RightDownDir * magnitude,
+                    _Size = size
                 },
-                Parent = parentNode,
-                Depth = depth
+                _Parent = parentNode,
+                _Depth = depth
             };
 
-            GeneratePoints(parentNode.Childs[0].Bound.Pos, size, depth, parentNode.Childs[0]);
-            GeneratePoints(parentNode.Childs[1].Bound.Pos, size, depth, parentNode.Childs[1]);
-            GeneratePoints(parentNode.Childs[2].Bound.Pos, size, depth, parentNode.Childs[2]);
-            GeneratePoints(parentNode.Childs[3].Bound.Pos, size, depth, parentNode.Childs[3]);
+            GeneratePoints(parentNode._Childs[0]._Bound._Pos, size, depth, parentNode._Childs[0]);
+            GeneratePoints(parentNode._Childs[1]._Bound._Pos, size, depth, parentNode._Childs[1]);
+            GeneratePoints(parentNode._Childs[2]._Bound._Pos, size, depth, parentNode._Childs[2]);
+            GeneratePoints(parentNode._Childs[3]._Bound._Pos, size, depth, parentNode._Childs[3]);
         }
 
         private void GenerateNeighbor(BoundNode parentNode)
@@ -266,8 +298,8 @@ namespace IndieLINY.AI
             Debug.Assert(targetNode.IsLeaf);
             if (parentNode.IsLeaf)
             {
-                Bounds a = parentNode.Bound.GetBounds();
-                Bounds b = targetNode.Bound.GetBounds();
+                Bounds a = parentNode._Bound.GetBounds();
+                Bounds b = targetNode._Bound.GetBounds();
 
                 a.center = transform.InverseTransformPoint(a.center);
                 a.size += (Vector3)Vector2.one * 0.01f;
@@ -277,44 +309,227 @@ namespace IndieLINY.AI
 
                 if (isIntersacts)
                 {
-                    targetNode.Neighbor.Add(parentNode);
+                    targetNode._Neighbor.Add(parentNode);
                 }
             }
             else
             {
-                foreach (var child in parentNode.Childs)
+                foreach (var child in parentNode._Childs)
                 {
                     SetNeighbor(child, targetNode);
                 }
             }
         }
 
-        public void GetNodeFromBox(Vector2 point, Vector2 size, List<BoundNode> nodes, [CanBeNull] Func<BoundNode, bool> condition = null)
+        private void GenerateCornerEdge()
+        {
+            List<BoundNode> nodes = new List<BoundNode>(100);
+            _rootNode.GetLeafCondition(ref nodes, x => x._Bound is { _Collision: false, _IsCorner: true });
+
+            foreach (var node in nodes)
+            {
+                if (node._CornerNeighbor.Any() == false)
+                {
+                    SetCornerEdge(node);
+                }
+            }
+
+            List<BoundNode> results = new List<BoundNode>(10);
+
+            foreach (var node in nodes)
+            {
+                Collider2D callbackCollider = null;
+                foreach (var neighbor in node.Neighbor) 
+                {
+                    if (neighbor.Bound.Collision)
+                    {
+                        callbackCollider = neighbor.Bound.ContactCollider;
+                        break;
+                    }
+                }
+                var callbackNode = node;
+                GetNodeFromBox(node.Bound.Pos, Vector2.one * _cornerConnectivityRadius, results, x =>
+                {
+                    if (x.Bound.IsCorner == false) return false;
+                    if (Vector2.SqrMagnitude(x.Bound.Pos - callbackNode.Bound.Pos) > _cornerConnectivityRadius * _cornerConnectivityRadius) return false;
+
+                    bool pass = false;
+                    foreach (var neighbor in x.Neighbor) 
+                    {
+                        if (neighbor.Bound.Collision & callbackCollider != neighbor.Bound.ContactCollider)
+                        {
+                            pass = true;
+                            break;
+                        }
+                    }
+                    if (pass == false) return false;
+                    
+                    return true;
+                });
+
+
+                foreach (BoundNode resultNode in results)
+                {
+                    if (node == resultNode) continue;
+                    resultNode._CornerNeighbor.Add(node);
+                    node._CornerNeighbor.Add(resultNode);
+                }
+
+                results.Clear();
+            }
+        }
+
+        private void SetCornerEdge(BoundNode startNode)
+        {
+            HashSet<BoundNode> visitor = new HashSet<BoundNode>();
+
+            BoundNode currentNode = startNode;
+            BoundNode lastCornerNode = startNode;
+            Collider2D collider2D = null;
+
+            foreach (BoundNode neighbor in currentNode.Neighbor)
+            {
+                if (neighbor.Bound.ContactCollider)
+                {
+                    collider2D = neighbor.Bound.ContactCollider;
+                    break;
+                }
+            }
+
+            if (collider2D == null)
+            {
+                return;
+            }
+
+            do
+            {
+                visitor.Add(currentNode);
+                BoundNode nextNode = null;
+                bool end = true;
+
+                foreach (var neighbor in currentNode.Neighbor)
+                {
+                    if (visitor.Contains(neighbor))
+                        continue;
+                    if (IsCanExitCornerGen(neighbor, collider2D, visitor) == false) continue;
+
+                    if (neighbor.Bound.IsCorner)
+                    {
+                        foreach (var a in neighbor.Neighbor)
+                        {
+                            if (a.Bound.Collision && collider2D == a.Bound.ContactCollider)
+                            {
+                                nextNode = neighbor;
+                                end = false;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (end == false) break;
+                }
+
+                if (end)
+                {
+                    foreach (BoundNode neighbor in currentNode.Neighbor)
+                    {
+                        if (neighbor.Bound.Collision) continue;
+
+                        if (visitor.Contains(neighbor)) continue;
+
+                        //if (IsCanExitCornerGen(neighbor, collider2D, visitor) == false) continue;
+
+                        foreach (var a in neighbor.Neighbor)
+                        {
+                            if (a.Bound.Collision)
+                            {
+                                if (collider2D != a.Bound.ContactCollider)
+                                    continue;
+
+                                nextNode = neighbor;
+                                end = false;
+                                visitor.Add(neighbor);
+                                break;
+                            }
+                        }
+
+                        if (end == false) break;
+                    }
+                }
+
+                if (end) break;
+
+                if (nextNode.Bound.IsCorner)
+                {
+                    nextNode._CornerNeighbor.Add(lastCornerNode);
+                    lastCornerNode._CornerNeighbor.Add(nextNode);
+                    lastCornerNode = nextNode;
+                }
+
+                currentNode = nextNode;
+            } while (true);
+
+            if (lastCornerNode != startNode)
+            {
+                lastCornerNode._CornerNeighbor.Add(startNode);
+                startNode._CornerNeighbor.Add(lastCornerNode);
+            }
+        }
+
+        private bool IsCanExitCornerGen(BoundNode node, Collider2D col, HashSet<BoundNode> hashSet)
+        {
+            foreach (var neighbor in node.Neighbor)
+            {
+                if (neighbor.Bound.Collision) continue;
+                bool has = false;
+                foreach (var a in neighbor.Neighbor)
+                {
+                    if (a.Bound.Collision && a.Bound.ContactCollider == col)
+                    {
+                        has = true;
+                        break;
+                    }
+                }
+
+                if (has == false) continue;
+
+                if (hashSet.Contains(neighbor) == false)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public void GetNodeFromBox(Vector2 point, Vector2 size, List<BoundNode> nodes,
+            [CanBeNull] Func<BoundNode, bool> condition = null)
         {
             Queue<BoundNode> currentTargets = new Queue<BoundNode>(10);
 
             currentTargets.Enqueue(_rootNode);
             Bounds bounds = new Bounds(point, size);
             bool hasCondition = condition != null;
-            
+
             while (currentTargets.Any())
             {
                 int length = currentTargets.Count;
-                for(int i=0; i<length;i++)
+                for (int i = 0; i < length; i++)
                 {
                     var target = currentTargets.Dequeue();
 
-                    if (hasCondition && condition.Invoke(target) == false) continue;
-                    
-                    if (Intersects(target.Bound.GetBounds(), bounds))
+                    if (Intersects(target._Bound.GetBounds(), bounds))
                     {
                         if (target.IsLeaf)
                         {
-                            nodes.Add(target);
+                            if (hasCondition == false || condition.Invoke(target))
+                            {
+                                nodes.Add(target);
+                            }
                         }
                         else
                         {
-                            foreach (BoundNode child in target.Childs)
+                            foreach (BoundNode child in target._Childs)
                             {
                                 currentTargets.Enqueue(child);
                             }
@@ -327,18 +542,18 @@ namespace IndieLINY.AI
         public BoundNode GetNodeFromPoint(Vector2 point)
         {
             BoundNode currentNode = _rootNode;
-            
+
             var m = transform.worldToLocalMatrix;
             m.SetColumn(3, new Vector4(0f, 0f, 0f, 1f));
-            
+
             while (true)
             {
                 bool isContinue = false;
                 if (currentNode.IsLeaf) return currentNode;
-                
-                foreach (var node in currentNode.Childs)
+
+                foreach (var node in currentNode._Childs)
                 {
-                    var bounds = node.Bound.GetBounds();
+                    var bounds = node._Bound.GetBounds();
                     bounds.center = m.MultiplyPoint(bounds.center);
 
                     if (bounds.Contains(m.MultiplyPoint(point)))
@@ -353,45 +568,61 @@ namespace IndieLINY.AI
                 {
                     return null;
                 }
-                
             }
         }
 
         public BoundNode Root => _rootNode;
-        
+
         private void OnDrawGizmos()
         {
-            Gizmos.DrawWireCube(transform.position, _size * 2);
 
             List<BoundNode> noCollisionLeafs = new List<BoundNode>(100);
             List<BoundNode> neighborLeafs = new List<BoundNode>(100);
             List<BoundNode> cornerLeafs = new List<BoundNode>(100);
+            List<BoundNode> cornerEdgeLeafs = new List<BoundNode>(100);
             if (_rootNode == null) return;
 
-            _rootNode.GetLeafCondition(ref noCollisionLeafs, x => x.Bound.Collision == false);
-            _rootNode.GetLeafCondition(ref neighborLeafs, x => x.Bound.Collision == false && x.Neighbor.Any(y => y.Bound.Collision));
-            _rootNode.GetLeafCondition(ref cornerLeafs, x => x.Bound is { Collision: false, IsCorner: true });
+            _rootNode.GetLeafCondition(ref noCollisionLeafs, x => x._Bound._Collision == false);
+            _rootNode.GetLeafCondition(ref neighborLeafs,
+                x => x._Bound._Collision == false && x._Neighbor.Any(y => y._Bound._Collision));
+            _rootNode.GetLeafCondition(ref cornerLeafs, x => x._Bound is { _Collision: false, _IsCorner: true });
+            _rootNode.GetLeafCondition(ref cornerEdgeLeafs, x => x._CornerNeighbor.Any());
 
+            foreach (var node in cornerEdgeLeafs)
+            {
+                if (DEBUG_CornerNeighborLine == false) break;
+                
+                foreach (BoundNode neighbor in node._CornerNeighbor)
+                {
+                    Gizmos.DrawLine(node._Bound._Pos, neighbor._Bound._Pos);
+                }
+            }
 
             foreach (BoundNode node in noCollisionLeafs)
             {
                 if (DEBUG_NeighborLine == false) break;
 
- 
-                foreach (BoundNode neighbor in node.Neighbor)
+                foreach (BoundNode neighbor in node._Neighbor)
                 {
-
                     Gizmos.color = Color.magenta;
-                    Gizmos.DrawLine( node.Bound.Pos, neighbor.Bound.Pos);
+                    Gizmos.DrawLine(node._Bound._Pos, neighbor._Bound._Pos);
                 }
             }
+
+            var mm = Matrix4x4.TRS(
+                transform.position,
+                transform.rotation,
+                Vector3.one
+            );
+            Gizmos.matrix = mm;
+            Gizmos.DrawWireCube(Vector3.zero, _size * 2);
             
             foreach (var node in noCollisionLeafs)
             {
                 if (DEBUG_BoudingBox == false) break;
 
                 var m = Matrix4x4.TRS(
-                    node.Bound.Pos,
+                    node._Bound._Pos,
                     transform.rotation,
                     Vector3.one
                 );
@@ -399,7 +630,7 @@ namespace IndieLINY.AI
                 Gizmos.matrix = m;
                 Gizmos.color = Color.green;
                 Gizmos.DrawSphere(Vector3.zero, 0.1f);
-                Gizmos.DrawWireCube(Vector3.zero, node.Bound.Size * 2);
+                Gizmos.DrawWireCube(Vector3.zero, node._Bound._Size * 2);
             }
 
             foreach (var node in neighborLeafs)
@@ -407,7 +638,7 @@ namespace IndieLINY.AI
                 if (DEBUG_NeighvorBoudingBox == false) break;
 
                 var m = Matrix4x4.TRS(
-                    node.Bound.Pos,
+                    node._Bound._Pos,
                     transform.rotation,
                     Vector3.one
                 );
@@ -415,7 +646,7 @@ namespace IndieLINY.AI
                 Gizmos.matrix = m;
                 Gizmos.color = Color.yellow;
                 Gizmos.DrawSphere(Vector3.zero, 0.1f);
-                Gizmos.DrawWireCube(Vector3.zero, node.Bound.Size * 2);
+                Gizmos.DrawWireCube(Vector3.zero, node._Bound._Size * 2);
             }
 
             foreach (var node in cornerLeafs)
@@ -423,7 +654,7 @@ namespace IndieLINY.AI
                 if (DEBUG_CornerBoudingBox == false) break;
 
                 var m = Matrix4x4.TRS(
-                    node.Bound.Pos,
+                    node._Bound._Pos,
                     transform.rotation,
                     Vector3.one
                 );
@@ -431,7 +662,7 @@ namespace IndieLINY.AI
                 Gizmos.matrix = m;
                 Gizmos.color = Color.red;
                 Gizmos.DrawSphere(Vector3.zero, 0.1f);
-                Gizmos.DrawWireCube(Vector3.zero, node.Bound.Size * 2);
+                Gizmos.DrawWireCube(Vector3.zero, node._Bound._Size * 2);
             }
         }
     }

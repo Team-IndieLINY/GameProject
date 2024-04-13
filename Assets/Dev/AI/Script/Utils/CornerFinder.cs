@@ -1,52 +1,165 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 namespace IndieLINY.AI
 {
     public class CornerFinder : MonoBehaviour
     {
-        public PathGenerator Generator;
-        public Transform Pivot;
-        public int Step = 4;
-        public float Fov;
-        public float Distance;
-        private List<BoundNode> _nodes = new List<BoundNode>(100);
+        [SerializeField] private PathGenerator _pathGenerator;
 
-        public Vector2 Size;
+        [SerializeField] private int _step;
+        [SerializeField] private Vector2 _size;
+        
+        [FormerlySerializedAs("_randomWeightRange")]
+        
+        [Range(0f, 1f)]
+        [SerializeField] private float _randomWeightProbability;
+        [Range(0f, 1f)]
+        [SerializeField] private float _randomWeight;
+        
+        private BoundNode _curCornerNode;
+        private NavMeshAgent _agent;
 
-        private BoundNode _currentCorner;
-
-        private void Update()
+        public PathGenerator Generator
         {
-            UpdateCloserPointWays();
+            get => _pathGenerator;
+            set => _pathGenerator = value;
+        }
+        public int Step 
+        {
+            get => _step;
+            set => _step = value;
+        }
+        public Vector2 Size 
+        {
+            get => _size;
+            set => _size = value;
         }
 
-        private void UpdateCloserPointWays()
+        public float RandomWeightProbability
         {
-            List<BoundNode> list = new List<BoundNode>(4);
-
-            Vector2 before = Pivot.position;
-            for (int i = 0; i < Step; i++)
+            get => _randomWeightProbability;
+            set
             {
-                var node = GetCornerNode(before, list);
-                if (node == null) continue;
-                before = node.Bound.Pos;
-                list.Add(node);
-            }
+                _randomWeightProbability = value;
 
-            if (list.Count > 0)
-                Debug.DrawLine(Pivot.position, list[0].Bound.Pos);
+                if (_randomWeightProbability > 1f)
+                    _randomWeightProbability = 1f;
 
-            for (int i = 0; i < list.Count - 1; i++)
-            {
-                Debug.DrawLine(list[i].Bound.Pos, list[i + 1].Bound.Pos);
+                if (_randomWeightProbability < 0f)
+                    _randomWeightProbability = 0f;
+
             }
         }
 
-        private BoundNode GetCornerNode(Vector2 point, List<BoundNode> excludeNodes)
+        public float RandomWeight
+        {
+            get => _randomWeight;
+            set => _randomWeight = value;
+        }
+        public void OnEnterState(Vector2 lastSightPoint, NavMeshAgent agent)
+        {
+            _agent = agent;
+            
+            _curCornerNode = GetCornerNode(_agent.transform.position, Size);
+            
+            if (_curCornerNode != null)
+            {
+                _curCornerNode = GetNextCornerNode(_curCornerNode, (lastSightPoint-(Vector2)_curCornerNode.Bound.Pos));
+
+
+                if (_curCornerNode != null)
+                {
+                    _agent.SetDestination(_curCornerNode.Bound.Pos);
+                }
+            }
+
+        }
+
+        [CanBeNull]
+        private Collider2D GetNeighborCollider([NotNull] BoundNode node)
+        {
+            foreach (var neighbor in node.Neighbor)
+            {
+                if (neighbor.Bound.Collision)
+                {
+                    return neighbor.Bound.ContactCollider;
+                }
+            }
+
+            return null;
+        }
+        
+        public void OnUpdate()
+        {
+            if (_curCornerNode == null)
+            {
+                _curCornerNode = GetCornerNode(_agent.transform.position, Size);
+
+                if (_curCornerNode != null)
+                    _agent.SetDestination(_curCornerNode.Bound.Pos);
+            }
+
+            if (_agent.remainingDistance <= 1f && _curCornerNode != null)
+            {
+                _curCornerNode = GetNextCornerNode(_curCornerNode, _agent.desiredVelocity);
+                
+                if (_curCornerNode != null)
+                {
+                    _agent.SetDestination(_curCornerNode.Bound.Pos);
+                }
+            }
+
+        }
+        public BoundNode GetCornerNode(Vector2 point, Vector2 size)
+        {
+            var node = GetCornerNode(point, size, point, new List<BoundNode>(0));
+
+            return node;
+        }
+
+        [CanBeNull]
+        public BoundNode GetNextCornerNode([NotNull] BoundNode node, Vector2 dir)
+        {
+            dir = dir.normalized;
+
+            float dot = Mathf.Infinity;
+            BoundNode result = null;
+            foreach (BoundNode neighbor in node.CornerNeighbor)
+            {
+                Debug.Assert(neighbor != node);
+                var toNeighborDir = (neighbor.Bound.Pos - node.Bound.Pos).normalized;
+
+                float tempDot = 1f - Vector2.Dot(toNeighborDir, dir);
+                float weight = 0f;
+
+                if (Random.Range(0f, 1f) > RandomWeightProbability)
+                {
+                    weight += RandomWeight;
+                }
+                
+                tempDot += weight;
+                
+                if (dot > tempDot)
+                {
+                    dot = tempDot;
+                    result = neighbor;
+                }
+            }
+
+            return result;
+
+        }
+        
+        private BoundNode GetCornerNode(Vector2 originPoint, Vector2 boundingSize, Vector2 point,
+            List<BoundNode> excludeNodes)
         {
             HashSet<BoundNode> hashSet = new HashSet<BoundNode>();
             Queue<BoundNode> currentNodes = new Queue<BoundNode>(100);
@@ -54,9 +167,7 @@ namespace IndieLINY.AI
             var pointNode = Generator.GetNodeFromPoint(point);
 
             if (pointNode == null) return null;
-            if (pointNode.Bound.Collision) return null;
-
-            _currentCorner = pointNode;
+            if (pointNode._Bound._Collision) return null;
 
             currentNodes.Enqueue(pointNode);
 
@@ -68,17 +179,17 @@ namespace IndieLINY.AI
                 for (int i = 0; i < length; i++)
                 {
                     var node = currentNodes.Dequeue();
-                    if (node.Bound.Collision) continue;
+                    if (node._Bound._Collision) continue;
                     if (hashSet.Contains(node)) continue;
                     if (Generator.Intersects(
-                            node.Bound.GetBounds(),
-                            new Bounds(Pivot.position, Size))
+                            node._Bound.GetBounds(),
+                            new Bounds(originPoint, boundingSize))
                         == false)
                         continue;
 
-                    if (node.Bound.IsCorner && excludeNodes.Contains(node) == false)
+                    if (node._Bound._IsCorner && excludeNodes.Contains(node) == false)
                     {
-                        float dis = Vector2.SqrMagnitude(point - node.Bound.Pos);
+                        float dis = Vector2.SqrMagnitude(point - node._Bound._Pos);
                         if (minDis >= dis)
                         {
                             minDis = dis;
@@ -87,12 +198,12 @@ namespace IndieLINY.AI
                     }
 
                     hashSet.Add(node);
-                    foreach (var neighbor in node.Neighbor)
+                    foreach (var neighbor in node._Neighbor)
                     {
-                        if (neighbor.Bound.Collision) continue;
+                        if (neighbor._Bound._Collision) continue;
                         if (Generator.Intersects(
-                                neighbor.Bound.GetBounds(),
-                                new Bounds(Pivot.position, Size))
+                                neighbor._Bound.GetBounds(),
+                                new Bounds(originPoint, boundingSize))
                             == false)
                             continue;
                         currentNodes.Enqueue(neighbor);
@@ -101,23 +212,11 @@ namespace IndieLINY.AI
 
                 if (minNode != null)
                 {
-                    _currentCorner = minNode;
                     return minNode;
                 }
             }
 
             return null;
-        }
-
-        private void OnDrawGizmos()
-        {
-            var m = Matrix4x4.TRS(
-                Pivot.position,
-                Generator.transform.rotation,
-                Vector2.one
-            );
-            Gizmos.matrix = m;
-            Gizmos.DrawWireCube(Vector3.zero, Size);
         }
     }
 }

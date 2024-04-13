@@ -57,9 +57,9 @@ namespace IndieLINY.AI
 
     public abstract class UBaseEnterUpdateExit : Unit
     {
-        [DoNotSerialize] public ControlInput InputEnter;
-        [DoNotSerialize] public ControlInput InputUpdate;
-        [DoNotSerialize] public ControlInput InputExit;
+        [DoNotSerialize] protected ControlInput InputEnter;
+        [DoNotSerialize] protected ControlInput InputUpdate;
+        [DoNotSerialize] protected ControlInput InputExit;
 
         protected sealed override void Definition()
         {
