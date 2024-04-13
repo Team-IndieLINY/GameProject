@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace IndieLINY.AI
 {
-    [UnitCategory("IndieLINY/AI/Unit")]
+    [UnitCategory("IndieLINY/Unit")]
     [UnitTitle("AuditorySpeaker")]
     public class AuditorySpeakerUnit : UBaseI1O1
     {

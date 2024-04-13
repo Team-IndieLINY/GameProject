@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace IndieLINY.AI
 {
-    [UnitCategory("IndieLINY/AI/Unit")]
+    [UnitCategory("IndieLINY/Unit")]
     [UnitTitle("SightPerception")]
     public class SightPerceptionUnit : UBaseI1O1
     {

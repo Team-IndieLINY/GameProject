@@ -9,8 +9,6 @@ using UnityEngine.UI;
 
 namespace IndieLINY.AI
 {
-    [UnitCategory("IndieLINY/AI/Unit")]
-    [UnitTitle("PerceptionMeter")]
     public class PerceptionMeter : MonoBehaviour
     {
         [SerializeField] private float _limitTime;

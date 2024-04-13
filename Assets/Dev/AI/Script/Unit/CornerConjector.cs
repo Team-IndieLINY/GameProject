@@ -9,7 +9,7 @@ using UnityEngine.AI;
 
 namespace IndieLINY.AI
 {
-    [UnitCategory("IndieLINY/AI/Unit")]
+    [UnitCategory("IndieLINY/Unit")]
     [UnitTitle("CornerConjector")]
     public class CornerConjectorUnit : UBaseEnterUpdateExit
     {

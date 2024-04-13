@@ -6,7 +6,7 @@ using UnityEngine.AI;
 
 namespace IndieLINY.AI
 {
-    [UnitCategory("IndieLINY/AI/Unit")]
+    [UnitCategory("IndieLINY/Unit")]
     [UnitTitle("Move to AotList Vector2")]
     public class MoveToAotListVector2 : UBaseI1O1Start
     {

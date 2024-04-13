@@ -83,7 +83,7 @@ namespace IndieLINY.AI
         }
     }
     
-    [UnitCategory("IndieLINY/AI/Unit")]
+    [UnitCategory("IndieLINY/Unit")]
     [UnitTitle("RotatingSearch")]
     public class RotatingSearchUnit : UBaseEnterUpdateExit
     {

@@ -4,10 +4,9 @@ using IndieLINY.Event;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
-
 namespace IndieLINY.AI
 {
-    [UnitCategory("IndieLINY/AI/Unit")]
+    [UnitCategory("IndieLINY/Unit")]
     [UnitTitle("ToMoveNavPoint")]
     public class ToMoveNavPoint : UBaseI1O1
     {
@@ -35,7 +34,7 @@ namespace IndieLINY.AI
         }
     }
     
-    [UnitCategory("IndieLINY/AI/Unit")]
+    [UnitCategory("IndieLINY/Unit")]
     [UnitTitle("ToMoveNavCollisionInteraction")]
     public class ToMoveNavCollisionInteraction : UBaseI1O1
     {
@@ -59,7 +58,7 @@ namespace IndieLINY.AI
         }
     }
     
-    [UnitCategory("IndieLINY/AI/Unit")]
+    [UnitCategory("IndieLINY/Unit")]
     [UnitTitle("ToMoveNavTransform")]
     public class ToMoveNavTransform: UBaseI1O1
     {
