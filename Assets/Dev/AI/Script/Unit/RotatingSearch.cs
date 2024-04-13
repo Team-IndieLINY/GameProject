@@ -6,49 +6,136 @@ using UnityEngine;
 
 namespace IndieLINY.AI
 {
+    using IndieLINY.AI.Core;
+
+    public class RotatingSearch : StateBehaviour
+    {
+        private Vector2 _dir;
+
+        private Vector2 _firstDir;
+        private Vector2 _secondDir;
+
+        private SightPerception _sightPerception;
+
+        private IEnumerator _co;
+
+        public bool IsEnd => _co == null;
+        
+        
+        public void OnStateEnter(SightPerception sightPerception, float angle, float duration)
+        {
+            _dir = sightPerception.Direction;
+            _sightPerception = sightPerception;
+
+            _firstDir = Quaternion.Euler(0f, 0f, angle * 0.5f) * _dir;
+            _secondDir= Quaternion.Euler(0f, 0f, angle * -0.5f) * _dir;
+
+            StartCoroutine(_co = OnUpdate(duration));
+        }
+        
+
+        public IEnumerator OnUpdate(float duration)
+        {
+            var wait = new WaitForEndOfFrame();
+
+            float t = 0f;
+            while (true)
+            {
+                if (t >= 1f)
+                {
+                    break;
+                }
+                
+                var dir = Vector3.Slerp(_dir, _firstDir, t);
+                t += Time.deltaTime / (duration * 0.3333f);
+            
+                _sightPerception.LookAtDirection(dir);
+
+                yield return wait;
+            }
+
+            _dir = _sightPerception.Direction;
+            t = 0f;
+            while (true)
+            {
+                if (t >= 1f)
+                {
+                    break;
+                }
+                
+                var dir = Vector3.Slerp(_dir, _secondDir, t);
+                t += Time.deltaTime / (duration * 0.6666f);
+            
+                _sightPerception.LookAtDirection(dir);
+
+                yield return wait;
+            }
+
+            _co = null;
+        }
+
+        public void OnStateExit()
+        {
+            if(_co != null)
+                StopCoroutine(_co);
+
+            _co = null;
+        }
+    }
+    
     [UnitCategory("IndieLINY/AI/Unit")]
     [UnitTitle("RotatingSearch")]
-    public class RotatingSearch : Unit
+    public class RotatingSearchUnit : UBaseEnterUpdateExit
     {
-        [DoNotSerialize] private ControlInput _cEnter;
-        [DoNotSerialize] private ControlInput _cUpdate;
-        [DoNotSerialize] private ControlOutput _cEnd;
-        [DoNotSerialize] private ValueInput _vTarget;
+        [DoNotSerialize] private ControlOutput _cUpdate;
+        [DoNotSerialize] private ValueInput _vSightPerception;
+        [DoNotSerialize] private ValueInput _vRotationAngle;
         [DoNotSerialize] private ValueInput _vRotationDuration;
-
-        private CollisionInteraction _interaction;
-        private float _currentTime;
-        private float _duration;
-        private Vector3 _currentDir;
-        private Vector3 _targetDir;
         
-        private ControlOutput OnEnter(Flow flow)
+        protected override ControlOutput OnEnter(Flow flow)
         {
-            _currentTime = 0f;
-            _interaction = flow.GetValue<CollisionInteraction>(_vTarget);
-            _duration = flow.GetValue<float>(_vRotationDuration);
-
-            _currentDir = _interaction.transform.right;
-            _targetDir =  Quaternion.Euler(0f, 0f, 356) * _currentDir;
-
+            BehaviourBinder
+                .GetBinder(flow)
+                .GetBehaviour<RotatingSearch>()
+                .OnStateEnter(
+                    flow.GetValue<SightPerception>(_vSightPerception),
+                    flow.GetValue<float>(_vRotationAngle),
+                    flow.GetValue<float>(_vRotationDuration)
+                    );
+            
             return null;
         }
 
-        private ControlOutput OnUpdate(Flow flow)
+        protected override ControlOutput OnUpdate(Flow flow)
         {
             //TODO: sightPerception rotating implementation
             
-            return _cEnd;
+
+            return BehaviourBinder
+                .GetBinder(flow)
+                .GetBehaviour<RotatingSearch>()
+                .IsEnd
+                ? _cUpdate
+                : null;
         }
 
-        protected override void Definition()
+        protected override ControlOutput OnExit(Flow flow)
         {
-            _cEnter = ControlInput("OnEnter", OnEnter);
-            _cUpdate = ControlInput("OnUpdate", OnUpdate);
-            _cEnd = ControlOutput("EndOfRotate");
-            _vTarget = ValueInput<CollisionInteraction>("rotating target");
+            BehaviourBinder
+                .GetBinder(flow)
+                .GetBehaviour<RotatingSearch>()
+                .OnStateExit();
+            
+            return null;
+        }
+
+        protected override void OnDefinition()
+        {
+            _vSightPerception = ValueInput<SightPerception>("SightPerception");
             _vRotationDuration = ValueInput<float>("rotating duration");
+            _vRotationAngle = ValueInput<float>("rotating angle");
+            _cUpdate = ControlOutput("End of update");
         }
     }
-
+    
 }
