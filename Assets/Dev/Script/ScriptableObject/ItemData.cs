@@ -10,4 +10,5 @@ public abstract class ItemData : ScriptableObject
     
     public string ItemName => _itemName;
     public Sprite ItemSprite => _itemSprite;
+    public float LootingTime => _lootingTime;
 }

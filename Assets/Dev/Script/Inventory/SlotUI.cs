@@ -91,6 +91,7 @@ public class SlotUI : VisualElement
             
             RemoveFromClassList("highlighted_slot");
             
+            LootingManager.RegisterLootingTask(Loot);
             await Loot();
         }
         
@@ -102,11 +103,12 @@ public class SlotUI : VisualElement
         public async UniTask Loot()
         {
             _palmingProgressBar.style.visibility = Visibility.Visible;
+            
             while (_palmingProgressBar.value <= _palmingProgressBar.highValue)
             {
-                await UniTask.Delay((int)(Time.deltaTime * 10000));
-
-                _palmingProgressBar.value += (int)(Time.deltaTime * 1000);
+                await UniTask.Delay((int)Time.deltaTime * 1000);
+                
+                _palmingProgressBar.value += _palmingProgressBar.highValue * Time.deltaTime / Slot.Item.ItemData.LootingTime;
             }
             
             _palmingProgressBar.style.visibility = Visibility.Hidden;
