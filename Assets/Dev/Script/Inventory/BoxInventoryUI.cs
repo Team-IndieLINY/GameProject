@@ -33,6 +33,13 @@ public class BoxInventoryUI : InventoryUI
         {
             return;
         }
+
+        if (BoxInventory.Instance.IsLooting())
+        {
+            BoxInventory.Instance.CancelLooting();
+            return;
+        }
+
         
         for (int i = 0; i < BoxInventory.Instance.Slots.Length; i++)
         {
