@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using IndieLINY.Singleton;
 using UnityEngine;
@@ -13,6 +14,7 @@ public class SlotUI : VisualElement
     private VisualElement _itemIcon;
     private Label _itemAmountLabel;
     private ProgressBar _palmingProgressBar;
+    private CancellationTokenSource _cancellationTokenSource = new ();
     
     public Slot Slot { get; set; }
     
@@ -81,7 +83,7 @@ public class SlotUI : VisualElement
             AddToClassList("highlighted_slot");
         }
 
-        private async void OnClickEvent(ClickEvent evt)
+        private void OnClickEvent(ClickEvent evt)
         {
             if(panel.visualTree.name != "BoxInventory")
                 return;
@@ -90,14 +92,36 @@ public class SlotUI : VisualElement
                 return;
             
             RemoveFromClassList("highlighted_slot");
-            
-            LootingManager.RegisterLootingTask(Loot);
-            await Loot();
+
+            if (_cancellationTokenSource == null)
+            {
+                _cancellationTokenSource = new CancellationTokenSource();
+            }
+
+            if (_palmingProgressBar.value != 0)
+            {
+                CancelLoot();
+            }
+            else
+                Loot();
         }
         
         private void OnMouseLeaveEvent(MouseLeaveEvent evt)
         {
             RemoveFromClassList("highlighted_slot");
+        }
+
+        public void CancelLoot()
+        {
+            if (_cancellationTokenSource == null)
+            {
+                Debug.LogError("_cancellationTokenSource == null");
+                return;
+            }
+            
+            _cancellationTokenSource.Cancel();
+            _cancellationTokenSource.Dispose();
+            _cancellationTokenSource = null;
         }
 
         public async UniTask Loot()
@@ -106,7 +130,16 @@ public class SlotUI : VisualElement
             
             while (_palmingProgressBar.value <= _palmingProgressBar.highValue)
             {
-                await UniTask.Delay((int)Time.deltaTime * 1000);
+                try
+                {
+                    await UniTask.Delay((int)Time.deltaTime * 1000, cancellationToken: _cancellationTokenSource.Token);
+                }
+                catch
+                {
+                    _palmingProgressBar.style.visibility = Visibility.Hidden;
+                    _palmingProgressBar.value = 0;
+                    throw;
+                }
                 
                 _palmingProgressBar.value += _palmingProgressBar.highValue * Time.deltaTime / Slot.Item.ItemData.LootingTime;
             }

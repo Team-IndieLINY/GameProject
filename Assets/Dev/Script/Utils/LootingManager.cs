@@ -15,6 +15,11 @@ public class LootingManager
         _lootingTask = lootingTask;
     }
 
+    public static void InvokeLootingTask()
+    {
+        _lootingTask?.Invoke();
+    }
+
     public static bool IsProcessingTask()
     {
         return false;

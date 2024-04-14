@@ -29,6 +29,11 @@ public class BoxInventoryUI : InventoryUI
 
     public async void OnClickTakeAllButton(ClickEvent evt)
     {
+        if (PlayerInventory.Instance.IsFull())
+        {
+            return;
+        }
+        
         for (int i = 0; i < BoxInventory.Instance.Slots.Length; i++)
         {
             if (BoxInventory.Instance.Slots[i].IsEmpty())
@@ -36,12 +41,15 @@ public class BoxInventoryUI : InventoryUI
                 continue;
             }
 
-            if (PlayerInventory.Instance.IsFull())
+            try
+            {
+                await BoxInventory.Instance.Slots[i].SlotUI.Loot();
+            }
+            catch
             {
                 return;
             }
-            
-            await BoxInventory.Instance.Slots[i].SlotUI.Loot();
+
             i--;
         }
     }
