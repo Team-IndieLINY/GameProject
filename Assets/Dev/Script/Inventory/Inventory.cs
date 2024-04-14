@@ -11,27 +11,34 @@ public abstract class Inventory : MonoBehaviour
     
     protected InventoryUI _inventoryUI;
 
-    public Slot[] Slots => _slots;
-    
     #region private method
+    
     #endregion
 
     #region public method
+
+    public void OpenInventory()
+    {
+        _inventoryUI.OpenInventory();
+    }
+
+    public void CloseInventory()
+    {
+        _inventoryUI.CloseInventory();
+    }
     
     public void AddItem(Item item)
     {
+        if (item == null)
+        {
+            return;
+        }
+        
         foreach (var slot in _slots)
         {
             item = slot.AddItem(item);
             slot.SlotUI.UpdateSlotUI();
-
-            if (item == null)
-            {
-                return;
-            }
         }
-        
-        Debug.Log("Inventory is Full");
     }
 
     public void RemoveAtItem(int slotIndex)

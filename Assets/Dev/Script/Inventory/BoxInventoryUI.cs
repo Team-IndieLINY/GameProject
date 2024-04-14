@@ -21,43 +21,12 @@ public class BoxInventoryUI : InventoryUI
         _takeAllButton.RegisterCallback<ClickEvent>(OnClickTakeAllButton);
         
         // _rootVisualElement.style.visibility = Visibility.Hidden;
-        
-        _isOpen = _rootVisualElement.visible;
     }
     
     
 
-    public async void OnClickTakeAllButton(ClickEvent evt)
+    private async void OnClickTakeAllButton(ClickEvent evt)
     {
-        if (PlayerInventory.Instance.IsFull())
-        {
-            return;
-        }
-
-        if (BoxInventory.Instance.IsLooting())
-        {
-            BoxInventory.Instance.CancelLooting();
-            return;
-        }
-
-        
-        for (int i = 0; i < BoxInventory.Instance.Slots.Length; i++)
-        {
-            if (BoxInventory.Instance.Slots[i].IsEmpty())
-            {
-                continue;
-            }
-
-            try
-            {
-                await BoxInventory.Instance.Slots[i].SlotUI.Loot();
-            }
-            catch
-            {
-                return;
-            }
-
-            i--;
-        }
+        BoxInventory.Instance.TakeAll();
     }
 }

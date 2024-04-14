@@ -71,5 +71,39 @@ public class BoxInventory : Inventory
             }
         }
     }
+
+    public async void TakeAll()
+    {
+        if (PlayerInventory.Instance.IsFull())
+        {
+            return;
+        }
+
+        if (IsLooting())
+        {
+            CancelLooting();
+            return;
+        }
+
+        
+        for (int i = 0; i < _slots.Length; i++)
+        {
+            if (_slots[i].IsEmpty())
+            {
+                continue;
+            }
+
+            try
+            {
+                await _slots[i].SlotUI.Loot();
+            }
+            catch
+            {
+                return;
+            }
+
+            i--;
+        }
+    }
     #endregion
 }

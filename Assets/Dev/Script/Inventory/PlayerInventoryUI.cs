@@ -18,24 +18,5 @@ public class PlayerInventoryUI : InventoryUI
         _slotContainerVisualElement = _rootVisualElement.Q<VisualElement>("SlotContainer");
 
         _rootVisualElement.style.visibility = Visibility.Hidden;
-        
-        _isOpen = _rootVisualElement.visible;
-    }
-    
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            if (_isOpen)
-            {
-                _isOpen = false;
-                CloseInventory();
-            }
-            else
-            {
-                _isOpen = true;
-                OpenInventory();
-            }
-        }
     }
 }

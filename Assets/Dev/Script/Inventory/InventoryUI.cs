@@ -15,7 +15,6 @@ public abstract class InventoryUI : MonoBehaviour
     protected Label _headLabel;
 
     protected Inventory _inventory;
-    protected bool _isOpen;
 
     public VisualElement SlotContainerVisualElement => _slotContainerVisualElement;
     
