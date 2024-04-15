@@ -8,7 +8,8 @@ public class PlayerInventoryUI : InventoryUI
 {
     private void Awake()
     {
-        Debug.Assert(TryGetComponent(out PlayerInventory inventory), "inventory is null");
+        var inventory = GetComponent<PlayerInventory>();
+        Debug.Assert(inventory, "inventory is null");
         _inventory = inventory;
         
         _inventoryUIDocument = GetComponent<UIDocument>();

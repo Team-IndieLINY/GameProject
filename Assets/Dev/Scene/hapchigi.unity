@@ -497,6 +497,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51158af71664a7e4384a9f63d57166eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _scenes:
+  - hapchigi
+  - House 1
+  - House 2
+  - House 3
+  - House 4
+  - Randmark 0
+  - Outside
   ChildScenesToLoadConfig:
   - {fileID: 102900000, guid: e3bab1bb4e8e26449856f93d1cabbd84, type: 3}
   - {fileID: 102900000, guid: cfe9ac7f94b0a874db917312ec1d3605, type: 3}

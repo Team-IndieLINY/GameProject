@@ -8,7 +8,8 @@ public class BoxInventoryUI : InventoryUI
     private Button _takeAllButton;
     private void Awake()
     {
-        Debug.Assert(TryGetComponent(out BoxInventory inventory), "inventory is null");
+        var inventory = GetComponent<BoxInventory>();
+        Debug.Assert(inventory, "inventory is null");
         _inventory = inventory;
         
         _inventoryUIDocument = GetComponent<UIDocument>();
