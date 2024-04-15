@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: ControllerData
   m_EditorClassIdentifier: 
   _worldInteractionRadius: 3
-  _movementSpeed: 2
   _crouchSpeed: 1.5
   _sprintSpeed: 5
   _walkSpeed: 3
+  _decreaseEndurancePerSec: 0.5
+  _increaseEndurancePerSec: 0.25

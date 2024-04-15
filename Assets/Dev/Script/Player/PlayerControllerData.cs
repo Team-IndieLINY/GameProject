@@ -13,8 +13,11 @@ namespace IndieLINY
         [SerializeField] private float _walkSpeed;
 
         [SerializeField] private float _decreaseEndurancePerSec;
+        [SerializeField] private float _increaseEndurancePerSec;
 
         public float DecreaseEndurancePerSec => _decreaseEndurancePerSec;
+
+        public float IncreaseEndurancePerSec => _increaseEndurancePerSec;
 
         public float WorldInteractionRadius => _worldInteractionRadius;
 

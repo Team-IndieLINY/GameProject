@@ -15,7 +15,7 @@ namespace IndieLINY
     public class PlayerController : MonoBehaviour
     {
         [SerializeField] private PlayerControllerData _data;
-        [SerializeField] private ISteminaController _steminaController;
+        [SerializeField] private SteminaController _steminaController;
 
         public PlayerControllerData ControllerData => _data;
 
@@ -45,6 +45,20 @@ namespace IndieLINY
 
             WorldInteraction();
             SelfInteraction();
+
+            if (Input.GetKeyDown(KeyCode.Tab))
+            {
+                var instance = PlayerInventory.Instance;
+                
+                if (instance.IsOpened())
+                {
+                    instance.CloseInventory();
+                }
+                else
+                {
+                    instance.OpenInventory();
+                }
+            }
 
             if (Input.GetKeyDown(KeyCode.Alpha0))
             {
@@ -88,6 +102,11 @@ namespace IndieLINY
 
             if (collider.TryGetComponent<CollisionInteraction>(out var ttInteraction))
             {
+                if (ttInteraction.TryGetContractInfo(out ObjectContractInfo info) &&
+                    info.TryGetBehaviour(out IBOSample sample))
+                {
+                    sample.OpenInventory();
+                }
             }
         }
 
@@ -101,6 +120,7 @@ namespace IndieLINY
             };
 
             float currentSpeed = 0f;
+            bool isSprint = false;
 
             if (Input.GetKey(KeyCode.LeftControl) && dir.sqrMagnitude >= 0.001f)
             {
@@ -112,10 +132,18 @@ namespace IndieLINY
 
                 _steminaController?.Decrease(ESteminaType.Endurance,
                     ControllerData.DecreaseEndurancePerSec * Time.deltaTime);
+
+                isSprint = true;
             }
             else if (dir.sqrMagnitude >= 0.001f)
             {
                 currentSpeed = ControllerData.WalkSpeed;
+            }
+
+            if (isSprint is false)
+            {
+                _steminaController?.Increase(ESteminaType.Endurance,
+                    ControllerData.IncreaseEndurancePerSec * Time.deltaTime);
             }
 
             if (IsStopped) return;
