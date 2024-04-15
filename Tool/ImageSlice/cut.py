@@ -1,14 +1,14 @@
 import cv2
 import numpy as np
 
-start_point = (1538, 3257)
+start_point = (1540, 2116)
 pivot = (256, 889)
 #angle = 124.3907145
 angle = 126.86989764584402129685561255909
 halfAngle = angle/2
 size = (512, 1024)
 x_iter_left = 6
-x_iter_right = 6
+x_iter_right = 8
 y_iter = 2
 is_cutting_front = True
 
@@ -32,7 +32,6 @@ def get_standard(position, cur_pivot, cur_size):
 def get_each_vector(cur_pivot, cur_size):
     height = float(cur_size[1] - cur_pivot[1])
     tan_value = np.tan(np.deg2rad(halfAngle)) * height
-    print
     
     
     uleft_vector = np.array([-tan_value, -height])
@@ -173,8 +172,10 @@ def cut_and_save(vector, mask_func, name):
 
     img = image_slice(image, pts, size, is_side, is_left)
 
-    cv2.imwrite(name, img)
-    
+    try:
+        cv2.imwrite(name, img)
+    except:
+        print("error")
 
 for cur_y in range(0, y_iter):
     uleft_vector, uright_vector, dleft_vector, dright_vector = get_each_vector(pivot, size)

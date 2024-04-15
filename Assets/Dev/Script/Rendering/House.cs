@@ -364,7 +364,7 @@ public class House : OrderedObject
         set => gameObject.SetActive(value);
     }
 
-    public override Renderer Renderer => GetComponentInChildren<TilemapRenderer>();
+    public override Renderer Renderer => GetComponentInChildren<Renderer>();
 
 
     private bool _colliderEnabled = true;
