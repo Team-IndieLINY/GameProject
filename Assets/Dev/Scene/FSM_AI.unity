@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 48309742}
   - component: {fileID: 48309744}
   - component: {fileID: 48309743}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Block (11)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -320,7 +320,7 @@ GameObject:
   - component: {fileID: 292389973}
   - component: {fileID: 292389972}
   - component: {fileID: 292389971}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Block
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -476,14 +476,17 @@ PrefabInstance:
         Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null","$version":"A"},"$version":"A"},{"name":"NavAgent","value":{"$content":4,"$type":"UnityEngine.Object"},"typeHandle":{"Identification":"UnityEngine.AI.NavMeshAgent,
         UnityEngine.AIModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null","$version":"A"},"$version":"A"},{"name":"CollisionInteraction","value":{"$content":5,"$type":"UnityEngine.Object"},"typeHandle":{"Identification":"IndieLINY.Event.CollisionInteraction,
         IndieLINY.Event, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null","$version":"A"},"$version":"A"},{"name":"LastSightPosition","value":{"x":0.0,"y":0.0,"$type":"UnityEngine.Vector2"},"typeHandle":{"Identification":"UnityEngine.Vector2,
-        UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null","$version":"A"},"$version":"A"},{"name":"CloseDistance","value":{"$content":2.0,"$type":"System.Single"},"typeHandle":{"Identification":"System.Single,
-        mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089","$version":"A"},"$version":"A"},{"name":"SearchExitCondition","value":{"$content":false,"$type":"System.Boolean"},"typeHandle":{"Identification":"System.Boolean,
+        UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null","$version":"A"},"$version":"A"},{"name":"SearchExitCondition","value":{"$content":false,"$type":"System.Boolean"},"typeHandle":{"Identification":"System.Boolean,
         mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089","$version":"A"},"$version":"A"},{"name":"Shooter","value":{"$content":6,"$type":"UnityEngine.Object"},"typeHandle":{"Identification":"DummyEnemyShooter,
         Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null","$version":"A"},"$version":"A"},{"name":"TargetSurrenderPosition","value":{"x":0.0,"y":0.0,"$type":"UnityEngine.Vector2"},"typeHandle":{"Identification":"UnityEngine.Vector2,
         UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null","$version":"A"},"$version":"A"},{"name":"__BehaviourBinder_GameObject__","value":{"$content":7,"$type":"UnityEngine.Object"},"typeHandle":{"Identification":"UnityEngine.GameObject,
         UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null","$version":"A"},"$version":"A"},{"name":"PatrolPathFinder","value":{"$content":8,"$type":"UnityEngine.Object"},"typeHandle":{"Identification":"IndieLINY.AI.Core.PatrolPointPath,
         Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null","$version":"A"},"$version":"A"},{"name":"PatrolPoint","value":null,"typeHandle":{"Identification":"IndieLINY.AI.Core.PatrolPoint,
-        Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null","$version":"A"},"$version":"A"}],"$version":"A"},"$version":"A"}}'
+        Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null","$version":"A"},"$version":"A"},{"name":"CloseDistance","value":{"$content":2.0,"$type":"System.Single"},"typeHandle":{"Identification":"System.Single,
+        mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089","$version":"A"},"$version":"A"},{"name":"TraceSpeed","value":{"$content":3.0,"$type":"System.Single"},"typeHandle":{"Identification":"System.Single,
+        mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089","$version":"A"},"$version":"A"},{"name":"NormalSpeed","value":{"$content":1.0,"$type":"System.Single"},"typeHandle":{"Identification":"System.Single,
+        mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089","$version":"A"},"$version":"A"},{"name":"TimeOfRank4Search","value":{"$content":30.0,"$type":"System.Single"},"typeHandle":{"Identification":"System.Single,
+        mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089","$version":"A"},"$version":"A"}],"$version":"A"},"$version":"A"}}'
       objectReference: {fileID: 0}
     - target: {fileID: 4415101083320072728, guid: b9fb7f4cf2f05ed47a0619939f924dea, type: 3}
       propertyPath: _data._objectReferences.Array.size
@@ -545,6 +548,18 @@ PrefabInstance:
       propertyPath: _patrollPoints.Array.data[7]._interactiveDecoratorObject
       value: 
       objectReference: {fileID: 1719222299}
+    - target: {fileID: 5617733569983728297, guid: b9fb7f4cf2f05ed47a0619939f924dea, type: 3}
+      propertyPath: _rank1FindingTime
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5617733569983728297, guid: b9fb7f4cf2f05ed47a0619939f924dea, type: 3}
+      propertyPath: _rank2FindingTime
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5617733569983728297, guid: b9fb7f4cf2f05ed47a0619939f924dea, type: 3}
+      propertyPath: _rank3FindingTime
+      value: 0.0001
+      objectReference: {fileID: 0}
     - target: {fileID: 5723020753729806403, guid: b9fb7f4cf2f05ed47a0619939f924dea, type: 3}
       propertyPath: m_Name
       value: Agent
@@ -605,7 +620,7 @@ GameObject:
   - component: {fileID: 368918872}
   - component: {fileID: 368918874}
   - component: {fileID: 368918873}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Block (13)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -707,7 +722,7 @@ GameObject:
   - component: {fileID: 375401836}
   - component: {fileID: 375401835}
   - component: {fileID: 375401834}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Block (14)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -861,7 +876,7 @@ GameObject:
   - component: {fileID: 379283722}
   - component: {fileID: 379283724}
   - component: {fileID: 379283723}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Block (10)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -963,7 +978,7 @@ GameObject:
   - component: {fileID: 509127863}
   - component: {fileID: 509127862}
   - component: {fileID: 509127861}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Block (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1617,7 +1632,7 @@ GameObject:
   - component: {fileID: 695443640}
   - component: {fileID: 695443643}
   - component: {fileID: 695443642}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Block (7)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1719,7 +1734,7 @@ GameObject:
   - component: {fileID: 700570937}
   - component: {fileID: 700570936}
   - component: {fileID: 700570935}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Block (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1980,7 +1995,7 @@ GameObject:
   - component: {fileID: 884431974}
   - component: {fileID: 884431973}
   - component: {fileID: 884431972}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Block (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2429,7 +2444,7 @@ GameObject:
   - component: {fileID: 1105681265}
   - component: {fileID: 1105681268}
   - component: {fileID: 1105681267}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Block (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2662,7 +2677,7 @@ GameObject:
   - component: {fileID: 1433564075}
   - component: {fileID: 1433564078}
   - component: {fileID: 1433564077}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Block (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2799,7 +2814,7 @@ GameObject:
   - component: {fileID: 1543429520}
   - component: {fileID: 1543429519}
   - component: {fileID: 1543429518}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Block (12)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2953,7 +2968,7 @@ GameObject:
   - component: {fileID: 1620509643}
   - component: {fileID: 1620509646}
   - component: {fileID: 1620509645}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Block (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3130,7 +3145,7 @@ GameObject:
   - component: {fileID: 1906471966}
   - component: {fileID: 1906471965}
   - component: {fileID: 1906471964}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Block (8)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3285,7 +3300,7 @@ GameObject:
   - component: {fileID: 1927886198}
   - component: {fileID: 1927886197}
   - component: {fileID: 1927886196}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Block (9)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -11,7 +11,11 @@ namespace IndieLINY.AI
 {
     public class PerceptionMeter : MonoBehaviour
     {
-        [SerializeField] private float _limitTime;
+        [SerializeField] private float _rank1FindingTime;
+        [SerializeField] private float _rank2FindingTime;
+        [SerializeField] private float _rank3FindingTime;
+        
+        
         [SerializeField] private float _decreaseDuration;
         [SerializeField] private float _waitDuration;
         [SerializeField] private Image _fillGage;
@@ -45,6 +49,26 @@ namespace IndieLINY.AI
 
                 OnRankUp(_rank);
             }
+        }
+
+        public float GetFindingTimeWithRank()
+        {
+            float time = 1f;
+
+            if (Rank == 0 || Rank == 1)
+            {
+                time = _rank1FindingTime;
+            }
+            else if (Rank == 2)
+            {
+                time = _rank2FindingTime;
+            }
+            else
+            {
+                time = _rank3FindingTime;
+            }
+
+            return time;
         }
 
         public AotList Contracts
@@ -102,7 +126,10 @@ namespace IndieLINY.AI
         private void Update()
         {
             _state?.Invoke();
-            Value = _totalGage / _limitTime;
+
+            float time = GetFindingTimeWithRank();
+            
+            Value = _totalGage / time;
 
             if (Rank == 0 && _parameters.Any())
             {
@@ -125,7 +152,7 @@ namespace IndieLINY.AI
         {
             Rank -= 1;
             Value = 1f;
-            _totalGage = _limitTime;
+            _totalGage = GetFindingTimeWithRank();
         }
 
         private void OnRankUp(int rank)
@@ -158,9 +185,9 @@ namespace IndieLINY.AI
                 _totalGage += item.StepTime;
             }
 
-            if (_totalGage >= _limitTime)
+            if (_totalGage >= GetFindingTimeWithRank())
             {
-                _totalGage = _limitTime;
+                _totalGage = GetFindingTimeWithRank();
             }
         }
 
