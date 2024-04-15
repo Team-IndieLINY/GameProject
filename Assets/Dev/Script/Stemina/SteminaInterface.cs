@@ -36,6 +36,12 @@ namespace IndieLINY
         /// <param name="type">스테미나 타입</param>
         /// <param name="normalizedValue">0~1 범위의 정규화된 스테미나 값</param>
         public void Decrease(ESteminaType type, float normalizedValue);
+
+        /// <summary>
+        /// 해당 타입의 스테미나를 초기값으로 리셋합니다.
+        /// </summary>
+        /// <param name="type">스테미나 타입</param>
+        public void ResetStemina(ESteminaType type);
     }
 
 }
