@@ -1,0 +1,5 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="Container" style="flex-grow: 1; align-items: flex-end; justify-content: flex-end; background-image: url(&apos;project://database/Assets/Dev/Art/Sprite/background_basecamp_1.jpg?fileID=2800000&amp;guid=b229a411e5adb1b41b3a9f644ccc6313&amp;type=3#background_basecamp_1&apos;);">
+        <ui:Button text="외출하기" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Button" style="width: 536px; font-size: 40px;" />
+    </ui:VisualElement>
+</ui:UXML>
