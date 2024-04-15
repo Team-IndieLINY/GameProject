@@ -37,6 +37,16 @@ public abstract class Inventory : MonoBehaviour
         {
             return;
         }
+
+        if (item is CountableItem)
+        {
+            CountableItem countableItem = item as CountableItem;
+            
+            if (countableItem.CurrentAmount == 0)
+            {
+                return;
+            }
+        }
         
         foreach (var slot in _slots)
         {
@@ -67,6 +77,14 @@ public abstract class Inventory : MonoBehaviour
         }
         
         _inventoryUI.SetInventoryUI(_inventoryData);
+    }
+
+    public void ResetInventory()
+    {
+        foreach (var slot in _slots)
+        {
+            slot.ResetSlot();
+        }
     }
 
     public bool IsFull()

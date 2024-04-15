@@ -53,6 +53,7 @@ namespace IndieLINY
                 if (instance.IsOpened())
                 {
                     instance.CloseInventory();
+                    BoxInventory.Instance.CloseInventory();
                 }
                 else
                 {
@@ -105,7 +106,10 @@ namespace IndieLINY
                 if (ttInteraction.TryGetContractInfo(out ObjectContractInfo info) &&
                     info.TryGetBehaviour(out IBOSample sample))
                 {
-                    sample.OpenInventory();
+                    if (Input.GetKeyDown(KeyCode.E) && BoxInventory.Instance.IsOpened() is false)
+                    {
+                        sample.OpenInventory();
+                    }
                 }
             }
         }
@@ -113,6 +117,10 @@ namespace IndieLINY
 
         private void Move()
         {
+            if (BoxInventory.Instance.IsOpened())
+            {
+                return;
+            }
             var dir = new Vector2()
             {
                 x = Input.GetAxisRaw("Horizontal"),

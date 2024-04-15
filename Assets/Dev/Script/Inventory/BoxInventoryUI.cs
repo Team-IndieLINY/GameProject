@@ -20,7 +20,7 @@ public class BoxInventoryUI : InventoryUI
         _takeAllButton = _rootVisualElement.Q<Button>("TakeAllButton");
         _takeAllButton.RegisterCallback<ClickEvent>(OnClickTakeAllButton);
         
-        // _rootVisualElement.style.visibility = Visibility.Hidden;
+        _rootVisualElement.style.visibility = Visibility.Hidden;
     }
     
     

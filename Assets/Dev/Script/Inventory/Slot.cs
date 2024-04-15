@@ -38,6 +38,12 @@ public class Slot
 
         CountableItem countableItem = (CountableItem)item;
 
+        if (countableItem.CurrentAmount == 0)
+        {
+            Debug.Log("ss");
+            return null;
+        }
+
         int sumAmount = countableItem.CurrentAmount + ((CountableItem)_item).CurrentAmount;
         int itemMaxAmount = ((CountableItemData)countableItem.ItemData).MaxStack;
 
@@ -83,6 +89,12 @@ public class Slot
             _item = null;
         }
         
+        _slotUI.UpdateSlotUI();
+    }
+
+    public void ResetSlot()
+    {
+        _item = null;
         _slotUI.UpdateSlotUI();
     }
 

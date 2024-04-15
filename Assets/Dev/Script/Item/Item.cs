@@ -1,11 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 
+
 public abstract class Item
 {
-    [NotNull] private readonly ItemData _itemData;
+    [NotNull, SerializeField] private ItemData _itemData;
     public ItemData ItemData => _itemData;
 
     protected Item(ItemData itemData)

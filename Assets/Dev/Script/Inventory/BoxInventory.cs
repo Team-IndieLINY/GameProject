@@ -18,8 +18,6 @@ public class BoxInventory : Inventory
             return _instance;
         }
     }
-    
-    [SerializeField] private CountableItemData _testItem;
 
     #region private method
 
@@ -35,10 +33,6 @@ public class BoxInventory : Inventory
     private void Start()
     {
         SetInventory();
-
-        AddItem(new CountableItem(_testItem, 3));
-        AddItem(new CountableItem(_testItem, 2));
-        AddItem(new CountableItem(_testItem, 2));
     }
 
     #endregion

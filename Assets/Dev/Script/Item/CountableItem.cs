@@ -1,11 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+[Serializable]
 public class CountableItem : Item
 {
-    private int _currentAmount = 0;
+    [SerializeField] private int _currentAmount = 0;
     public int CurrentAmount => _currentAmount;
 
     public CountableItem(CountableItemData countableItemData, int currentAmount) : base(countableItemData)
