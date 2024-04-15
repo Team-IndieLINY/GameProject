@@ -10,6 +10,7 @@ namespace IndieLINY.Editor
     using UnityEditor;
     
     [CustomEditor(typeof(InteractiveDecoratorObject))]
+    [CanEditMultipleObjects]
     internal class InteractiveDecoratorObjectEditor : UnityEditor.Editor
     {
         private void OnSceneGUI()

@@ -19,7 +19,7 @@ namespace IndieLINY.AI
 
         private IEnumerator _co;
 
-        public bool IsEnd => _co == null;
+        [DoNotSerialize] public bool IsEnd => _co == null;
         
         
         public void OnStateEnter(SightPerception sightPerception, float angle, float duration)
@@ -34,7 +34,7 @@ namespace IndieLINY.AI
         }
         
 
-        public IEnumerator OnUpdate(float duration)
+        private IEnumerator OnUpdate(float duration)
         {
             var wait = new WaitForEndOfFrame();
 

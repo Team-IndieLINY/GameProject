@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 using IndieLINY.Event;
@@ -11,6 +13,11 @@ namespace IndieLINY
     {
         [SerializeField] private CollisionInteraction _interaction;
         [SerializeField] private Vector2 _interactingPivot;
+        [SerializeField] private float _waitDuration;
+
+        [SerializeField] private InteractiveDecoratorObjectData _data;
+
+        public InteractiveDecoratorObjectData Data => _data;
 
         public Vector2 InteractingPositionWorld
         {
@@ -25,6 +32,12 @@ namespace IndieLINY
         }
         
         public CollisionInteraction Interaction => _interaction;
+        public async UniTask<IBObjectDecoratedObject> Interact(CancellationToken token)
+        {
+            await UniTask.Delay(TimeSpan.FromSeconds(_waitDuration), DelayType.DeltaTime, PlayerLoopTiming.Update, token);
+
+            return this;
+        }
 
         private void Awake()
         {
