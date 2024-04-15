@@ -240,32 +240,37 @@ public class House : OrderedObject
         {
             SetEnable(false, module.fronts);
             SetEnable(false, module.backs);
+            SetEnable(false, module.inners);
             SetEnable(false, module.floors);
-            SetEnable(true, module.fronts_collider);
-            SetEnable(true, module.backs_collider);
+            SetEnable(false, module.fronts_collider);
+            SetEnable(false, module.backs_collider);
 
-            SetAlpha(module.backs, 1f, false);
+            //SetAlpha(module.backs, 1f, false);
 
-            module.fronts.ForEach(x =>
-            {
-                if (module.floor != CurrentFloor) x.IsEnabled = false;
-            });
-            module.backs.ForEach(x =>
-            {
-                if (module.floor != CurrentFloor) x.IsEnabled = false;
-            });
-            module.floors.ForEach(x =>
-            {
-                if (module.floor != CurrentFloor) x.IsEnabled = false;
-            });
-            module.fronts_collider.ForEach(x =>
-            {
-                if (module.floor != CurrentFloor) x.IsEnabled = false;
-            });
-            module.backs_collider.ForEach(x =>
-            {
-                if (module.floor != CurrentFloor) x.IsEnabled = false;
-            });
+           //module.fronts.ForEach(x =>
+           //{
+           //    if (module.floor != CurrentFloor) 
+           //});
+           //module.backs.ForEach(x =>
+           //{
+           //    if (module.floor != CurrentFloor) x.IsEnabled = false;
+           //});
+           //module.inners.ForEach(x =>
+           //{
+           //    if (module.floor != CurrentFloor) x.IsEnabled = false;
+           //});
+           //module.floors.ForEach(x =>
+           //{
+           //    if (module.floor != CurrentFloor) x.IsEnabled = false;
+           //});
+           //module.fronts_collider.ForEach(x =>
+           //{
+           //    if (module.floor != CurrentFloor) x.IsEnabled = false;
+           //});
+           //module.backs_collider.ForEach(x =>
+           //{
+           //    if (module.floor != CurrentFloor) x.IsEnabled = false;
+           //});
         }
     }
 
