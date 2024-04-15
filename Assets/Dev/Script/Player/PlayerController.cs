@@ -140,6 +140,11 @@ namespace IndieLINY
 
                 _steminaController?.Decrease(ESteminaType.Endurance,
                     ControllerData.DecreaseEndurancePerSec * Time.deltaTime);
+                
+                if (_steminaController.GetStemina(ESteminaType.Endurance) <= 0f)
+                {
+                    currentSpeed = ControllerData.WalkSpeed;
+                }
 
                 isSprint = true;
             }
