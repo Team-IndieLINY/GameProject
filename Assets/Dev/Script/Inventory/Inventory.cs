@@ -26,7 +26,11 @@ public abstract class Inventory : MonoBehaviour
     {
         _inventoryUI.CloseInventory();
     }
-    
+
+    public bool IsOpened()
+    {
+        return _inventoryUI.IsOpened();
+    }
     public void AddItem(Item item)
     {
         if (item == null)

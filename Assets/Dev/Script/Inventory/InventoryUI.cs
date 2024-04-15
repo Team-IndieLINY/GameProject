@@ -28,6 +28,11 @@ public abstract class InventoryUI : MonoBehaviour
     {
         _rootVisualElement.style.visibility = Visibility.Hidden;
     }
+
+    public bool IsOpened()
+    {
+        return _rootVisualElement.visible;
+    }
     
     public void SetInventoryUI(InventoryData inventoryData)
     {
