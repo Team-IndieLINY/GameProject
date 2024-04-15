@@ -126,7 +126,7 @@ namespace IndieLINY.AI
         //TODO: test 전용 코드, 수정 요망
         public static PathGenerator Test_Instance { get; private set; }
 
-        private void Awake()
+        private void Start()
         {
             Test_Instance = this;
             

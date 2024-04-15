@@ -233,7 +233,7 @@ MonoBehaviour:
       Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null","$version":"A"},"$version":"A"},{"name":"TargetSurrenderPosition","value":{"x":0.0,"y":0.0,"$type":"UnityEngine.Vector2"},"typeHandle":{"Identification":"UnityEngine.Vector2,
       UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null","$version":"A"},"$version":"A"},{"name":"__BehaviourBinder_GameObject__","value":{"$content":7,"$type":"UnityEngine.Object"},"typeHandle":{"Identification":"UnityEngine.GameObject,
       UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null","$version":"A"},"$version":"A"},{"name":"PatrolPathFinder","value":{"$content":8,"$type":"UnityEngine.Object"},"typeHandle":{"Identification":"IndieLINY.AI.Core.PatrolPointPath,
-      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null","$version":"A"},"$version":"A"},{"name":"PatrolPoint","value":null,"typeHandle":{"Identification":"IndieLINY.AI.Core.PatrolPointPath,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null","$version":"A"},"$version":"A"},{"name":"PatrolPoint","value":null,"typeHandle":{"Identification":"IndieLINY.AI.Core.PatrolPoint,
       Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null","$version":"A"},"$version":"A"}],"$version":"A"},"$version":"A"}}'
     _objectReferences:
     - {fileID: 7944839371231357573}
@@ -500,84 +500,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Points:
   - Neighbors:
-    - 306143ff7d3a29e41a4c1cc38afa6fe4
-    Guid: 7cc99bd0cd9e5414a8c7881645c9c34f
+    - 924bf4f5957d289489ce2e95048e4b9e
+    Guid: f7f65eae658c07d4e87ee94fcc41a60f
     IsStartPoint: 1
-    Position: {x: -9.51, y: -6.8199997, z: 0}
+    Position: {x: 39.44832, y: -0.12834647, z: 0}
     InteractiveDecoratorObject: {fileID: 0}
   - Neighbors:
-    - 7cc99bd0cd9e5414a8c7881645c9c34f
-    - 140dfa8d35021c442872c5372835e482
-    Guid: 306143ff7d3a29e41a4c1cc38afa6fe4
+    - f7f65eae658c07d4e87ee94fcc41a60f
+    Guid: 924bf4f5957d289489ce2e95048e4b9e
     IsStartPoint: 0
-    Position: {x: -18.386345, y: -1.9117365, z: 0}
+    Position: {x: 43.760742, y: 3.333193, z: 0}
     InteractiveDecoratorObject: {fileID: 0}
-  - Neighbors:
-    - 306143ff7d3a29e41a4c1cc38afa6fe4
-    - bc6397ca8c21f3240b1660c650785971
-    Guid: 140dfa8d35021c442872c5372835e482
-    IsStartPoint: 0
-    Position: {x: -12.330638, y: 4.0564322, z: 0}
-    InteractiveDecoratorObject: {fileID: 0}
-  - Neighbors:
-    - 140dfa8d35021c442872c5372835e482
-    - 597cf2a6df1d5864ba81d8c4cf842313
-    Guid: bc6397ca8c21f3240b1660c650785971
-    IsStartPoint: 0
-    Position: {x: -10.935982, y: 8.57123, z: 0}
-    InteractiveDecoratorObject: {fileID: 0}
-  - Neighbors:
-    - bc6397ca8c21f3240b1660c650785971
-    - 2f5904eb95f73cc4ba84b54f778ae464
-    Guid: 597cf2a6df1d5864ba81d8c4cf842313
-    IsStartPoint: 0
-    Position: {x: -1.3125498, y: 2.0750358, z: 0}
-    InteractiveDecoratorObject: {fileID: 0}
-  - Neighbors:
-    - 597cf2a6df1d5864ba81d8c4cf842313
-    - dfea465553c072c4da3d658769dec436
-    Guid: 2f5904eb95f73cc4ba84b54f778ae464
-    IsStartPoint: 0
-    Position: {x: -3.5717347, y: -0.11622846, z: 0}
-    InteractiveDecoratorObject: {fileID: 0}
-  - Neighbors:
-    - 2f5904eb95f73cc4ba84b54f778ae464
-    - 6e4ce38ac9daa4a489a1e1015850e4c7
-    Guid: dfea465553c072c4da3d658769dec436
-    IsStartPoint: 0
-    Position: {x: -0.56612396, y: -6.7070575, z: 0}
-    InteractiveDecoratorObject: {fileID: 0}
-  - Neighbors:
-    - dfea465553c072c4da3d658769dec436
-    Guid: 6e4ce38ac9daa4a489a1e1015850e4c7
-    IsStartPoint: 0
-    Position: {x: -5.00446, y: -11.350868, z: 0}
-    InteractiveDecoratorObject: {fileID: 0}
-  SelectedGuid: dfea465553c072c4da3d658769dec436
+  SelectedGuid: 924bf4f5957d289489ce2e95048e4b9e
   _patrollPoints:
   - _interactiveDecoratorObject: {fileID: 0}
-    _position: {x: -9.51, y: -6.8199997, z: 0}
-    _nextPosition: {x: -18.386345, y: -1.9117365, z: 0}
+    _position: {x: 39.44832, y: -0.12834647, z: 0}
+    _nextPosition: {x: 43.760742, y: 3.333193, z: 0}
   - _interactiveDecoratorObject: {fileID: 0}
-    _position: {x: -18.386345, y: -1.9117365, z: 0}
-    _nextPosition: {x: -12.330638, y: 4.0564322, z: 0}
-  - _interactiveDecoratorObject: {fileID: 0}
-    _position: {x: -12.330638, y: 4.0564322, z: 0}
-    _nextPosition: {x: -10.935982, y: 8.57123, z: 0}
-  - _interactiveDecoratorObject: {fileID: 0}
-    _position: {x: -10.935982, y: 8.57123, z: 0}
-    _nextPosition: {x: -1.3125498, y: 2.0750358, z: 0}
-  - _interactiveDecoratorObject: {fileID: 0}
-    _position: {x: -1.3125498, y: 2.0750358, z: 0}
-    _nextPosition: {x: -3.5717347, y: -0.11622846, z: 0}
-  - _interactiveDecoratorObject: {fileID: 0}
-    _position: {x: -3.5717347, y: -0.11622846, z: 0}
-    _nextPosition: {x: -0.56612396, y: -6.7070575, z: 0}
-  - _interactiveDecoratorObject: {fileID: 0}
-    _position: {x: -0.56612396, y: -6.7070575, z: 0}
-    _nextPosition: {x: -5.00446, y: -11.350868, z: 0}
-  - _interactiveDecoratorObject: {fileID: 0}
-    _position: {x: -5.00446, y: -11.350868, z: 0}
+    _position: {x: 43.760742, y: 3.333193, z: 0}
     _nextPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &7139687222247414568
 GameObject:
@@ -906,7 +846,7 @@ MonoBehaviour:
   _agent: {fileID: 1081245648823385360}
   _cullingLayer:
     serializedVersion: 2
-    m_Bits: 129
+    m_Bits: 144
 --- !u!1 &8955123532499699887
 GameObject:
   m_ObjectHideFlags: 0
