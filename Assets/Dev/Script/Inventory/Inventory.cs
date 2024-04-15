@@ -25,6 +25,10 @@ public abstract class Inventory : MonoBehaviour
     public void CloseInventory()
     {
         _inventoryUI.CloseInventory();
+        if (this is BoxInventory)
+        {
+            (this as BoxInventory)?.CancelLooting();
+        }
     }
 
     public bool IsOpened()

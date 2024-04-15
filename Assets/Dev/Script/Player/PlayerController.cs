@@ -117,10 +117,6 @@ namespace IndieLINY
 
         private void Move()
         {
-            if (BoxInventory.Instance.IsOpened())
-            {
-                return;
-            }
             var dir = new Vector2()
             {
                 x = Input.GetAxisRaw("Horizontal"),
@@ -157,6 +153,11 @@ namespace IndieLINY
             {
                 _steminaController?.Increase(ESteminaType.Endurance,
                     ControllerData.IncreaseEndurancePerSec * Time.deltaTime);
+            }
+            
+            if (BoxInventory.Instance.IsOpened())
+            {
+                currentSpeed = 0f;
             }
 
             if (IsStopped) return;
