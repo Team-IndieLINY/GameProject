@@ -227,14 +227,17 @@ MonoBehaviour:
       Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null","$version":"A"},"$version":"A"},{"name":"NavAgent","value":{"$content":4,"$type":"UnityEngine.Object"},"typeHandle":{"Identification":"UnityEngine.AI.NavMeshAgent,
       UnityEngine.AIModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null","$version":"A"},"$version":"A"},{"name":"CollisionInteraction","value":{"$content":5,"$type":"UnityEngine.Object"},"typeHandle":{"Identification":"IndieLINY.Event.CollisionInteraction,
       IndieLINY.Event, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null","$version":"A"},"$version":"A"},{"name":"LastSightPosition","value":{"x":0.0,"y":0.0,"$type":"UnityEngine.Vector2"},"typeHandle":{"Identification":"UnityEngine.Vector2,
-      UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null","$version":"A"},"$version":"A"},{"name":"CloseDistance","value":{"$content":2.0,"$type":"System.Single"},"typeHandle":{"Identification":"System.Single,
-      mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089","$version":"A"},"$version":"A"},{"name":"SearchExitCondition","value":{"$content":false,"$type":"System.Boolean"},"typeHandle":{"Identification":"System.Boolean,
+      UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null","$version":"A"},"$version":"A"},{"name":"SearchExitCondition","value":{"$content":false,"$type":"System.Boolean"},"typeHandle":{"Identification":"System.Boolean,
       mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089","$version":"A"},"$version":"A"},{"name":"Shooter","value":{"$content":6,"$type":"UnityEngine.Object"},"typeHandle":{"Identification":"DummyEnemyShooter,
       Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null","$version":"A"},"$version":"A"},{"name":"TargetSurrenderPosition","value":{"x":0.0,"y":0.0,"$type":"UnityEngine.Vector2"},"typeHandle":{"Identification":"UnityEngine.Vector2,
       UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null","$version":"A"},"$version":"A"},{"name":"__BehaviourBinder_GameObject__","value":{"$content":7,"$type":"UnityEngine.Object"},"typeHandle":{"Identification":"UnityEngine.GameObject,
       UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null","$version":"A"},"$version":"A"},{"name":"PatrolPathFinder","value":{"$content":8,"$type":"UnityEngine.Object"},"typeHandle":{"Identification":"IndieLINY.AI.Core.PatrolPointPath,
       Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null","$version":"A"},"$version":"A"},{"name":"PatrolPoint","value":null,"typeHandle":{"Identification":"IndieLINY.AI.Core.PatrolPoint,
-      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null","$version":"A"},"$version":"A"}],"$version":"A"},"$version":"A"}}'
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null","$version":"A"},"$version":"A"},{"name":"CloseDistance","value":{"$content":2.0,"$type":"System.Single"},"typeHandle":{"Identification":"System.Single,
+      mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089","$version":"A"},"$version":"A"},{"name":"TraceSpeed","value":{"$content":3.0,"$type":"System.Single"},"typeHandle":{"Identification":"System.Single,
+      mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089","$version":"A"},"$version":"A"},{"name":"NormalSpeed","value":{"$content":1.0,"$type":"System.Single"},"typeHandle":{"Identification":"System.Single,
+      mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089","$version":"A"},"$version":"A"},{"name":"TimeOfRank4Search","value":{"$content":30.0,"$type":"System.Single"},"typeHandle":{"Identification":"System.Single,
+      mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089","$version":"A"},"$version":"A"}],"$version":"A"},"$version":"A"}}'
     _objectReferences:
     - {fileID: 7944839371231357573}
     - {fileID: 3628880328781950621}
@@ -509,15 +512,15 @@ MonoBehaviour:
     - f7f65eae658c07d4e87ee94fcc41a60f
     Guid: 924bf4f5957d289489ce2e95048e4b9e
     IsStartPoint: 0
-    Position: {x: 43.760742, y: 3.333193, z: 0}
+    Position: {x: -18.386345, y: -1.9117365, z: 0}
     InteractiveDecoratorObject: {fileID: 0}
-  SelectedGuid: 924bf4f5957d289489ce2e95048e4b9e
+  SelectedGuid: 
   _patrollPoints:
   - _interactiveDecoratorObject: {fileID: 0}
     _position: {x: 39.44832, y: -0.12834647, z: 0}
-    _nextPosition: {x: 43.760742, y: 3.333193, z: 0}
+    _nextPosition: {x: -18.386345, y: -1.9117365, z: 0}
   - _interactiveDecoratorObject: {fileID: 0}
-    _position: {x: 43.760742, y: 3.333193, z: 0}
+    _position: {x: -18.386345, y: -1.9117365, z: 0}
     _nextPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &7139687222247414568
 GameObject:
@@ -730,7 +733,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d484ef3b00ab7df4189a10e5c01765d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _limitTime: 2
+  _rank1FindingTime: 1
+  _rank2FindingTime: 0.5
+  _rank3FindingTime: 0.0001
   _decreaseDuration: 1
   _waitDuration: 1
   _fillGage: {fileID: 981739286912197871}
