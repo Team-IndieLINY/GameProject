@@ -10,9 +10,13 @@ namespace IndieLINY
     public class PlayerAudioSpeaker : AuditorySpeaker
     {
         [SerializeField] private PlayerAudioSpeakerData _data;
+        [SerializeField] private Renderer _audioVisualizer;
+        [SerializeField] private PlayerController _controller;
         public PlayerAudioSpeakerData SpeakerData => _data;
         private void Update()
         {
+                
+                
             var dir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 
             float curRadius = 0f;
@@ -23,7 +27,7 @@ namespace IndieLINY
                 curRadius = SpeakerData.CrouchRadius;
                 curRadiusSpeed = SpeakerData.CrouchRadiusSpeed;
             }
-            else if (Input.GetKey(KeyCode.LeftShift) && dir.sqrMagnitude >= 0.001f)
+            else if (Input.GetKey(KeyCode.LeftShift) && dir.sqrMagnitude >= 0.001f && _controller.SteminaController.GetStemina(ESteminaType.Endurance) > 0f)
             {
                 curRadius = SpeakerData.SprintRadius;
                 curRadiusSpeed = SpeakerData.SprintRadiusSpeed;
@@ -39,6 +43,8 @@ namespace IndieLINY
                 curRadiusSpeed = SpeakerData.IdleRadiusSpeed;
             }
 
+            _audioVisualizer.transform.localScale = Vector3.one * curRadius * 2f;
+            
             dir.Normalize();
             this.PlayWithNoStop(curRadiusSpeed, curRadius);
         }

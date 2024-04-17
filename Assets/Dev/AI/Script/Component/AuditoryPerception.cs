@@ -11,6 +11,11 @@ namespace IndieLINY.AI
     {
         public CollisionInteraction MasterInteraction => _interaction;
         [SerializeField] private CollisionInteraction _interaction;
+        [SerializeField] private AuditoryPerceptionData _data;
+        
+        private CircleCollider2D _collider;
+
+        public AuditoryPerceptionData Data => _data;
 
         public List<CollisionInteraction> Contracts { get; private set; }
 
@@ -22,6 +27,12 @@ namespace IndieLINY.AI
         private void Awake()
         {
             Contracts = new List<CollisionInteraction>(2);
+            _collider = GetComponent<CircleCollider2D>();
+        }
+
+        private void Update()
+        {
+            _collider.radius = Data.ListeningRadius;
         }
 
         private void OnTriggerEnter2D(Collider2D other)

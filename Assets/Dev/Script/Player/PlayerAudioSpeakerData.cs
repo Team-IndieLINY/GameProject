@@ -7,15 +7,20 @@ namespace IndieLINY
     [CreateAssetMenu(menuName = "IndieLINY/PlayerData/AudioSpeaker", fileName = "AudioSpeakerData")]
     public class PlayerAudioSpeakerData : ScriptableObject
     {
-        [Header("소리 반지름")]
+        [Header("웅크리기 소리 반지름 (meter)")]
         [SerializeField] private float _crouchRadius;
+        [Header("달리기 소리 반지름 (meter)")]
         [SerializeField] private float _sprintRadius;
+        [Header("걷기 소리 반지름 (meter)")]
         [SerializeField] private float _walkRadius;
         
-        [Header("각 소리 반지름으로 전환되는 속도")]
+        [Header("웅크리기 소리 반지름으로 전환되는 시간 (sec)")]
         [SerializeField] private float _crouchRadiusSpeed;
+        [Header("달리기 소리 반지름으로 전환되는 시간 (sec)")]
         [SerializeField] private float _sprintRadiusSpeed;
+        [Header("걷기 소리 반지름으로 전환되는 시간 (sec)")]
         [SerializeField] private float _walkRadiusSpeed;
+        [Header("가만히 있을 때 소리 반지름으로 전환되는 시간 (sec)")]
         [SerializeField] private float _idleRadiusSpeed;
 
         public float CrouchRadius => _crouchRadius;

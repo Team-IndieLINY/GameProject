@@ -12,8 +12,10 @@ namespace IndieLINY.AI
 {
     public class SightPerception : MonoBehaviour
     {
-        public float Fov;
-        public float Distance;
+        [SerializeField] private SightPerceptionData _data;
+
+        public SightPerceptionData Data => _data;
+
         public int Iteration;
         public Vector2 Forward = Vector2.right;
         
@@ -25,6 +27,7 @@ namespace IndieLINY.AI
         [SerializeField] private PerceptionMeter _perceptionMeter;
         [SerializeField] private NavMeshAgent _agent;
         [SerializeField] private LayerMask _cullingLayer;
+        [SerializeField] private Renderer _sightVisualizer;
 
         public List<CollisionInteraction> Contracts { get; private set; }
 
@@ -53,11 +56,25 @@ namespace IndieLINY.AI
             {
                 Direction = _agent.desiredVelocity.normalized;
             }
+
+            if (_sightVisualizer)
+            {
+                _sightVisualizer.transform.localScale = Vector3.one * Data.Distance * 2f;
+                _sightVisualizer.transform.up = -(Quaternion.Euler(0f, 0f,Data.Fov * 0.5f) * Direction);
+                var er = _sightVisualizer.transform.rotation.eulerAngles;
+                er.x = 45f;
+                _sightVisualizer.transform.eulerAngles = er;
+                _sightVisualizer.material.SetFloat("_Fan", Data.Fov / 360f);
+
+                er = transform.rotation.eulerAngles;
+                er.x = 45f;
+                transform.eulerAngles = er;
+            }
         }
 
         public void MeshUpdate()
         {
-            GenerateVisionMesh(Fov, Distance, Iteration, Forward);
+            GenerateVisionMesh(Data.Fov, Data.Distance, Iteration, Forward);
         }
 
         public Mesh CreateMesh(bool useBodyPosition, bool useBodyRotation)
@@ -73,14 +90,14 @@ namespace IndieLINY.AI
 
             if (Mathf.Approximately(dir.sqrMagnitude, 0f))
             {
-                dir = Direction;
+                dir = Direction.normalized;
             }
             else
             {
-                Direction = dir;
+                Direction = dir.normalized;
             }
 
-            transform.right = dir;
+            transform.right = dir.normalized;
         }
         public void LookAtDirection(Vector2 dir)
         {
@@ -88,11 +105,11 @@ namespace IndieLINY.AI
 
             if (Mathf.Approximately(dir.sqrMagnitude, 0f))
             {
-                dir = Direction;
+                dir = Direction.normalized;
             }
             else
             {
-                Direction = dir;
+                Direction = dir.normalized;
             }
 
             transform.right = dir;
@@ -144,7 +161,7 @@ namespace IndieLINY.AI
             var hits = Physics2D.RaycastAll(
                 myPos,
                 targetPos - myPos,
-                Distance,
+                Data.Distance,
                 _cullingLayer.value
             );
 

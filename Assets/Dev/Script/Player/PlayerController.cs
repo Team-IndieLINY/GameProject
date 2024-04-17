@@ -16,8 +16,9 @@ namespace IndieLINY
     {
         [SerializeField] private PlayerControllerData _data;
         [SerializeField] private SteminaController _steminaController;
-
+        
         public PlayerControllerData ControllerData => _data;
+        public SteminaController SteminaController => _steminaController;
 
         public Rigidbody2D Rigid2D;
 
@@ -42,7 +43,7 @@ namespace IndieLINY
         private void Update()
         {
             Move();
-
+            
             WorldInteraction();
             SelfInteraction();
 

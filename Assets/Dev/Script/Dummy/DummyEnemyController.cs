@@ -8,19 +8,10 @@ public class DummyEnemyController : MonoBehaviour
 {
     public NavMeshAgent Agent;
     public SightPerception SightPerception;
-    
-    private Vector2 _dir;
-    
+    public Renderer _viewVisualizer;
+
     private void Update()
     {
-        if (Mathf.Approximately(Agent.desiredVelocity.magnitude, 0f))
-        {
-            return;
-        }
-
-        _dir = Agent.desiredVelocity;
-        //SightPerception.transform.right = _dir;
-
-
+        var dir = SightPerception.Direction;
     }
 }

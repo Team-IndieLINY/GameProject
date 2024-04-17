@@ -11,14 +11,11 @@ namespace IndieLINY.AI
 {
     public class PerceptionMeter : MonoBehaviour
     {
-        [SerializeField] private float _rank1FindingTime;
-        [SerializeField] private float _rank2FindingTime;
-        [SerializeField] private float _rank3FindingTime;
-        
-        
-        [SerializeField] private float _decreaseDuration;
-        [SerializeField] private float _waitDuration;
+        [SerializeField] private PerceptionMeterData _Data;
+
         [SerializeField] private Image _fillGage;
+
+        public PerceptionMeterData Data => _Data;
 
         private List<PerceptionParameterItem> _parameters = new(2);
 
@@ -57,15 +54,15 @@ namespace IndieLINY.AI
 
             if (Rank == 0 || Rank == 1)
             {
-                time = _rank1FindingTime;
+                time = Data.Rank1FindingTime;
             }
             else if (Rank == 2)
             {
-                time = _rank2FindingTime;
+                time = Data.Rank2FindingTime;
             }
             else
             {
-                time = _rank3FindingTime;
+                time = Data.Rank3FindingTime;
             }
 
             return time;
@@ -199,7 +196,7 @@ namespace IndieLINY.AI
                 return;
             }
 
-            _totalGage -= Time.deltaTime / _decreaseDuration;
+            _totalGage -= Time.deltaTime / Data.DecreaseDuration;
             
             if (_totalGage < 0f)
             {
@@ -218,7 +215,7 @@ namespace IndieLINY.AI
 
             _waitTimer += Time.deltaTime;
 
-            if (_waitTimer >= _waitDuration)
+            if (_waitTimer >= Data.WaitDuration)
             {
                 _waitTimer = 0f;
                 _state = NoDetectingGage;
