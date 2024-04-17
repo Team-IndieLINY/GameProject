@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,12 +21,12 @@ public class BoxInventoryUI : InventoryUI
         
         _takeAllButton = _rootVisualElement.Q<Button>("TakeAllButton");
         _takeAllButton.RegisterCallback<ClickEvent>(OnClickTakeAllButton);
-        
+
+        _tooltipUI = new TooltipUI(_rootVisualElement.Q<VisualElement>("Tooltip"));
+
         _rootVisualElement.style.visibility = Visibility.Hidden;
     }
     
-    
-
     private async void OnClickTakeAllButton(ClickEvent evt)
     {
         BoxInventory.Instance.TakeAll();

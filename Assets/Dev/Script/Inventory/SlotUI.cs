@@ -137,6 +137,7 @@ public class SlotUI : VisualElement
         _itemAmountLabel.style.fontSize = 25;
         _itemAmountLabel.style.unityFontStyleAndWeight = FontStyle.Bold;
         _itemAmountLabel.style.alignSelf = Align.FlexEnd;
+        _itemAmountLabel.pickingMode = PickingMode.Ignore;
 
         _palmingProgressBar = new ProgressBar();
 
@@ -144,55 +145,111 @@ public class SlotUI : VisualElement
 
         itemFrameUI.AddToClassList("item_frame");
         itemFrameUI.Add(_itemIcon);
+        itemFrameUI.pickingMode = PickingMode.Ignore;
 
         _itemIcon.AddToClassList("item_icon");
         _itemIcon.Add(_palmingProgressBar);
         _itemIcon.Add(_itemAmountLabel);
+        _itemIcon.pickingMode = PickingMode.Ignore;
 
         _palmingProgressBar.style.visibility = Visibility.Hidden;
+        _palmingProgressBar.pickingMode = PickingMode.Ignore;
 
         RegisterCallback<MouseEnterEvent>(OnMouseEnterEvent);
         RegisterCallback<MouseLeaveEvent>(OnMouseLeaveEvent);
         RegisterCallback<ClickEvent>(OnClickEvent);
+        RegisterCallback<MouseMoveEvent>(OnMouseMove);
     }
 
     private void OnMouseEnterEvent(MouseEnterEvent evt)
     {
         AddToClassList("highlighted_slot");
+        
+        //Caution: 인벤토리 종류가 확장되면 아래 코드는 위험할 수 있음
+        Inventory instance = panel.visualTree.name == "PlayerInventory" ? PlayerInventory.Instance : BoxInventory.Instance;
+        
+        if (Slot.IsEmpty())
+        {
+            instance.CloseTooltipUI();
+            return;
+        }
+        
+        instance.SetTooltipUI(Slot.Item);
+        instance.SetTooltipUIPosition(this.ChangeCoordinatesTo(parent, evt.localMousePosition));
+        instance.OpenTooltipUI();
+    }
+
+    private void OnMouseMove(MouseMoveEvent evt)
+    {
+        Inventory instance = panel.visualTree.name == "PlayerInventory" ? PlayerInventory.Instance : BoxInventory.Instance;
+        
+        instance.SetTooltipUIPosition(this.ChangeCoordinatesTo(parent, evt.localMousePosition));
     }
 
     private void OnClickEvent(ClickEvent evt)
     {
-        if (panel.visualTree.name != "BoxInventory")
-            return;
-
         if (Slot.IsEmpty())
             return;
-
-        RemoveFromClassList("highlighted_slot");
-
-        if (_cancellationTokenSource == null)
+        
+        if (panel.visualTree.name == "BoxInventory")
         {
-            _cancellationTokenSource = new CancellationTokenSource();
-        }
+            RemoveFromClassList("highlighted_slot");
 
-        if (BoxInventory.Instance.IsLooting())
+            if (_cancellationTokenSource == null)
+            {
+                _cancellationTokenSource = new CancellationTokenSource();
+            }
+
+            if (BoxInventory.Instance.IsLooting())
+            {
+                BoxInventory.Instance.CancelLooting();
+                return;
+            }
+            
+            if (_palmingProgressBar.value != 0)
+                CancelLoot();
+            else
+                Loot();
+        }
+        else if (panel.visualTree.name == "PlayerInventory")
         {
-            BoxInventory.Instance.CancelLooting();
-            return;
+            if (BoxInventory.Instance.IsOpened() is false)
+            {
+                return;
+            }
+            RemoveFromClassList("highlighted_slot");
+            
+            if (_cancellationTokenSource == null)
+            {
+                _cancellationTokenSource = new CancellationTokenSource();
+            } 
+
+            if (BoxInventory.Instance.IsLooting())
+            {
+                BoxInventory.Instance.CancelLooting();
+                return;
+            }
+
+            Item item = Slot.Item.Clone() as Item;
+
+            if (item is CountableItem)
+            {
+                (item as CountableItem).SetAmount(1);
+            }
+            
+            BoxInventory.Instance.AddItem(item);
+            Slot.RemoveItem();
         }
-
-
-
-        if (_palmingProgressBar.value != 0)
-            CancelLoot();
-        else
-            Loot();
     }
 
     private void OnMouseLeaveEvent(MouseLeaveEvent evt)
     {
         RemoveFromClassList("highlighted_slot");
+        
+        //Caution: 인벤토리 종류가 확장되면 아래 코드는 위험할 수 있음
+        Inventory instance = panel.visualTree.name == "PlayerInventory" ? PlayerInventory.Instance : BoxInventory.Instance;
+        
+        instance.CloseTooltipUI();
     }
 
     #endregion

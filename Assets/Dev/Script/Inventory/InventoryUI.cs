@@ -15,6 +15,7 @@ public abstract class InventoryUI : MonoBehaviour
     protected Label _headLabel;
 
     protected Inventory _inventory;
+    protected TooltipUI _tooltipUI;
 
     public VisualElement SlotContainerVisualElement => _slotContainerVisualElement;
     
@@ -33,6 +34,26 @@ public abstract class InventoryUI : MonoBehaviour
     {
         return _rootVisualElement.visible;
     }
+
+    public void SetTooltipUI(Item item)
+    {
+        _tooltipUI.SetTooltipUI(item);
+    }
+
+    public void OpenTooltipUI()
+    {
+        _tooltipUI.OpenTooltipUI();
+    }
+    
+    public void CloseTooltipUI()
+    {
+        _tooltipUI.CloseTooltipUI();
+    }
+
+    public void SetTooltipUIPosition(Vector2 mousePosition)
+    {
+        _tooltipUI.SetTooltipPosition(mousePosition);
+    }
     
     public void SetInventoryUI(InventoryData inventoryData)
     {
@@ -48,6 +69,7 @@ public abstract class InventoryUI : MonoBehaviour
         
         SetInventoryUI(inventoryData);
     }
+    
     #endregion
     #region private method
     

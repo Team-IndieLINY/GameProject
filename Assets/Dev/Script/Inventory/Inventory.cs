@@ -35,6 +35,27 @@ public abstract class Inventory : MonoBehaviour
     {
         return _inventoryUI.IsOpened();
     }
+    
+    public void SetTooltipUI(Item item)
+    {
+        _inventoryUI.SetTooltipUI(item);
+    }
+
+    public void OpenTooltipUI()
+    {
+        _inventoryUI.OpenTooltipUI();
+    }
+    
+    public void CloseTooltipUI()
+    {
+        _inventoryUI.CloseTooltipUI();
+    }
+
+    public void SetTooltipUIPosition(Vector2 mousePosition)
+    {
+        _inventoryUI.SetTooltipUIPosition(mousePosition);
+    }
+    
     public void AddItem(Item item)
     {
         if (item == null)

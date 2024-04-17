@@ -17,7 +17,9 @@ public class PlayerInventoryUI : InventoryUI
         _containerElement = _rootVisualElement.Q<VisualElement>("Container");
         _headLabel = _rootVisualElement.Q<Label>("HeadLabel");
         _slotContainerVisualElement = _rootVisualElement.Q<VisualElement>("SlotContainer");
-
+        
+        _tooltipUI = new TooltipUI(_rootVisualElement.Q<VisualElement>("Tooltip"));
+        
         _rootVisualElement.style.visibility = Visibility.Hidden;
     }
 }

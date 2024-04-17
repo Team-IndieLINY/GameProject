@@ -7,5 +7,19 @@
         <ui:VisualElement name="Body" style="flex-grow: 1; -unity-background-image-tint-color: rgb(0, 0, 0); background-color: rgb(103, 103, 103); flex-direction: column; flex-wrap: nowrap;">
             <ui:VisualElement name="SlotContainer" style="flex-grow: 1; flex-direction: row; flex-wrap: wrap;" />
         </ui:VisualElement>
+        <ui:VisualElement name="Tooltip" picking-mode="Ignore" style="flex-grow: 1; position: absolute; height: 323px; width: 303px; top: 77px; left: 888px; background-color: rgb(99, 99, 99); visibility: hidden;">
+            <ui:VisualElement name="Head" picking-mode="Ignore" style="flex-grow: 0; height: 47px; background-color: rgb(204, 204, 204);">
+                <ui:Label tabindex="-1" text="Tooltip" parse-escape-sequences="true" display-tooltip-when-elided="true" picking-mode="Ignore" style="font-size: 25px; -unity-font-style: bold;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="Body" picking-mode="Ignore" style="flex-grow: 1;">
+                <ui:VisualElement name="DescriptionHead" picking-mode="Ignore" style="flex-grow: 0; flex-direction: row; flex-wrap: nowrap; height: 102px;">
+                    <ui:VisualElement name="ItemIcon" picking-mode="Ignore" style="flex-grow: 0; height: 80px; width: 80px; margin-top: 5px; margin-left: 5px; background-color: rgb(255, 255, 255);" />
+                    <ui:Label tabindex="-1" text="아이템 이름" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ItemName" picking-mode="Ignore" style="font-size: 20px; -unity-font-style: bold;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="DescriptionBody" picking-mode="Ignore" style="flex-grow: 1;">
+                    <ui:Label tabindex="-1" text="Label" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ItemDescription" picking-mode="Ignore" style="-unity-font-style: bold; font-size: 19px;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

@@ -4,8 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 
-
-public abstract class Item
+public abstract class Item : ICloneable
 {
     [NotNull, SerializeField] private ItemData _itemData;
     public ItemData ItemData => _itemData;
@@ -29,4 +28,6 @@ public abstract class Item
     {
         return (_itemData != null ? _itemData.GetHashCode() : 0);
     }
+
+    public abstract object Clone();
 }

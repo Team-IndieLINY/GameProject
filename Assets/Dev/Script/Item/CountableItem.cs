@@ -46,4 +46,9 @@ public class CountableItem : Item
         return false;
     }
 
+
+    public override object Clone()
+    {
+        return MemberwiseClone();
+    }
 }

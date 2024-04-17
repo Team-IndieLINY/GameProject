@@ -15,4 +15,5 @@ MonoBehaviour:
   _itemName: Band
   _itemSprite: {fileID: 21300000, guid: 7a3339999ee82a648a6be9f974c7d386, type: 3}
   _lootingTime: 2
+  _itemDescription: "\uC774\uAC74 \uCD08\uCF5C\uB9BF\uC778\uB385"
   _maxStack: 5
