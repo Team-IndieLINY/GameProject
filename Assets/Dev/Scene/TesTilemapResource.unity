@@ -3047,6 +3047,7 @@ GameObject:
   - component: {fileID: 902885541}
   - component: {fileID: 902885540}
   - component: {fileID: 902885543}
+  - component: {fileID: 902885544}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -3097,7 +3098,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 6.13
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -3172,6 +3173,21 @@ MonoBehaviour:
     mipBias: 0
     varianceClampScale: 0.9
     contrastAdaptiveSharpening: 0
+--- !u!114 &902885544
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 902885539}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffc46fa8137ff834d8982d1257962b33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  A: {fileID: 1023296183}
+  B: {fileID: 948045044}
+  current: {fileID: 0}
 --- !u!1 &932346488
 GameObject:
   m_ObjectHideFlags: 0
@@ -3344,6 +3360,37 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1616467373}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1023296182
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1023296183}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1023296183
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1023296182}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.07, y: 9.15, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1054156957
 GameObject:
@@ -6169,3 +6216,4 @@ SceneRoots:
   - {fileID: 1616467373}
   - {fileID: 668246328}
   - {fileID: 732306157}
+  - {fileID: 1023296183}
