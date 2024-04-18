@@ -27,7 +27,7 @@ public class BoxInventoryUI : InventoryUI
         _rootVisualElement.style.visibility = Visibility.Hidden;
     }
     
-    private async void OnClickTakeAllButton(ClickEvent evt)
+    private void OnClickTakeAllButton(ClickEvent evt)
     {
         BoxInventory.Instance.TakeAll();
     }

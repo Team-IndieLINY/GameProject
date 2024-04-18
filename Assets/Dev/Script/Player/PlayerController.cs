@@ -68,8 +68,6 @@ namespace IndieLINY
             }
         }
 
-        private bool _isOpen = false;
-
         private void SelfInteraction()
         {
         }
