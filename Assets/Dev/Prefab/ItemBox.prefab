@@ -51,7 +51,7 @@ MonoBehaviour:
   _countableItems:
   - _itemData: {fileID: 11400000, guid: 28d92c396ba00a54190643ee4b780e1d, type: 2}
     _currentAmount: 3
-  - _itemData: {fileID: 11400000, guid: e6995d1f2e2fb6244a8c4d0e806d1fee, type: 2}
+  - _itemData: {fileID: 11400000, guid: 937921e83df512c4997ea88a77feb66c, type: 2}
     _currentAmount: 1
   - _itemData: {fileID: 11400000, guid: 59a07030e58e56b45a7574737602077b, type: 2}
     _currentAmount: 2

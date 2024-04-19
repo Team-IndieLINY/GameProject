@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _rank1FindingTime: 1
   _rank2FindingTime: 0.5
-  _rank3FindingTime: 0.001
+  _rank3FindingTime: 0.5
   _decreaseDuration: 1
   _waitDuration: 1

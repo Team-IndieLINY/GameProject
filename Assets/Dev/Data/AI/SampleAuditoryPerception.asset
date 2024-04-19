@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e5a9b5ecf40c2e489fa4f2c1d17cc5c, type: 3}
   m_Name: SampleAuditoryPerception
   m_EditorClassIdentifier: 
-  _listeningRadius: 1.7
+  _listeningRadius: 0.3

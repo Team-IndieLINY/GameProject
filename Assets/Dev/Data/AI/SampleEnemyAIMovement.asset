@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5817b9294cd54a945a0ec9ffa1ec06b3, type: 3}
   m_Name: SampleEnemyAIMovement
   m_EditorClassIdentifier: 
-  _NormalMovementSpeed: 1.5
+  _NormalMovementSpeed: 1.2
   _TraceMovementSpeed: 3
-  _TimeOfRank4MovementSpeed: 15
+  _TimeOfRank4MovementSpeed: 3
   _TimeOfRank4SearchEnd: 0

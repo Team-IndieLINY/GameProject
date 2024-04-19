@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: BoxInventoryData
   m_EditorClassIdentifier: 
   _inventoryName: Box Inventory
+  _cellCount: 4
   _rowCount: 4
   _columnCount: 4
-  _cellCount: 10
   _cellHorizontalSize: 1
   _cellVerticalSize: 1
