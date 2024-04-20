@@ -13,5 +13,5 @@ public class GameDataTable : ScriptableObject
 	//public List<EntityType> Skill_Master; // Replace 'EntityType' to an actual type that is serializable.
 	//public List<EntityType> Action_Master; // Replace 'EntityType' to an actual type that is serializable.
 	//public List<EntityType> String_Master; // Replace 'EntityType' to an actual type that is serializable.
-	//public List<EntityType> Time_Master; // Replace 'EntityType' to an actual type that is serializable.
+	public List<TimeData> Time_Master; // Replace 'EntityType' to an actual type that is serializable.
 }
