@@ -21,8 +21,7 @@ namespace IndieLINY.AI
 
         [DoNotSerialize] public bool IsEnd => _co == null;
         
-        
-        public void OnStateEnter(SightPerception sightPerception, float angle, float duration)
+        public void StateEnter(SightPerception sightPerception, float angle, float duration)
         {
             _dir = sightPerception.Direction;
             _sightPerception = sightPerception;
@@ -97,7 +96,7 @@ namespace IndieLINY.AI
             BehaviourBinder
                 .GetBinder(flow)
                 .GetBehaviour<RotatingSearch>()
-                .OnStateEnter(
+                .StateEnter(
                     flow.GetValue<SightPerception>(_vSightPerception),
                     flow.GetValue<float>(_vRotationAngle),
                     flow.GetValue<float>(_vRotationDuration)
