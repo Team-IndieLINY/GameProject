@@ -139,9 +139,14 @@ def image_slice(image, pts, cur_size, is_side, is_left):
         height = tan_value * (cur_size[0] / 2)
         offset_y = int(np.ceil(height))
 
+    yy = canvas.shape[0] - resized_image.shape[0] - offset_y
+
+    if yy < 0:
+        yy = 0
+
     if(is_left):
         canvas[
-            canvas.shape[0] - resized_image.shape[0] - offset_y:canvas.shape[0] - resized_image.shape[0] - offset_y + resized_image.shape[0],
+            yy : yy + resized_image.shape[0],
             0:resized_image.shape[1]
             ] = resized_image
     else:
@@ -151,7 +156,7 @@ def image_slice(image, pts, cur_size, is_side, is_left):
             half_canvas_size = half_canvas_size - 1
 
         canvas[
-            canvas.shape[0] - resized_image.shape[0] - offset_y:canvas.shape[0] - resized_image.shape[0] - offset_y + resized_image.shape[0],
+            yy : yy + resized_image.shape[0],
             half_canvas_size: half_canvas_size + resized_image.shape[1]
             ] = resized_image
         
