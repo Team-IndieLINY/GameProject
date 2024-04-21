@@ -321,8 +321,9 @@ def input_and_save(image_name, mask_all_func, input_message):
         x_iter_left = input_number("left iteration: ")
         x_iter_right = input_number("right iteration: ")   
         #y_iter = input_number("y iteration: ") 문제가 생겨서 1로 고정   
-        y_iter = 1
+        tag = input("tag: ") 
         print("\n")
+        y_iter = 1
 
         image, mask_all, is_back = mask_all_func(image_name, cur_size, cur_pos, x_iter_left, x_iter_right, y_iter)
 
@@ -350,12 +351,12 @@ def input_and_save(image_name, mask_all_func, input_message):
                 cur_x = 0
                 for pts in item[0]:
                     img = image_slice(rimage, pts, cur_size, is_back, True)
-                    cv2.imwrite(f"{global_file_name}_{input_message}_left_x{cur_x+1}_y{cur_y+1}.png", img)
+                    cv2.imwrite(f"{global_file_name}_{input_message}_left_x{cur_x+1}_{tag}.png", img)
                     cur_x = cur_x + 1
                 cur_x = 0
                 for pts in item[1]:
                     img = image_slice(rimage, pts, cur_size, is_back, False)
-                    cv2.imwrite(f"{global_file_name}_{input_message}_right_x{cur_x+1}_y{cur_y+1}.png", img)
+                    cv2.imwrite(f"{global_file_name}_{input_message}_right_x{cur_x+1}_{tag}.png", img)
                     cur_x = cur_x + 1
                 cur_y = cur_y + 1
             break
@@ -366,9 +367,9 @@ global_file_name = input("enter file name: ")
 
 
 input_and_save("front.png", get_mask_front,"front")
-input_and_save("front.png", get_mask_front,"front_col")
+input_and_save("front_col.png", get_mask_front,"front_col")
 input_and_save("back.png", get_mask_back,"back")
-input_and_save("back.png", get_mask_back, "back_col")
+input_and_save("back_col.png", get_mask_back, "back_col")
 
 #save_image_front("1.png", size, start_point, "render")
 #save_image_front("1.png", (512, 512), start_point, "col")
