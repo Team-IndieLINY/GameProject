@@ -12,7 +12,7 @@ public class House : OrderedObject, IOrderedDescriptor
 {
     [Range(1, 10)] [SerializeField] private int _currentFloor = 1;
 
-    public int MaxFloor { get; private set; }= 1;
+    public int MaxFloor { get; private set; } = 1;
 
     private List<HouseModule> _modules = new(10);
 
@@ -22,19 +22,16 @@ public class House : OrderedObject, IOrderedDescriptor
     {
         Descriptor = this;
         Owner = this;
-        
+
         BindModules();
-        
+
         OnUpdate().Forget();
     }
 
     private void Start()
     {
-        OnOutside(new HouseEvent()
-        {
-            PassEvent = EHousePassEvent.Outside,
-            TriggerActor = null
-        });
+        ResetModules();
+        OnOutside();
     }
 
     public override void Init()
@@ -51,15 +48,23 @@ public class House : OrderedObject, IOrderedDescriptor
                 queue.Enqueue(queuedTransform.GetChild(i));
             }
         }
-        
+
         var queue = new Queue<Transform>(10);
 
         queue.Enqueue(transform);
+        bool first = true;
 
         while (queue.Any())
         {
             var queuedTransform = queue.Dequeue();
+
+            if (first == false && queuedTransform.TryGetComponent<House>(out var house))
+            {
+                continue;
+            }
             
+            first = false;
+
             if (queuedTransform.TryGetComponent<HouseModule>(out var module))
             {
                 _modules.Add(module);
@@ -69,7 +74,6 @@ public class House : OrderedObject, IOrderedDescriptor
             {
                 TransformEnqueue(queue, queuedTransform);
             }
-            
         }
 
         foreach (HouseModule module in _modules)
@@ -129,21 +133,29 @@ public class House : OrderedObject, IOrderedDescriptor
     {
         foreach (HouseModule module in _modules)
         {
-            module.ForEach(x=>x.Descriptor.OnEvent(EHouseBroadcastEvent.Reset));
+            module.ForEach(x => x.Descriptor.OnEvent(EHouseBroadcastEvent.Reset));
+        }
+        
+        foreach (HousePass housePass in CurrentFloorModule.Pass)
+        {
+            housePass.gameObject.SetActive(true);
+        }
+        foreach (var modules in ExcludedCurrentFloorModule)
+        {
+            foreach (var pass in modules.Pass)
+            {
+                pass.gameObject.SetActive(false);
+            }
         }
     }
 
-    private void OnValidate()
-    {
-        
-    }
-
     public OrderedObject Owner { get; set; }
+
     public void OnEvent(EHouseBroadcastEvent e)
     {
         ResetModules();
         
-        _modules.ForEach(x=>x.ForEach(y=>y.Descriptor.OnEvent(e)));
+        _modules.ForEach(x => x.ForEach(y => y.Descriptor.OnEvent(e)));
     }
 
     private async UniTaskVoid OnUpdate()
@@ -154,7 +166,7 @@ public class House : OrderedObject, IOrderedDescriptor
             if (e.TriggerActor != null && e.TriggerActor.IsPlayer == false) return;
 
             ResetModules();
-            Action<HouseEvent> callback;
+            Action callback;
 
             switch (e.PassEvent)
             {
@@ -173,36 +185,42 @@ public class House : OrderedObject, IOrderedDescriptor
                     return;
             }
 
-            callback?.Invoke(e);
+            callback?.Invoke();
         }
     }
-    public void OnInside(HouseEvent e)
+
+    public void OnInside()
     {
         var module = CurrentFloorModule;
-        
+
         foreach (OrderedObject obj in module.Front)
         {
             obj.Descriptor.OnEvent(EHouseBroadcastEvent.DisableVisible);
         }
+
         foreach (OrderedObject obj in module.FrontCollider)
         {
             obj.Descriptor.OnEvent(EHouseBroadcastEvent.EnableCollider);
             obj.Descriptor.OnEvent(EHouseBroadcastEvent.EnableVisible);
         }
+
         foreach (OrderedObject obj in module.Back)
         {
             obj.Descriptor.OnEvent(EHouseBroadcastEvent.EnableVisible);
         }
+
         foreach (OrderedObject obj in module.BackCollider)
         {
             obj.Descriptor.OnEvent(EHouseBroadcastEvent.EnableCollider);
             obj.Descriptor.OnEvent(EHouseBroadcastEvent.EnableVisible);
         }
+
         foreach (OrderedObject obj in module.Inside)
         {
             obj.Descriptor.OnEvent(EHouseBroadcastEvent.EnableVisible);
             obj.Descriptor.OnEvent(EHouseBroadcastEvent.EnableCollider);
         }
+
         foreach (OrderedObject obj in module.Floor)
         {
             obj.Descriptor.OnEvent(EHouseBroadcastEvent.EnableVisible);
@@ -214,25 +232,30 @@ public class House : OrderedObject, IOrderedDescriptor
             {
                 obj.Descriptor.OnEvent(EHouseBroadcastEvent.DisableVisible);
             }
+
             foreach (OrderedObject obj in emodule.FrontCollider)
             {
                 obj.Descriptor.OnEvent(EHouseBroadcastEvent.DisableCollider);
                 obj.Descriptor.OnEvent(EHouseBroadcastEvent.DisableVisible);
             }
+
             foreach (OrderedObject obj in emodule.Back)
             {
                 obj.Descriptor.OnEvent(EHouseBroadcastEvent.DisableVisible);
             }
+
             foreach (OrderedObject obj in emodule.BackCollider)
             {
                 obj.Descriptor.OnEvent(EHouseBroadcastEvent.DisableCollider);
                 obj.Descriptor.OnEvent(EHouseBroadcastEvent.DisableVisible);
             }
+
             foreach (OrderedObject obj in emodule.Inside)
             {
                 obj.Descriptor.OnEvent(EHouseBroadcastEvent.DisableCollider);
                 obj.Descriptor.OnEvent(EHouseBroadcastEvent.DisableVisible);
             }
+
             foreach (OrderedObject obj in emodule.Floor)
             {
                 obj.Descriptor.OnEvent(EHouseBroadcastEvent.DisableVisible);
@@ -240,7 +263,7 @@ public class House : OrderedObject, IOrderedDescriptor
         }
     }
 
-    public void OnOutside(HouseEvent e)
+    public void OnOutside()
     {
         var module = _modules;
 
@@ -250,6 +273,7 @@ public class House : OrderedObject, IOrderedDescriptor
             {
                 obj.Descriptor.OnEvent(EHouseBroadcastEvent.EnableVisible);
             }
+
             foreach (OrderedObject obj in cmodule.FrontCollider)
             {
                 if (cmodule.FloorNumer == 1)
@@ -262,10 +286,12 @@ public class House : OrderedObject, IOrderedDescriptor
                     obj.Descriptor.OnEvent(EHouseBroadcastEvent.DisableCollider);
                 }
             }
+
             foreach (OrderedObject obj in cmodule.Back)
             {
                 obj.Descriptor.OnEvent(EHouseBroadcastEvent.EnableVisible);
             }
+
             foreach (OrderedObject obj in cmodule.BackCollider)
             {
                 if (cmodule.FloorNumer == 1)
@@ -278,10 +304,12 @@ public class House : OrderedObject, IOrderedDescriptor
                     obj.Descriptor.OnEvent(EHouseBroadcastEvent.DisableCollider);
                 }
             }
+
             foreach (OrderedObject obj in cmodule.Inside)
             {
                 obj.Descriptor.OnEvent(EHouseBroadcastEvent.DisableVisible);
             }
+
             foreach (OrderedObject obj in cmodule.Floor)
             {
                 obj.Descriptor.OnEvent(EHouseBroadcastEvent.EnableVisible);
@@ -289,16 +317,17 @@ public class House : OrderedObject, IOrderedDescriptor
         }
     }
 
-    public void OnBack(HouseEvent e)
+    public void OnBack()
     {
         var cmodule = _modules;
 
-        foreach (HouseModule module  in cmodule)
+        foreach (HouseModule module in cmodule)
         {
             foreach (OrderedObject obj in module.Front)
             {
                 obj.Descriptor.OnEvent(EHouseBroadcastEvent.DisableVisible);
             }
+
             foreach (OrderedObject obj in module.FrontCollider)
             {
                 if (module.FloorNumer == 1 || module.FloorNumer == CurrentFloor)
@@ -312,14 +341,16 @@ public class House : OrderedObject, IOrderedDescriptor
                     obj.Descriptor.OnEvent(EHouseBroadcastEvent.DisableCollider);
                 }
             }
+
             foreach (OrderedObject obj in module.Back)
             {
                 obj.Descriptor.OnEvent(EHouseBroadcastEvent.EnableCollider);
                 obj.Descriptor.OnEvent(EHouseBroadcastEvent.SetTransparently);
             }
+
             foreach (OrderedObject obj in module.BackCollider)
             {
-                if (module.FloorNumer == 1|| module.FloorNumer == CurrentFloor)
+                if (module.FloorNumer == 1 || module.FloorNumer == CurrentFloor)
                 {
                     obj.Descriptor.OnEvent(EHouseBroadcastEvent.EnableCollider);
                     obj.Descriptor.OnEvent(EHouseBroadcastEvent.EnableVisible);
@@ -330,16 +361,16 @@ public class House : OrderedObject, IOrderedDescriptor
                     obj.Descriptor.OnEvent(EHouseBroadcastEvent.DisableCollider);
                 }
             }
+
             foreach (OrderedObject obj in module.Inside)
             {
                 obj.Descriptor.OnEvent(EHouseBroadcastEvent.DisableVisible);
             }
+
             foreach (OrderedObject obj in module.Floor)
             {
                 obj.Descriptor.OnEvent(
-                    module.FloorNumer == 1 ? 
-                        EHouseBroadcastEvent.EnableVisible :
-                        EHouseBroadcastEvent.DisableVisible
+                    module.FloorNumer == 1 ? EHouseBroadcastEvent.EnableVisible : EHouseBroadcastEvent.DisableVisible
                 );
             }
         }

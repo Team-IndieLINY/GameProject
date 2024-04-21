@@ -48,3 +48,8 @@ public interface IOrderedDescriptor
     public OrderedObject Owner { get; set; }
     public void OnEvent(EHouseBroadcastEvent e);
 }
+
+public interface IHousePassBindingInterrupter
+{
+    
+}

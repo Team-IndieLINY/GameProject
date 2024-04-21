@@ -34,6 +34,8 @@ public class HouseModule : MonoBehaviour
 
     public IReadOnlyList<OrderedObject> Inside => _inside;
 
+    public IReadOnlyList<HousePass> Pass => _pass;
+
     public int FloorNumer => _floorNumer;
 
     public void Init(House master)
@@ -47,6 +49,8 @@ public class HouseModule : MonoBehaviour
         foreach (var obj in Front)
             callback(obj);
         foreach (var obj in FrontCollider)
+            callback(obj);
+        foreach (var obj in Back)
             callback(obj);
         foreach (var obj in BackCollider)
             callback(obj);
@@ -69,24 +73,31 @@ public class HouseModule : MonoBehaviour
         var queue = new Queue<Transform>(10);
 
         queue.Enqueue(transform);
+        
+        print(gameObject.name + " start");
+
         bool first = true;
-        bool queued = false;
 
         while (queue.Any())
         {
             var queuedTransform = queue.Dequeue();
-            if (first && queuedTransform.TryGetComponent<House>(out var house))
+            if(first == false && queuedTransform.TryGetComponent<HouseModule>(out _))
             {
-                first = false;
-                Add(house);
-                TransformEnqueue(queue, queuedTransform);
                 continue;
             }
+
+            first = false;
+            
             
             if (queuedTransform.TryGetComponent<OrderedObject>(out var com))
             {
                 Add(com);
                 com.Init();
+                continue;
+            }
+            if (queuedTransform.TryGetComponent<IHousePassBindingInterrupter>(out var interrupter))
+            {
+                continue;
             }
             if (queuedTransform.TryGetComponent<HousePass>(out var pass))
             {
@@ -94,10 +105,7 @@ public class HouseModule : MonoBehaviour
                 pass.Init(_masterHouse.EventReactiveProperty);
             }
             
-            if(queuedTransform.TryGetComponent<House>(out _))
-            {
-                continue;
-            }
+            print(queuedTransform.name);
             
             TransformEnqueue(queue, queuedTransform);
         }
