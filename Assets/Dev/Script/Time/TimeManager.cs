@@ -88,8 +88,6 @@ public class TimeManager : MonoBehaviour
             yield return waitForSeconds;
 
             _currentTime = Mathf.Clamp(_currentTime + _delayTime, _minTime, _maxTime);
-            
-            Debug.Log(_currentTime);
 
             UpdateTimeState();
 
