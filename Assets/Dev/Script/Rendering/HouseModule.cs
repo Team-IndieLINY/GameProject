@@ -1,39 +1,105 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-
 public class HouseModule : MonoBehaviour
 {
-    [NonSerialized] public List<OrderedObject> fronts = new();
-    [NonSerialized] public List<OrderedObject> backs = new();
-    [NonSerialized] public List<OrderedObject> floors = new();
-    [NonSerialized] public List<OrderedObject> fronts_collider = new();
-    [NonSerialized] public List<OrderedObject> backs_collider = new();
-    [NonSerialized] public List<OrderedObject> inners = new();
-    [NonSerialized] public StairLine[] stairs;
+    private House _masterHouse;
+    
+    private List<OrderedObject> _front = new();
+    private List<OrderedObject> _frontCollider = new();
+    private List<OrderedObject> _back = new();
+    private List<OrderedObject> _backCollider = new();
+    private List<OrderedObject> _floor = new();
+    private List<OrderedObject> _inside = new();
 
-    public int floor;
+    private List<HousePass> _pass = new();
+    
+    [Range(1, 10)]
+    [SerializeField] private int _floorNumer = 1;
 
-    private void Awake()
+    public IReadOnlyList<OrderedObject> Front => _front;
+
+    public IReadOnlyList<OrderedObject> FrontCollider => _frontCollider;
+
+    public IReadOnlyList<OrderedObject> Back => _back;
+
+    public IReadOnlyList<OrderedObject> BackCollider => _backCollider;
+
+    public IReadOnlyList<OrderedObject> Floor => _floor;
+
+    public IReadOnlyList<OrderedObject> Inside => _inside;
+
+    public int FloorNumer => _floorNumer;
+
+    public void Init(House master)
     {
-        var objects = GetComponentsInChildren<OrderedObject>(true);
+        _masterHouse = master;
+        BindOrderedObjects();
+    }
 
-        var myCom = GetComponent<OrderedObject>();
+    public void ForEach(Action<OrderedObject> callback)
+    {
+        foreach (var obj in Front)
+            callback(obj);
+        foreach (var obj in FrontCollider)
+            callback(obj);
+        foreach (var obj in BackCollider)
+            callback(obj);
+        foreach (var obj in Floor)
+            callback(obj);
+        foreach (var obj in Inside)
+            callback(obj);
+    }
 
-        if (myCom)
+    private void BindOrderedObjects()
+    {
+        void TransformEnqueue(Queue<Transform> queue, Transform queuedTransform)
         {
-            Add(myCom);
+            for (int i = 0; i < queuedTransform.childCount; i++)
+            {
+                queue.Enqueue(queuedTransform.GetChild(i));
+            }
         }
         
-        foreach (var obj in objects)
-        {
-            if (obj == false) continue;
+        var queue = new Queue<Transform>(10);
 
-            Add(obj);
+        queue.Enqueue(transform);
+        bool first = true;
+        bool queued = false;
+
+        while (queue.Any())
+        {
+            var queuedTransform = queue.Dequeue();
+            if (first && queuedTransform.TryGetComponent<House>(out var house))
+            {
+                first = false;
+                Add(house);
+                TransformEnqueue(queue, queuedTransform);
+                continue;
+            }
+            
+            if (queuedTransform.TryGetComponent<OrderedObject>(out var com))
+            {
+                Add(com);
+                com.Init();
+            }
+            if (queuedTransform.TryGetComponent<HousePass>(out var pass))
+            {
+                _pass.Add(pass);
+                pass.Init(_masterHouse.EventReactiveProperty);
+            }
+            
+            if(queuedTransform.TryGetComponent<House>(out _))
+            {
+                continue;
+            }
+            
+            TransformEnqueue(queue, queuedTransform);
         }
     }
     
@@ -44,31 +110,29 @@ public class HouseModule : MonoBehaviour
         switch (obj.Type)
         {
             case EOrderedObjectType.Front:
-                addingArray = fronts;
+                addingArray = _front;
                 break;
             case EOrderedObjectType.FrontCollision:
-                addingArray = fronts_collider;
+                addingArray = _frontCollider;
                 break;
             case EOrderedObjectType.Back:
-                addingArray = backs;
+                addingArray = _back;
                 break;
             case EOrderedObjectType.BackCollision:
-                addingArray = backs_collider;
+                addingArray = _backCollider;
                 break;
             case EOrderedObjectType.Floor:
-                addingArray = floors;
+                addingArray = _floor;
                 break;
-            case EOrderedObjectType.Stair:
-                break;
-            case EOrderedObjectType.Inner:
-                addingArray = inners;
+            case EOrderedObjectType.Inside:
+                addingArray = _inside;
                 break;
             default:
-                Debug.Assert(false);
-                break;
+                Debug.Assert(false, "정의되지 않은 EOrderedObjectType: " + obj.Type);
+                return;
         }
-            
-        Debug.Assert(addingArray != null) ;
+        
+        Debug.Assert(addingArray != null);
         addingArray.Add(obj);
     }
 }

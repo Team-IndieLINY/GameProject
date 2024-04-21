@@ -12,50 +12,55 @@ public enum EOrderedObjectType
     Back,
     BackCollision,
     Floor,
-    Stair,
-    Inner
+    Inside
 }
+
+public interface IOrderedState
+{
+    public OrderedObject Owner { get; set; }
+    public void OnEvent(EHouseBroadcastEvent e);
+}
+
+public class DefaultOrderedState : IOrderedState
+{
+    public OrderedObject Owner { get; set; }
+
+    public void OnEvent(EHouseBroadcastEvent e)
+    {
+        if (e == EHouseBroadcastEvent.Hide)
+        {
+            Owner.IsEnabledRenderer = false;
+        }
+        if (e == EHouseBroadcastEvent.Show)
+        {
+            Owner.IsEnabledRenderer = true;
+        }
+        if (e == EHouseBroadcastEvent.Reset)
+        {
+            Owner.IsEnabledRenderer = true;
+        }
+    }
+}
+
 public abstract class OrderedObject : MonoBehaviour
 {
+    public static readonly int StencilField = Shader.PropertyToID("_Stencil");
+    public static readonly int DefaultStencilNumber = 2;
+    
     [SerializeField] private EOrderedObjectType _type;
     public EOrderedObjectType Type => _type;
 
-    private Material _backupMaterial;
-    private Material _createdMaterial;
-
     public abstract Color Color { get; set; }
 
-    public abstract bool IsEnabled { get; set; }
+    public abstract bool IsEnabledRenderer { get; set; }
 
-    public abstract int CurrentFloor { get; set; } 
 
-    public int Stencil
-    {
-        get => Renderer.material.GetInt("_Stencil");
-    }
-
-    public void SetStencilState(bool value)
-    {
-        if (value)
-        {
-            _createdMaterial.SetInt("_Stencil", 1);
-            Renderer.material = _createdMaterial;
-        }
-        else
-        {
-            Renderer.sharedMaterial = _backupMaterial;
-        }
-    }
-
-    public abstract Renderer Renderer { get; }
+    public abstract int Stencil { get; set; }
 
     public abstract bool CollisionEnabled { get; set; }
 
-    private protected virtual void Awake()
-    {
-        _backupMaterial = Renderer.sharedMaterial;
-        _backupMaterial.SetInt("Stencil", 2);
-        _createdMaterial = Renderer.material;
-        Renderer.material = _backupMaterial;
-    }
+    public abstract void Init();
+
+    public IOrderedState State { get; protected set; }
+    
 }

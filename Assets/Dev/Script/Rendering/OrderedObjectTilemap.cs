@@ -1,48 +1,58 @@
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
+[RequireComponent(typeof(TilemapRenderer))]
 public class OrderedObjectTilemap : OrderedObject
 {
+    private TilemapRenderer _renderer;
+    private TilemapCollider2D _collider;
+    
     public override Color Color
     {
-        get => _tilemap.color;
-        set => _tilemap.color = value;
+        get => _renderer.material.color;
+        set => _renderer.material.color = value;
     }
 
-    public override bool IsEnabled
+    public override bool IsEnabledRenderer
     {
         get => _renderer.enabled;
         set => _renderer.enabled = value;
     }
-
-    public override int CurrentFloor { get; set; }
-
-    private TilemapRenderer _renderer;
-    private Tilemap _tilemap;
-
-    private TilemapCollider2D _collider;
-    private CompositeCollider2D _compositeCollider;
-    public override Renderer Renderer => _renderer;
+    public override int Stencil { get; set; }
 
     public override bool CollisionEnabled
     {
-        get => _compositeCollider.enabled;
+        get
+        {
+            if (_collider)
+            {
+                return _collider.enabled;
+            }
+
+            return false;
+        }
         set
         {
             if (_collider)
+            {
                 _collider.enabled = value;
+            }
         }
     }
-
-    private protected override void Awake()
+    
+    public override void Init()
     {
+        State = new DefaultOrderedState()
+        {
+            Owner = this
+        };
+        
         _renderer = GetComponent<TilemapRenderer>();
-        _tilemap = GetComponent<Tilemap>();
-        _collider = GetComponent<TilemapCollider2D>();
-        _compositeCollider = GetComponent<CompositeCollider2D>();
+        Debug.Assert(_renderer);
 
-        base.Awake();
+        _collider = GetComponent<TilemapCollider2D>();
     }
 }

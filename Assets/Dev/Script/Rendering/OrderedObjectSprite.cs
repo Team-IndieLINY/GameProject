@@ -2,41 +2,33 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(SpriteRenderer))]
 public class OrderedObjectSprite : OrderedObject
 {
     private SpriteRenderer _renderer;
-    private Collider2D _collider2d;
 
     public override Color Color
     {
-        get=>_renderer.color;
+        get => _renderer.color;
         set => _renderer.color = value;
     }
 
-    public override bool IsEnabled
+    public override bool IsEnabledRenderer
     {
         get => _renderer.enabled;
         set => _renderer.enabled = value;
     }
-    public override int CurrentFloor { get; set; }
-    public override Renderer Renderer => _renderer;
 
-    public override bool CollisionEnabled
+    public override int Stencil { get; set; }
+    public override bool CollisionEnabled { get; set; }
+    public override void Init()
     {
-        get => _collider2d && _collider2d.enabled;
-        set
+        State = new DefaultOrderedState()
         {
-            if (_collider2d)
-            {
-                _collider2d.enabled = value;
-            }
-        }
-    }
-
-    private void Awake()
-    {
+            Owner = this
+        };
         _renderer = GetComponent<SpriteRenderer>();
-        _collider2d = GetComponent<Collider2D>();
-        base.Awake();
+        
+        Debug.Assert(_renderer);
     }
 }

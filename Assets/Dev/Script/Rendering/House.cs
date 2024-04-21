@@ -1,395 +1,285 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Serialization;
-using UnityEngine.Tilemaps;
 
-public enum EHouseDirection
+public enum EHousePassEvent
 {
     None,
-    Front,
-    Back,
     Inside,
-    Stair
-}
-
-public enum EHouseState
-{
-    Inside,
-    Front,
+    Outside,
     Back,
 }
 
-public class House : OrderedObject
+public enum EHouseBroadcastEvent
 {
-    private List<HouseModule> _modules = new();
+    None,
+    Reset,
+    Show,
+    Hide
+}
 
-    private List<HousePass> _housePasses = new();
+public struct HouseEvent
+{
+    public EHousePassEvent PassEvent;
+    public OrderedActor TriggerActor;
+}
 
-    public AsyncReactiveProperty<(EHouseDirection, OrderedActor)> OnPass;
 
-    private EHouseDirection _currentValue;
 
-    private Action _stateCallback;
-    [SerializeField] private int _currentFloor = 1;
+public class House : OrderedObject, IOrderedState
+{
+    [Range(1, 10)] [SerializeField] private int _currentFloor = 1;
 
-    public override int CurrentFloor
+    private List<HouseModule> _modules = new(10);
+
+    public AsyncReactiveProperty<HouseEvent> EventReactiveProperty { get; private set; } = new(new HouseEvent());
+
+    private Action<HouseEvent> _state;
+
+    private void Awake()
     {
-        get => _currentFloor;
-        set
-        {
-            if (value == _currentFloor) return;
-            if (Type == EOrderedObjectType.Inner) return;
-
-            _currentFloor = value;
-
-            foreach (HouseModule module in _modules)
-            {
-                module.fronts.ForEach(x => x.CurrentFloor = value);
-                module.fronts_collider.ForEach(x => x.CurrentFloor = value);
-                module.backs.ForEach(x => x.CurrentFloor = value);
-                module.backs_collider.ForEach(x => x.CurrentFloor = value);
-                module.floors.ForEach(x => x.CurrentFloor = value);
-                module.inners.ForEach(x => x.CurrentFloor = value);
-            }
-            
-            _stateCallback?.Invoke();
-        }
-    }
-
-    private void Start()
-    {
-        if (Type == EOrderedObjectType.Inner) CurrentFloor = 1;
+        State = this;
+        Owner = this;
         
-        OnPass = new AsyncReactiveProperty<(EHouseDirection, OrderedActor)>((EHouseDirection.None, null));
-        _currentValue = EHouseDirection.Front;
+        BindModules();
 
         OnUpdate().Forget();
-
-        InitHousePass(transform);
-        InitHouseModule(transform);
-
-        OnFront();
     }
 
-    private void OnValidate()
+    public override void Init()
     {
-        _stateCallback?.Invoke();
-    }
-
-    private void InitHousePass(Transform parent)
-    {
-        for (int i = 0; i < parent.childCount; i++)
-        {
-            var child = parent.GetChild(i);
-
-            if (child.TryGetComponent<House>(out var house))
-            {
-                continue;
-            }
-
-            if (child.TryGetComponent<HousePass>(out var pass))
-            {
-                _housePasses.Add(pass);
-                pass.Init(this);
-            }
-
-            InitHousePass(child);
-        }
-    }
-
-    private void InitHouseModule(Transform parent)
-    {
-        for (int i = 0; i < parent.childCount; i++)
-        {
-            var child = parent.GetChild(i);
-
-            if (child.TryGetComponent<House>(out var house))
-            {
-                continue;
-            }
-
-            if (child.TryGetComponent<HouseModule>(out var module))
-            {
-                _modules.Add(module);
-            }
-
-            InitHouseModule(child);
-        }
+        // do nothing here after
     }
 
     private async UniTaskVoid OnUpdate()
     {
         while (true)
         {
-            var tuple = await OnPass.WaitAsync();
+            var e = await EventReactiveProperty.WaitAsync();
+            if (e.TriggerActor.IsPlayer == false) return;
 
-            ModuleUpdate(tuple);
-        }
-    }
+            ResetModules();
 
-    public void ModuleUpdate((EHouseDirection, OrderedActor) tuple)
-    {
-        var dir = tuple.Item1;
-        var orderedObject = tuple.Item2;
-
-        if (orderedObject == null) return;
-
-        if (_currentValue == EHouseDirection.Inside && dir == EHouseDirection.Back)
-        {
-            return;
-        }
-        else
-        {
-            _currentValue = dir;
-        }
-
-        switch (dir)
-        {
-            case EHouseDirection.None:
-                break;
-            case EHouseDirection.Front:
-                if (CurrentFloor != 1) return;
-                if (orderedObject.IsPlayer)
-                {
-                    _stateCallback = OnFront;
-                }
-
-                break;
-            case EHouseDirection.Back:
-                if (CurrentFloor != 1) return;
-                if (orderedObject.IsPlayer)
-                {
-                    _stateCallback = OnBack;
-                }
-
-                break;
-            case EHouseDirection.Inside:
-                if (orderedObject.IsPlayer)
-                {
-                    _stateCallback = OnInsideOnFloor;
-                }
-
-                break;
-            case EHouseDirection.Stair:
-                if (orderedObject.IsPlayer)
-                {
-                    _stateCallback = OnStair;
-                }
-
-                break;
-            default:
-                throw new ArgumentOutOfRangeException();
-        }
-
-        _stateCallback?.Invoke();
-    }
-
-    private void SetEnable(bool value, List<OrderedObject> arr)
-    {
-        foreach (var item in arr)
-        {
-            item.IsEnabled = value;
-        }
-    }
-
-    private void SetAlpha(HouseModule module, float value, bool exclusive1F)
-    {
-        SetAlpha(module.fronts, value, exclusive1F);
-        SetAlpha(module.backs, value, exclusive1F);
-        SetAlpha(module.floors, value, exclusive1F);
-
-        if (module.floor != 1 && exclusive1F) return;
-        SetAlpha(module.fronts_collider, value, exclusive1F);
-        SetAlpha(module.backs_collider, value, exclusive1F);
-    }
-
-    private void SetAlpha(List<OrderedObject> objects, float value, bool exclusive1F)
-    {
-        foreach (var item in objects)
-        {
-            var c = item.Color;
-            c.a = value;
-            item.Color = c;
-        }
-    }
-
-    private void OnFront()
-    {
-        foreach (var module in _modules)
-        {
-            SetEnable(true, module.fronts);
-            SetEnable(true, module.backs);
-            SetEnable(true, module.floors);
-            SetEnable(true, module.fronts_collider);
-            SetEnable(true, module.backs_collider);
-
-            SetAlpha(module, 1f, false);
-
-            module.fronts_collider.ForEach(x => x.CollisionEnabled = module.floor == CurrentFloor);
-            module.backs_collider.ForEach(x => x.CollisionEnabled = module.floor == CurrentFloor);
-        }
-    }
-
-    private void OnBack()
-    {
-        foreach (var module in _modules)
-        {
-            SetEnable(false, module.fronts);
-            SetEnable(false, module.backs);
-            SetEnable(false, module.inners);
-            SetEnable(false, module.floors);
-            SetEnable(false, module.fronts_collider);
-            SetEnable(false, module.backs_collider);
-
-            //SetAlpha(module.backs, 1f, false);
-
-           //module.fronts.ForEach(x =>
-           //{
-           //    if (module.floor != CurrentFloor) 
-           //});
-           //module.backs.ForEach(x =>
-           //{
-           //    if (module.floor != CurrentFloor) x.IsEnabled = false;
-           //});
-           //module.inners.ForEach(x =>
-           //{
-           //    if (module.floor != CurrentFloor) x.IsEnabled = false;
-           //});
-           //module.floors.ForEach(x =>
-           //{
-           //    if (module.floor != CurrentFloor) x.IsEnabled = false;
-           //});
-           //module.fronts_collider.ForEach(x =>
-           //{
-           //    if (module.floor != CurrentFloor) x.IsEnabled = false;
-           //});
-           //module.backs_collider.ForEach(x =>
-           //{
-           //    if (module.floor != CurrentFloor) x.IsEnabled = false;
-           //});
-        }
-    }
-
-    private void OnStair()
-    {
-        foreach (var module in _modules)
-        {
-            SetEnable(false, module.fronts);
-            SetEnable(true, module.backs);
-            SetEnable(true, module.floors);
-            SetEnable(false, module.fronts_collider);
-            SetEnable(true, module.backs_collider);
-
-
-            SetAlpha(module, 1f, false);
-        }
-
-        foreach (var module in _modules)
-        {
-            foreach (var col in module.backs_collider)
+            switch (e.PassEvent)
             {
-                col.GetComponent<Collider2D>().enabled = false;
+                case EHousePassEvent.None:
+                    return;
+                case EHousePassEvent.Inside:
+                    _state = OnInside;
+                    break;
+                case EHousePassEvent.Outside:
+                    _state = OnOutside;
+                    break;
+                case EHousePassEvent.Back:
+                    _state = OnBack;
+                    break;
+                default:
+                    return;
             }
 
-            foreach (var col in module.fronts_collider)
+            _state.Invoke(e);
+        }
+    }
+
+    private void BindModules()
+    {
+        void TransformEnqueue(Queue<Transform> queue, Transform queuedTransform)
+        {
+            for (int i = 0; i < queuedTransform.childCount; i++)
             {
-                col.GetComponent<Collider2D>().enabled = false;
+                queue.Enqueue(queuedTransform.GetChild(i));
             }
         }
-    }
+        
+        var queue = new Queue<Transform>(10);
 
-    private void OnInsideOnFloor()
-    {
-        //_backPass.GetComponent<Collider2D>().enabled = false;
-        foreach (var module in _modules)
+        queue.Enqueue(transform);
+
+        while (queue.Any())
         {
-            SetAlpha(module, 1f, false);
-
-            module.fronts.ForEach(x =>
+            var queuedTransform = queue.Dequeue();
+            
+            if (queuedTransform.TryGetComponent<HouseModule>(out var module))
             {
-                x.IsEnabled = false;
-                x.CollisionEnabled = true;
-            });
-            module.backs.ForEach(x =>
+                _modules.Add(module);
+                module.Init(this);
+            }
+            else
             {
-                x.IsEnabled = module.floor == CurrentFloor;
-                x.CollisionEnabled = module.floor == CurrentFloor;
-            });
-            module.floors.ForEach(x =>
-            {
-                x.IsEnabled = module.floor == CurrentFloor;
-                x.CollisionEnabled = module.floor == CurrentFloor;
-            });
-            module.fronts_collider.ForEach(x =>
-            {
-                x.IsEnabled = module.floor == CurrentFloor;
-                x.CollisionEnabled = module.floor == CurrentFloor;
-            });
-            module.backs_collider.ForEach(x =>
-            {
-                x.IsEnabled = module.floor == CurrentFloor;
-                x.CollisionEnabled = module.floor == CurrentFloor;
-            });
-            module.inners.ForEach(x =>
-            {
-                x.IsEnabled = module.floor == CurrentFloor;
-                x.CollisionEnabled = module.floor == CurrentFloor;
-            });
+                TransformEnqueue(queue, queuedTransform);
+            }
+            
         }
     }
 
-    public override Color Color
+    public override Color Color { get; set; }
+    public override bool IsEnabledRenderer { get; set; }
+    public int CurrentFloor => _currentFloor;
+    public override int Stencil { get; set; }
+    public override bool CollisionEnabled { get; set; }
+
+
+    private HouseModule CurrentFloorModule
     {
-        get => Color.white;
-        set
+        get
         {
             foreach (var module in _modules)
             {
-                SetAlpha(module.fronts, value.a, false);
-                SetAlpha(module.backs, value.a, false);
-                SetAlpha(module.floors, value.a, false);
-                SetAlpha(module.fronts_collider, value.a, false);
-                SetAlpha(module.backs_collider, value.a, false);
+                if (module.FloorNumer == CurrentFloor)
+                {
+                    return module;
+                }
             }
+
+            Debug.Assert(_modules != null);
+            return null;
         }
     }
 
-    public override bool IsEnabled
+    private List<HouseModule> _excludedCurrentFloorModule = new();
+
+    private List<HouseModule> ExcludedCurrentFloorModule
     {
-        get => gameObject.activeSelf;
-        set => gameObject.SetActive(value);
-    }
-
-    public override Renderer Renderer => GetComponentInChildren<Renderer>();
-
-
-    private bool _colliderEnabled = true;
-
-    public override bool CollisionEnabled
-    {
-        get => _colliderEnabled;
-        set
+        get
         {
-            _colliderEnabled = value;
+            _excludedCurrentFloorModule.Clear();
 
             foreach (var module in _modules)
             {
-                module.fronts.ForEach(x => x.CollisionEnabled = value);
-                module.backs.ForEach(x => x.CollisionEnabled = value);
-                module.floors.ForEach(x => x.CollisionEnabled = value);
-                module.fronts_collider.ForEach(x => x.CollisionEnabled = value);
-                module.backs_collider.ForEach(x => x.CollisionEnabled = value);
-                module.inners.ForEach(x => x.CollisionEnabled = value);
+                if (module.FloorNumer != CurrentFloor)
+                {
+                    _excludedCurrentFloorModule.Add(module);
+                }
             }
 
-            foreach (var pass in _housePasses)
+            return _excludedCurrentFloorModule;
+        }
+    }
+
+    private void ResetModules()
+    {
+        foreach (HouseModule module in _modules)
+        {
+            module.ForEach(x=>x.State.OnEvent(EHouseBroadcastEvent.Reset));
+        }
+    }
+
+    public OrderedObject Owner { get; set; }
+    public void OnEvent(EHouseBroadcastEvent e)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void OnInside(HouseEvent e)
+    {
+        var module = CurrentFloorModule;
+        
+        foreach (OrderedObject obj in module.Front)
+        {
+            obj.State.OnEvent(EHouseBroadcastEvent.Hide);
+        }
+        foreach (OrderedObject obj in module.FrontCollider)
+        {
+            obj.State.OnEvent(EHouseBroadcastEvent.Show);
+        }
+        foreach (OrderedObject obj in module.Back)
+        {
+            obj.State.OnEvent(EHouseBroadcastEvent.Show);
+        }
+        foreach (OrderedObject obj in module.BackCollider)
+        {
+            obj.State.OnEvent(EHouseBroadcastEvent.Show);
+        }
+        foreach (OrderedObject obj in module.Floor)
+        {
+            obj.State.OnEvent(EHouseBroadcastEvent.Show);
+        }
+    }
+
+    public void OnOutside(HouseEvent e)
+    {
+        var module = CurrentFloorModule;
+        
+        foreach (OrderedObject obj in module.Front)
+        {
+            obj.State.OnEvent(EHouseBroadcastEvent.Show);
+        }
+        foreach (OrderedObject obj in module.FrontCollider)
+        {
+            obj.State.OnEvent(EHouseBroadcastEvent.Show);
+        }
+        foreach (OrderedObject obj in module.Back)
+        {
+            obj.State.OnEvent(EHouseBroadcastEvent.Show);
+        }
+        foreach (OrderedObject obj in module.BackCollider)
+        {
+            obj.State.OnEvent(EHouseBroadcastEvent.Show);
+        }
+        foreach (OrderedObject obj in module.Floor)
+        {
+            obj.State.OnEvent(EHouseBroadcastEvent.Show);
+        }
+    }
+
+    public void OnBack(HouseEvent e)
+    {
+        var cmodule = CurrentFloorModule;
+        var emodule = ExcludedCurrentFloorModule;
+        
+        foreach (OrderedObject obj in cmodule.Front)
+        {
+            obj.State.OnEvent(EHouseBroadcastEvent.Hide);
+        }
+        foreach (OrderedObject obj in cmodule.FrontCollider)
+        {
+            obj.State.OnEvent(EHouseBroadcastEvent.Show);
+        }
+        foreach (OrderedObject obj in cmodule.Back)
+        {
+            obj.State.OnEvent(EHouseBroadcastEvent.Hide);
+        }
+        foreach (OrderedObject obj in cmodule.BackCollider)
+        {
+            obj.State.OnEvent(EHouseBroadcastEvent.Show);
+        }
+        foreach (OrderedObject obj in cmodule.Floor)
+        {
+            obj.State.OnEvent(EHouseBroadcastEvent.Show);
+        }
+
+        foreach (var module in emodule)
+        {
+            foreach (OrderedObject obj in module.Front)
             {
-                pass.gameObject.SetActive(value);
+                obj.State.OnEvent(EHouseBroadcastEvent.Hide);
+            }
+            foreach (OrderedObject obj in module.FrontCollider)
+            {
+                obj.State.OnEvent(EHouseBroadcastEvent.Hide);
+            }
+            foreach (OrderedObject obj in module.Back)
+            {
+                obj.State.OnEvent(EHouseBroadcastEvent.Hide);
+            }
+            foreach (OrderedObject obj in module.BackCollider)
+            {
+                obj.State.OnEvent(EHouseBroadcastEvent.Hide);
+            }
+            foreach (OrderedObject obj in module.Floor)
+            {
+                obj.State.OnEvent(EHouseBroadcastEvent.Hide);
             }
         }
+    }
+
+    public void Reset()
+    {
+        ResetModules();
     }
 }
