@@ -7,6 +7,7 @@ using Cysharp.Threading.Tasks;
 using IndieLINY.Event;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace IndieLINY
@@ -133,10 +134,10 @@ namespace IndieLINY
             {
                 currentSpeed = ControllerData.SprintSpeed;
 
-                _steminaController?.Decrease(ESteminaType.Endurance,
-                    ControllerData.DecreaseEndurancePerSec * Time.deltaTime);
+                _steminaController?.Decrease(
+                    ControllerData.DecreaseEndurancePerSec);
                 
-                if (_steminaController.GetStemina(ESteminaType.Endurance) <= 0f)
+                if (_steminaController.GetStemina() <= 0)
                 {
                     currentSpeed = ControllerData.WalkSpeed;
                 }
@@ -150,8 +151,7 @@ namespace IndieLINY
 
             if (isSprint is false)
             {
-                _steminaController?.Increase(ESteminaType.Endurance,
-                    ControllerData.IncreaseEndurancePerSec * Time.deltaTime);
+                _steminaController?.Increase(ControllerData.IncreaseEndurancePerSec);
             }
             
             if (BoxInventory.Instance.IsOpened())

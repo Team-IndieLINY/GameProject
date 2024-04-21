@@ -7,8 +7,7 @@ using IndieLINY.Singleton;
 using UnityEditor;
 using UnityEngine;
 
-[Singleton(ESingletonType.Global)]
-public class TimeManager : MonoBehaviourSingleton<TimeManager>
+public class TimeManager : MonoBehaviour
 {
     public enum ETime
     {
@@ -36,10 +35,37 @@ public class TimeManager : MonoBehaviourSingleton<TimeManager>
     [SerializeField] private int _nightStartTime;
 
     public ETime TimeType => _timeType;
-
+    
+    private static TimeManager _instance = null;
+    
+    public static TimeManager Instance
+    {
+        get
+        {
+            if (null == _instance)
+            {
+                return null;
+            }
+            return _instance;
+        }
+    }
+    
     private void Awake()
     {
-        StartRoutine();
+        if (null == _instance)
+        {
+            _instance = this;
+            DontDestroyOnLoad(this.gameObject);
+            
+            StartRoutine();
+
+            _minTime = 0;
+            _maxTime = 10;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     //하루를 시작하는 함수이다.
@@ -99,14 +125,5 @@ public class TimeManager : MonoBehaviourSingleton<TimeManager>
     private void TriggerEndRoutineEvent()
     {
         EndRoutineCallback?.Invoke();
-    }
-
-    public override void PostInitialize()
-    {
-        
-    }
-
-    public override void PostRelease()
-    {
     }
 }

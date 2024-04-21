@@ -19,8 +19,14 @@ public class SteminaView : MonoBehaviour
         _enduranceProgressBar = _rootVisualElement.Q<ProgressBar>("EnduranceProgressBar");
     }
 
-    public void UpdateView(float currentNormalizedValue)
+    public void SetSteminaView(int minValue, int maxValue, int currentValue)
     {
-        _enduranceProgressBar.value = currentNormalizedValue * _enduranceProgressBar.highValue;
+        _enduranceProgressBar.highValue = maxValue;
+        _enduranceProgressBar.lowValue = minValue;
+        _enduranceProgressBar.value = currentValue;
+    }
+    public void UpdateView(int currentStemina)
+    {
+        _enduranceProgressBar.value = currentStemina;
     }
 }

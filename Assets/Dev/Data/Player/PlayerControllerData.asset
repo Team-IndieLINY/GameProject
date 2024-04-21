@@ -16,5 +16,5 @@ MonoBehaviour:
   _crouchSpeed: 1.5
   _sprintSpeed: 5
   _walkSpeed: 3
-  _decreaseEndurancePerSec: 0.5
-  _increaseEndurancePerSec: 0.25
+  _decreaseEndurancePerSec: 2
+  _increaseEndurancePerSec: 1

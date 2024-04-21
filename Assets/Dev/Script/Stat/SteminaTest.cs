@@ -6,15 +6,15 @@ using UnityEngine;
 
 public class SteminaTest : MonoBehaviour
 {
-    private SteminaController _steminaController;
+    private StatController _statController;
 
     private void Awake()
     {
-        _steminaController = GetComponent<SteminaController>();
+        _statController = GetComponent<StatController>();
     }
 
     private void Update()
     {
-        _steminaController.Decrease(ESteminaType.Endurance, 0.001f);
+        _statController.Decrease(1);
     }
 }

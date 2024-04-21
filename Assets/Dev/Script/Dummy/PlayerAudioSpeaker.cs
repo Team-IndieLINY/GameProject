@@ -27,7 +27,7 @@ namespace IndieLINY
                 curRadius = SpeakerData.CrouchRadius;
                 curRadiusSpeed = SpeakerData.CrouchRadiusSpeed;
             }
-            else if (Input.GetKey(KeyCode.LeftShift) && dir.sqrMagnitude >= 0.001f && _controller.SteminaController.GetStemina(ESteminaType.Endurance) > 0f)
+            else if (Input.GetKey(KeyCode.LeftShift) && dir.sqrMagnitude >= 0.001f && _controller.SteminaController.GetStemina() > 0f)
             {
                 curRadius = SpeakerData.SprintRadius;
                 curRadiusSpeed = SpeakerData.SprintRadiusSpeed;
