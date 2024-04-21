@@ -23,7 +23,7 @@ public class OrderedObjectSprite : OrderedObject
     public override bool CollisionEnabled { get; set; }
     public override void Init()
     {
-        State = new DefaultOrderedState()
+        Descriptor = new DefaultDescriptor()
         {
             Owner = this
         };

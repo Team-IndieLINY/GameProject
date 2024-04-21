@@ -6,6 +6,7 @@ using UnityEngine;
 public class OrderedActor : MonoBehaviour
 {
     [SerializeField] private bool _isPlayer = false;
+
     public bool IsPlayer => _isPlayer;
     private SpriteRenderer _renderer;
 

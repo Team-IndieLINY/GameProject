@@ -128,7 +128,7 @@ public class HouseModule : MonoBehaviour
                 addingArray = _inside;
                 break;
             default:
-                Debug.Assert(false, "정의되지 않은 EOrderedObjectType: " + obj.Type);
+                Debug.Assert(false, $"정의되지 않은 EOrderedObjectType({obj.gameObject.name}): " + obj.Type);
                 return;
         }
         

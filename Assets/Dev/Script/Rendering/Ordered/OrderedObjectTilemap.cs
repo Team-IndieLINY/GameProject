@@ -45,7 +45,7 @@ public class OrderedObjectTilemap : OrderedObject
     
     public override void Init()
     {
-        State = new DefaultOrderedState()
+        Descriptor = new DefaultDescriptor()
         {
             Owner = this
         };
