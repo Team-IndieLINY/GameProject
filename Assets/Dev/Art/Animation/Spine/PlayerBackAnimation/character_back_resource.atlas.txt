@@ -1,0 +1,58 @@
+character_back_resource.png
+size:1985,1524
+filter:Linear,Linear
+body
+bounds:2,38,432,417
+offsets:0,2,432,419
+hair
+bounds:1236,52,757,334
+offsets:1,1,759,366
+rotate:90
+hat
+bounds:2,457,1232,1065
+offsets:0,0,1232,1071
+hat tie l
+bounds:1572,126,113,683
+offsets:20,22,143,716
+hat tie r
+bounds:1783,835,132,406
+offsets:0,0,175,413
+head
+bounds:1236,811,711,545
+offsets:7,1,719,580
+rotate:90
+l arm1
+bounds:1783,1243,183,279
+offsets:0,8,183,287
+l arm2
+bounds:714,218,237,276
+rotate:90
+l hand
+bounds:1572,11,113,175
+offsets:6,0,119,183
+rotate:90
+l leg
+bounds:1687,150,244,294
+offsets:0,1,250,305
+l pants
+bounds:1687,446,363,296
+offsets:32,0,399,297
+rotate:90
+r arm 1
+bounds:714,58,158,271
+offsets:0,0,158,292
+rotate:90
+r arm 2
+bounds:436,2,209,252
+offsets:7,0,216,390
+rotate:90
+r hand
+bounds:1749,13,135,153
+offsets:0,0,143,154
+rotate:90
+r leg
+bounds:992,193,234,262
+offsets:0,1,289,268
+r pants
+bounds:436,213,242,276
+rotate:90

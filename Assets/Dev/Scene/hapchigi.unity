@@ -536,6 +536,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2077071375}
     m_Modifications:
+    - target: {fileID: 1533824919334816568, guid: b9fb7f4cf2f05ed47a0619939f924dea, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 4415101083320072728, guid: b9fb7f4cf2f05ed47a0619939f924dea, type: 3}
       propertyPath: _data._json
       value: '{"declarations":{"Kind":"Object","collection":{"$content":[{"name":"SightPerception","value":{"$content":0,"$type":"UnityEngine.Object"},"typeHandle":{"Identification":"IndieLINY.AI.SightPerception,
@@ -4073,17 +4077,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2077071375}
     m_Modifications:
+    - target: {fileID: 669028044432892609, guid: 218dcc7e2b0c5464ab4222915818d9d1, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 763057200265274253, guid: 218dcc7e2b0c5464ab4222915818d9d1, type: 3}
       propertyPath: _statController
       value: 
       objectReference: {fileID: 2100572738}
     - target: {fileID: 5052222322169793546, guid: 218dcc7e2b0c5464ab4222915818d9d1, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 32.5
+      value: 32.659
       objectReference: {fileID: 0}
     - target: {fileID: 5052222322169793546, guid: 218dcc7e2b0c5464ab4222915818d9d1, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -7.41
+      value: -8.034
       objectReference: {fileID: 0}
     - target: {fileID: 5052222322169793546, guid: 218dcc7e2b0c5464ab4222915818d9d1, type: 3}
       propertyPath: m_LocalPosition.z
@@ -4120,6 +4128,26 @@ PrefabInstance:
     - target: {fileID: 5157053406346226452, guid: 218dcc7e2b0c5464ab4222915818d9d1, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 5478285259333184763, guid: 218dcc7e2b0c5464ab4222915818d9d1, type: 3}
+      propertyPath: loop
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5478285259333184763, guid: 218dcc7e2b0c5464ab4222915818d9d1, type: 3}
+      propertyPath: _animationName
+      value: walk
+      objectReference: {fileID: 0}
+    - target: {fileID: 5478285259333184763, guid: 218dcc7e2b0c5464ab4222915818d9d1, type: 3}
+      propertyPath: skeletonDataAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: f7491d8c0a747594ba8baf57f639bdcd, type: 2}
+    - target: {fileID: 8425353300051567272, guid: 218dcc7e2b0c5464ab4222915818d9d1, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 4ec8226659868204c937d38d50bb3083, type: 2}
+    - target: {fileID: 9190118229797598086, guid: 218dcc7e2b0c5464ab4222915818d9d1, type: 3}
+      propertyPath: m_Mesh
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

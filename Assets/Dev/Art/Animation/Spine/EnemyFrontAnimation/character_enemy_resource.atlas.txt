@@ -1,0 +1,69 @@
+character_enemy_resource.png
+size:1977,1722
+filter:Linear,Linear
+body
+bounds:703,963,604,757
+face
+bounds:1017,277,684,580
+offsets:82,16,766,596
+rotate:90
+gun
+bounds:2,243,1013,593
+offsets:0,9,1013,602
+gun_1
+bounds:2,58,459,183
+offsets:1,1,461,185
+hat
+bounds:2,838,882,699
+offsets:2,2,884,701
+rotate:90
+l hand
+bounds:901,64,148,177
+offsets:4,1,152,178
+l hand_1
+bounds:2,2,54,67
+offsets:1,1,56,70
+rotate:90
+l leg
+bounds:1309,1407,313,377
+offsets:0,0,313,385
+rotate:90
+l pants
+bounds:1599,727,304,370
+offsets:3,0,307,372
+rotate:90
+l1_arm
+bounds:1051,5,270,298
+offsets:0,5,270,303
+rotate:90
+l1_arm_re
+bounds:1309,1033,372,309
+rotate:90
+l2_arm
+bounds:1351,18,284,257
+offsets:18,0,302,257
+l2_arm_re
+bounds:1637,137,334,289
+offsets:54,0,388,289
+neck
+bounds:703,854,107,106
+offsets:1,1,109,108
+rotate:90
+r hand
+bounds:728,23,218,171
+offsets:2,0,220,171
+rotate:90
+r leg
+bounds:1688,1414,306,287
+offsets:0,0,347,312
+rotate:90
+r pants
+bounds:1599,428,297,353
+offsets:0,3,303,356
+rotate:90
+r1 arm
+bounds:1620,1088,332,317
+offsets:20,16,352,333
+r2 arm
+bounds:463,2,239,263
+rotate:90
