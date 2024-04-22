@@ -103,6 +103,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _data: {fileID: 11400000, guid: 0995ac20115ba614094c58f3e2f1c0ad, type: 2}
   _steminaController: {fileID: 7612579631955032947}
+  _frontSkeletonDataAsset: {fileID: 11400000, guid: f7491d8c0a747594ba8baf57f639bdcd, type: 2}
+  _backSkeletonDataAsset: {fileID: 11400000, guid: ed352143eda709b44a5b0b09cd37ae6c, type: 2}
   Rigid2D: {fileID: 7008892915128400383}
 --- !u!58 &5812744692893432427
 CircleCollider2D:

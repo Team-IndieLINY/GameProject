@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using IndieLINY.Event;
+using Spine.Unity;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
@@ -17,6 +18,9 @@ namespace IndieLINY
     {
         [SerializeField] private PlayerControllerData _data;
         [SerializeField] private SteminaController _steminaController;
+        private SkeletonAnimation _skeletonAnimation;
+        [SerializeField] private SkeletonDataAsset _frontSkeletonDataAsset;
+        [SerializeField] private SkeletonDataAsset _backSkeletonDataAsset;
         
         public PlayerControllerData ControllerData => _data;
         public SteminaController SteminaController => _steminaController;
@@ -25,9 +29,12 @@ namespace IndieLINY
 
         public bool IsStopped { get; set; }
 
+        private Vector2 _currentDir = new Vector2();
+
         private void Awake()
         {
             Interaction = GetComponentInChildren<CollisionInteraction>();
+            _skeletonAnimation = GetComponent<SkeletonAnimation>();
 
             Interaction.SetContractInfo(ActorContractInfo.Create(
                 transform,
@@ -43,6 +50,7 @@ namespace IndieLINY
 
         private void Update()
         {
+            AnimateMoving();
             Move();
             
             WorldInteraction();
@@ -162,6 +170,68 @@ namespace IndieLINY
             if (IsStopped) return;
 
             Rigid2D.velocity = dir.normalized * currentSpeed;
+
+        }
+
+        private void AnimateMoving()
+        {
+            var dir = new Vector2();
+            dir.x = Input.GetAxisRaw("Horizontal");
+            dir.y = Input.GetAxisRaw("Vertical");
+
+            if (dir == _currentDir)
+            {
+                return;
+            }
+
+            if (dir is { x: 0, y: 0 })
+            {
+                if (_skeletonAnimation.skeletonDataAsset.name == "character_back_resource_SkeletonData")
+                {
+                    _skeletonAnimation.AnimationState.SetAnimation(0, "backidle", true);
+                }
+                else if (_skeletonAnimation.skeletonDataAsset.name == "character_resource_SkeletonData")
+                {
+                    _skeletonAnimation.AnimationState.SetAnimation(0, "idle", true);
+                }
+            }
+            else
+            {
+                if (dir is { x: <= 0, y: <= 0 })
+                {
+                    _skeletonAnimation.skeletonDataAsset = _frontSkeletonDataAsset;
+                    _skeletonAnimation.initialFlipX = false;
+                    _skeletonAnimation.Initialize(true);
+                    
+                    _skeletonAnimation.AnimationState.SetAnimation(0, "walk", true);
+                }
+                else if (dir is { x: >= 0, y: <= 0 })
+                {
+                    _skeletonAnimation.skeletonDataAsset = _frontSkeletonDataAsset;
+                    _skeletonAnimation.initialFlipX = true;
+                    _skeletonAnimation.Initialize(true);
+                    
+                    _skeletonAnimation.AnimationState.SetAnimation(0, "walk", true);
+                }
+                else if (dir is { x: <= 0, y: >= 0 })
+                {
+                    _skeletonAnimation.skeletonDataAsset = _backSkeletonDataAsset;
+                    _skeletonAnimation.initialFlipX = false;
+                    _skeletonAnimation.Initialize(true);
+
+                    _skeletonAnimation.AnimationState.SetAnimation(0, "backwalk", true);
+                }
+                else if (dir is { x: >= 0, y: >= 0 })
+                {
+                    _skeletonAnimation.skeletonDataAsset = _backSkeletonDataAsset;
+                    _skeletonAnimation.initialFlipX = true;
+                    _skeletonAnimation.Initialize(true);
+                    
+                    _skeletonAnimation.AnimationState.SetAnimation(0, "backwalk", true);
+                }
+            }
+            
+            _currentDir = dir;
         }
 
         #region ActorBehviour
