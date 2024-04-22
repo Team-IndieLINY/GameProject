@@ -17,7 +17,7 @@ public class BaseCampUI : MonoBehaviour
         _uiDocument = GetComponent<UIDocument>();
         _rootVisualElement = _uiDocument.rootVisualElement;
         _containerVisualElement = _rootVisualElement.Q<VisualElement>("Container");
-        _button = _containerVisualElement.Q<Button>("Button");
+        _button = _containerVisualElement.Q<Button>("GoOutsideButton");
         _button.RegisterCallback<ClickEvent>(LoadOutSideScene);
     }
 
