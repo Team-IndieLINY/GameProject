@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _worldInteractionRadius: 3
   _crouchSpeed: 1.5
-  _sprintSpeed: 5
+  _sprintSpeed: 4
   _walkSpeed: 3
-  _decreaseEndurancePerSec: 2
+  _decreaseEndurancePerSec: 1
   _increaseEndurancePerSec: 1

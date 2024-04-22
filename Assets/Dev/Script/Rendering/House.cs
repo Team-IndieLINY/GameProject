@@ -239,14 +239,14 @@ public class House : OrderedObject
         foreach (var module in _modules)
         {
             SetEnable(true, module.fronts);
-            SetEnable(true, module.backs);
+            SetEnable(false, module.backs);
             SetEnable(false, module.inners);
             SetEnable(true, module.floors);
             SetEnable(true, module.fronts_collider);
             SetEnable(true, module.backs_collider);
 
             SetAlpha(module.fronts, 0.25f, false);
-            SetAlpha(module.backs, 0.5f, false);
+            //SetAlpha(module.backs, 0.5f, false);
             SetAlpha(module.fronts_collider, 0.25f, false);
             SetAlpha(module.backs_collider, 0.5f, false);
 

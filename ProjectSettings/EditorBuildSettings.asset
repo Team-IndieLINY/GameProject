@@ -9,11 +9,11 @@ EditorBuildSettings:
     path: Assets/Dev/AI/Sample/SampleScene.unity
     guid: b01f9108e297d7946b5e5aa4350e2b0d
   - enabled: 1
-    path: Assets/Dev/Scene/BaseCamp/BaseCamp.unity
-    guid: 77e7c57059dd762438d64829bc673a20
-  - enabled: 1
     path: Assets/Dev/Scene/hapchigi.unity
     guid: e3bab1bb4e8e26449856f93d1cabbd84
+  - enabled: 1
+    path: Assets/Dev/Scene/BaseCamp/BaseCamp.unity
+    guid: 77e7c57059dd762438d64829bc673a20
   - enabled: 1
     path: Assets/Dev/Scene/House 1.unity
     guid: cfe9ac7f94b0a874db917312ec1d3605
