@@ -238,14 +238,17 @@ public class House : OrderedObject
     {
         foreach (var module in _modules)
         {
-            SetEnable(false, module.fronts);
-            SetEnable(false, module.backs);
+            SetEnable(true, module.fronts);
+            SetEnable(true, module.backs);
             SetEnable(false, module.inners);
-            SetEnable(false, module.floors);
-            SetEnable(false, module.fronts_collider);
-            SetEnable(false, module.backs_collider);
+            SetEnable(true, module.floors);
+            SetEnable(true, module.fronts_collider);
+            SetEnable(true, module.backs_collider);
 
-            //SetAlpha(module.backs, 1f, false);
+            SetAlpha(module.fronts, 0.25f, false);
+            SetAlpha(module.backs, 0.5f, false);
+            SetAlpha(module.fronts_collider, 0.25f, false);
+            SetAlpha(module.backs_collider, 0.5f, false);
 
            //module.fronts.ForEach(x =>
            //{
