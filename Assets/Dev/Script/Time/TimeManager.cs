@@ -34,7 +34,10 @@ public class TimeManager : MonoBehaviour
     
     [SerializeField] private int _nightStartTime;
 
+    private int _dayCount = 1;
+
     public ETime TimeType => _timeType;
+    public int DayCount => _dayCount;
     
     private static TimeManager _instance = null;
     
@@ -68,19 +71,24 @@ public class TimeManager : MonoBehaviour
         }
     }
 
-    //하루를 시작하는 함수이다.
+    //하루를 시작하는 함수이다. (시간은 흐르지 않음)
     public void StartRoutine()
     {
-        _timeType = ETime.Day;
         _currentTime = _minTime;
         
-        TriggerStartRoutineEvent();
+        UpdateTimeState();
         
-        _passTimeCoroutine = StartCoroutine(PassTime());
+        TriggerStartRoutineEvent();
+    }
+
+    public void EndRoutine()
+    {
+        _dayCount++;
+        TriggerEndRoutineEvent();
     }
 
     //시간을 흐르게하는 함수이다.
-    public IEnumerator PassTime()
+    private IEnumerator PassTime()
     {
         WaitForSeconds waitForSeconds = new WaitForSeconds(_delayTime);
         while (true)
@@ -108,6 +116,15 @@ public class TimeManager : MonoBehaviour
         
         StopCoroutine(_passTimeCoroutine);
         _passTimeCoroutine = null;
+    }
+
+    public void Resume()
+    {
+        if (_passTimeCoroutine is not null)
+        {
+            return;
+        }
+        _passTimeCoroutine = StartCoroutine(PassTime());
     }
     
     private void UpdateTimeState()
