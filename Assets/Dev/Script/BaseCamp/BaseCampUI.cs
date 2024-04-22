@@ -72,7 +72,7 @@ public class BaseCampUI : MonoBehaviour
     private void OnClickClockVisualElement(ClickEvent evt)
     {
         TimeManager.Instance.EndRoutine();
-        _dayLabel.text = $"{TimeManager.Instance.DayCount} 일";
+        _dayLabel.text = $"{TimeManager.Instance.DayCount} Day";
         FadeOut();
     }
     
