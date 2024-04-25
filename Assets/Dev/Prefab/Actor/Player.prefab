@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 8425353300051567272}
   - component: {fileID: 5478285259333184763}
   - component: {fileID: 669028044432892609}
+  - component: {fileID: 3431587617424732731}
   m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
@@ -140,7 +141,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0.13}
   serializedVersion: 2
-  m_Radius: 1
+  m_Radius: 0.21
 --- !u!114 &5932188116425641780
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -247,6 +248,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5157053406346226452}
   m_Mesh: {fileID: 0}
+--- !u!210 &3431587617424732731
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5157053406346226452}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortAtRoot: 1
 --- !u!1 &7188597100580214528
 GameObject:
   m_ObjectHideFlags: 0
