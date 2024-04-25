@@ -210,6 +210,9 @@ def get_mask_back(origin_image_name, cur_size,  cur_pos, cur_left_iter, cur_righ
     to_up_vector = (up_pivot_point - down_point)
     to_up_vector[1] = to_up_vector[1]
 
+    cur_pos = list(cur_pos)
+    cur_pos[1] = cur_pos[1] + (down_pivot_point[1] - down_point[1])
+
     image = cv2.imread(origin_image_name, cv2.IMREAD_UNCHANGED)
     mask_all = []
 
@@ -361,10 +364,7 @@ def input_and_save(image_name, mask_all_func, input_message):
                 cur_y = cur_y + 1
             break
 
-
-
 global_file_name = input("enter file name: ")
-
 
 input_and_save("front.png", get_mask_front,"front")
 input_and_save("front_col.png", get_mask_front,"front_col")
