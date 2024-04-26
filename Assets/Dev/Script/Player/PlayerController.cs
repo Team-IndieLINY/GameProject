@@ -109,7 +109,7 @@ namespace IndieLINY
             );
 
             CollisionInteractionUtil
-                .CreateState(collider.gameObject)
+                .CreateState()
                 .Bind<IBOSample>(sample =>
                 {
                     if (Input.GetKeyDown(KeyCode.E) && BoxInventory.Instance.IsOpened() is false)
@@ -117,7 +117,7 @@ namespace IndieLINY
                         sample.OpenInventory();
                     }
                 })
-                .Execute<ObjectContractInfo>();
+                .Execute<ObjectContractInfo>(collider.gameObject);
 
 
             // TODO: 확인시 주석 제거. 위 코드와 아래 코드 중 원하는 방식 사용
