@@ -37,7 +37,6 @@ namespace IndieLINY
             _skeletonAnimation = GetComponent<SkeletonAnimation>();
 
             Interaction.SetContractInfo(ActorContractInfo.Create(
-                transform,
                 () => gameObject == false
             ), this);
         }
@@ -109,17 +108,31 @@ namespace IndieLINY
                 Mathf.Infinity
             );
 
-            if (collider.TryGetComponent<CollisionInteraction>(out var ttInteraction))
-            {
-                if (ttInteraction.TryGetContractInfo(out ObjectContractInfo info) &&
-                    info.TryGetBehaviour(out IBOSample sample))
+            CollisionInteractionUtil
+                .CreateState(collider.gameObject)
+                .Bind<IBOSample>(sample =>
                 {
                     if (Input.GetKeyDown(KeyCode.E) && BoxInventory.Instance.IsOpened() is false)
                     {
                         sample.OpenInventory();
                     }
-                }
-            }
+                })
+                .Execute<ObjectContractInfo>();
+
+
+            // TODO: 아래의 코드 작성은 지양. 앞으로는 위 코드의 방식 지향.
+            // 하지만 필요하다면 사용
+            //if (collider.TryGetComponent<CollisionInteraction>(out var ttInteraction))
+            //{
+            //    if (ttInteraction.TryGetContractInfo(out ObjectContractInfo info) &&
+            //        info.TryGetBehaviour(out IBOSample sample))
+            //    {
+            //        if (Input.GetKeyDown(KeyCode.E) && BoxInventory.Instance.IsOpened() is false)
+            //        {
+            //            sample.OpenInventory();
+            //        }
+            //    }
+            //}
         }
 
 

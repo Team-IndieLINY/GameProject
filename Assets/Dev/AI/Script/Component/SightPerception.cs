@@ -191,7 +191,11 @@ namespace IndieLINY.AI
             {
                 if (otherInteraction.ListeningOnly) return;
 
-                var raycastResult = DoRaycastToTarget(otherInteraction.ContractInfo.Transform);
+                var targetTransform = (otherInteraction.ContractInfo.Interaction.Owner as MonoBehaviour)?.transform;
+
+                if (targetTransform == false) return;
+                
+                var raycastResult = DoRaycastToTarget(targetTransform);
                 var isContain = Contracts.Contains(otherInteraction);
                 
                 if (raycastResult == false)

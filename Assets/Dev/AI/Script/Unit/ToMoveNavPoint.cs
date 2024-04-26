@@ -53,7 +53,11 @@ namespace IndieLINY.AI
             var agent = flow.GetValue<NavMeshAgent>(_vNavAgent);
             var target = flow.GetValue<CollisionInteraction>(_vTarget);
 
-            agent.SetDestination(target.ContractInfo.Transform.position);
+            var targetTransform = (target.ContractInfo.Interaction.Owner as MonoBehaviour)?.transform;
+
+            if (targetTransform == false) return OutputTrigger;
+            
+            agent.SetDestination(targetTransform.position);
             return OutputTrigger;
         }
     }

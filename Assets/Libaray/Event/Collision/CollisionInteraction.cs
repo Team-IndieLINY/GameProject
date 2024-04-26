@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using IndieLINY.Singleton;
+using UnityEngine.EventSystems;
 
 namespace IndieLINY.Event
 {
-    public interface ICollisionInteraction
+    public interface ICollisionInteraction : IEventSystemHandler
     {
         public event Action<ActorContractInfo> OnContractActor;
         public event Action<ObjectContractInfo> OnContractObject;
@@ -56,8 +57,108 @@ namespace IndieLINY.Event
         public abstract void ClearContractEvent();
     }
 
+    
+    public abstract class BaseInteractionStateCallback
+    {
+        public Type Type;
+        public abstract bool Invoke(IBaseBehaviour behaviour);
+    }
+    public sealed class InteractionStateCallback<T> : BaseInteractionStateCallback
+    where T : IBaseBehaviour
+    {
+        public Action<T> Callback;
+        public override bool Invoke(IBaseBehaviour behaviour)
+        {
+            if (behaviour is T b)
+            {
+                Callback?.Invoke(b);
+                return true;
+            }
+
+            return false;
+        }
+    }
+    
+    public sealed class InteractionState
+    {
+        internal GameObject GameObject;
+
+        private List<BaseInteractionStateCallback> _callbacks = new(2);
+
+        public InteractionState Bind<T>(Action<T> callback)
+            where T : IBaseBehaviour
+        {
+            _callbacks.Add(new InteractionStateCallback<T>()
+            {
+                Callback = callback,
+                Type = typeof(T)
+            });
+            
+            return this;
+        }
+
+        public InteractionState Execute(BaseContractInfo info)
+        {
+            Debug.Assert(GameObject == null, "this case, GameObject must be null");
+
+            Inner_Execute(info);
+            
+            return this;
+        }
+
+        public InteractionState Execute<TContractInfo>() 
+            where TContractInfo : BaseContractInfo
+        {
+            Debug.Assert(GameObject != null, "this case, GameObject must be not null");
+            
+            if (this.GameObject.TryGetComponent<CollisionInteraction>(out var com) &&
+                com.TryGetContractInfo<TContractInfo>(out var info))
+            {
+                Inner_Execute(info);
+            }
+            else
+            {
+                Debug.Assert(false, "failed acquire contractInfo");
+            }
+
+            return this;
+        }
+
+        private void Inner_Execute(BaseContractInfo info)
+        {
+            foreach (BaseInteractionStateCallback callback in _callbacks)
+            {
+                var behaviour = info.GetBehaviourOrNull(callback.Type);
+
+                if (behaviour != null)
+                {
+                    callback.Invoke(behaviour);
+                }
+            }
+        }
+        
+    }
     public static class CollisionInteractionUtil
     {
+        public static InteractionState CreateState(GameObject gameObject)
+        {
+            var state = new InteractionState()
+            {
+                GameObject = gameObject
+            };
+
+            return state;
+        }
+        public static InteractionState CreateState()
+        {
+            var state = new InteractionState()
+            {
+                GameObject = null
+            };
+
+            return state;
+        }
+
         public static bool OnCollision(Collider2D other, ICollisionInteraction interaction, bool isActivating, out CollisionInteraction result)
         {
             result = null;

@@ -41,7 +41,7 @@ namespace IndieLINY
 
         private void Awake()
         {
-            var info = ObjectContractInfo.Create(transform, ()=>gameObject);
+            var info = ObjectContractInfo.Create(()=>gameObject);
             Interaction.SetContractInfo(info, this);
 
             info.AddBehaivour<IBObjectDecoratedObject>(this);

@@ -19,6 +19,10 @@ public class ClickContractInfo: BaseContractInfo
 {
     public int MouseButtonNumber;
     public EClickContractType clickType;
+    public override IBaseBehaviour GetBehaviourOrNull(Type type)
+    {
+        return null;
+    }
 }
 public class ListeningContractInfo: BaseContractT<INoBehaviour, ListeningContractInfo>
 {
@@ -52,22 +56,23 @@ public abstract class BaseContractInfo
 
         return !flag;
     }
-    [NotNull] public Transform Transform { get; protected set; }
+
+    public abstract IBaseBehaviour GetBehaviourOrNull(Type type);
 }
 
 public abstract class BaseContractT<TBASE, TCLASS> : BaseContractInfo
-    where TBASE : class 
+    where TBASE : IBaseBehaviour 
     where TCLASS : BaseContractT<TBASE, TCLASS>, new()
 {
 
-    private Dictionary<Type, TBASE> _table = new();
+    private Dictionary<Type, IBaseBehaviour> _table = new();
 
     protected BaseContractT()
     {
     }
 
-    public static TCLASS Create(Transform transform, Func<bool> destroyChecker) =>
-        new() { Transform = transform, _destroyChecker = destroyChecker };
+    public static TCLASS Create(Func<bool> destroyChecker) =>
+        new() { _destroyChecker = destroyChecker };
 
     public TCLASS AddBehaivour<T>(TBASE behaviour) where T : class, TBASE
     {
@@ -97,5 +102,10 @@ public abstract class BaseContractT<TBASE, TCLASS> : BaseContractInfo
         value = GetBehaviourOrNull<T>();
 
         return value != null;
+    }
+
+    public override IBaseBehaviour GetBehaviourOrNull(Type type)
+    {
+        return _table.GetValueOrDefault(type);
     }
 }

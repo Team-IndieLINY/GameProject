@@ -15,7 +15,7 @@ public class SampleObject : MonoBehaviour, IBOSample
     [SerializeField] private List<CountableItem> _countableItems;
     private void Awake()
     {
-        var info = ObjectContractInfo.Create(transform, () => gameObject == false);
+        var info = ObjectContractInfo.Create(() => gameObject == false);
         Interaction.SetContractInfo(info, this);
 
         info.AddBehaivour<IBOSample>(this);
