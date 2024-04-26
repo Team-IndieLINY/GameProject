@@ -15,4 +15,6 @@ MonoBehaviour:
   _itemName: Bear
   _itemSprite: {fileID: 21300000, guid: 93a3babdfb3f2d045bf981f7f4c6a95f, type: 3}
   _lootingTime: 1
-  _maxStack: 3
+  _itemDescription: "\uADC0\uC5EC\uC6B4 \uACF0\uC778\uD615. \uC8FC\uBA39 \uD55C\uB300
+    \uB54C\uB824\uBCF4\uACE0 \uC2F6\uB2E4."
+  _maxStack: 1

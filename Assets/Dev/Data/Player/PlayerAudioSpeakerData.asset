@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: PlayerAudioSpeakerData
   m_EditorClassIdentifier: 
   _crouchRadius: 1
-  _sprintRadius: 4
-  _walkRadius: 2
+  _sprintRadius: 6
+  _walkRadius: 3
   _crouchRadiusSpeed: 5
   _sprintRadiusSpeed: 5
   _walkRadiusSpeed: 5

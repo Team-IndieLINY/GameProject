@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: PlayerInventoryData
   m_EditorClassIdentifier: 
   _inventoryName: Player Inventory
+  _cellCount: 10
   _rowCount: 4
   _columnCount: 4
-  _cellCount: 12
   _cellHorizontalSize: 1
   _cellVerticalSize: 1

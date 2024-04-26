@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8b733bad73a7fe4492b8eea79491f3b, type: 3}
   m_Name: PlayerControllerData
   m_EditorClassIdentifier: 
-  _worldInteractionRadius: 3
+  _worldInteractionRadius: 0.3
   _crouchSpeed: 1.5
   _sprintSpeed: 4
-  _walkSpeed: 3
-  _decreaseEndurancePerSec: 1
-  _increaseEndurancePerSec: 1
+  _walkSpeed: 2.5
+  _decreaseEndurancePerSec: 0.2
+  _increaseEndurancePerSec: 0.2

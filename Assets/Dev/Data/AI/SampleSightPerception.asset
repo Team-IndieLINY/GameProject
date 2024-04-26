@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 253d66fc48cf7ea4888637b113d7df9e, type: 3}
   m_Name: SampleSightPerception
   m_EditorClassIdentifier: 
-  _fov: 120
-  _distance: 10
+  _fov: 80
+  _distance: 6
