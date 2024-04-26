@@ -47,7 +47,7 @@ namespace IndieLINY.Event
             remove => MainInteraction.OnExitClick -= value;
         }
 
-        public override LayerMask LayerMask => MainInteraction.LayerMask;
+        public override LayerMask TargetLayerMask => MainInteraction.TargetLayerMask;
 
         public override bool ListeningOnly => MainInteraction.ListeningOnly;
         public override bool DetectedOnly => MainInteraction.DetectedOnly;

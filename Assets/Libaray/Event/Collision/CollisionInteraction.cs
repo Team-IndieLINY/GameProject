@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEngine;
 using IndieLINY.Singleton;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 
 namespace IndieLINY.Event
 {
@@ -17,7 +18,7 @@ namespace IndieLINY.Event
         public event Action<ObjectContractInfo> OnExitObject;
         public event Action<ClickContractInfo> OnExitClick;
         
-        public LayerMask LayerMask { get; }
+        public LayerMask TargetLayerMask { get; }
         public bool ListeningOnly { get; }
         public bool DetectedOnly { get; }
         public BaseContractInfo ContractInfo { get; }
@@ -43,7 +44,7 @@ namespace IndieLINY.Event
         public abstract event Action<ActorContractInfo> OnExitActor;
         public abstract event Action<ObjectContractInfo> OnExitObject;
         public abstract event Action<ClickContractInfo> OnExitClick;
-        public abstract LayerMask LayerMask { get; }
+        public abstract LayerMask TargetLayerMask { get; }
         public abstract bool ListeningOnly { get; }
         public abstract bool DetectedOnly { get; }
         public abstract BaseContractInfo ContractInfo { get; internal set; }
@@ -167,7 +168,7 @@ namespace IndieLINY.Event
             if (!interaction.IsEnabled) return false;
             
             int layer = 1 << other.gameObject.layer;
-            if ((layer & interaction.LayerMask.value) != layer) return false;
+            if ((layer & interaction.TargetLayerMask.value) != layer) return false;
             
             if (other.gameObject.TryGetComponent<CollisionInteraction>(out var com))
             {
@@ -200,13 +201,13 @@ namespace IndieLINY.Event
         public override event Action<ObjectContractInfo> OnExitObject;
         public override event Action<ClickContractInfo> OnExitClick;
 
-        public override LayerMask LayerMask => _layerMask;
+        public override LayerMask TargetLayerMask => _targetLayerMask;
         public override bool ListeningOnly => _listeningOnly;
         public override bool DetectedOnly => _detectedOnly;
         public override BaseContractInfo ContractInfo { get; internal set; }
 
         [SerializeField] private bool _isBindChildProxy = true;
-        [SerializeField] private LayerMask _layerMask;
+        [SerializeField] private LayerMask _targetLayerMask;
         [SerializeField] private bool _listeningOnly;
         [SerializeField] private bool _detectedOnly;
 

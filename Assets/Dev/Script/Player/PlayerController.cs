@@ -120,8 +120,7 @@ namespace IndieLINY
                 .Execute<ObjectContractInfo>();
 
 
-            // TODO: 아래의 코드 작성은 지양. 앞으로는 위 코드의 방식 지향.
-            // 하지만 필요하다면 사용
+            // TODO: 확인시 주석 제거. 위 코드와 아래 코드 중 원하는 방식 사용
             //if (collider.TryGetComponent<CollisionInteraction>(out var ttInteraction))
             //{
             //    if (ttInteraction.TryGetContractInfo(out ObjectContractInfo info) &&
