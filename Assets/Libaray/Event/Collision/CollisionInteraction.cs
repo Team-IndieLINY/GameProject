@@ -82,8 +82,6 @@ namespace IndieLINY.Event
     
     public sealed class InteractionState
     {
-        internal GameObject GameObject;
-
         private List<BaseInteractionStateCallback> _callbacks = new(2);
 
         public InteractionState Bind<T>(Action<T> callback)
@@ -100,19 +98,19 @@ namespace IndieLINY.Event
 
         public InteractionState Execute(BaseContractInfo info)
         {
-            Debug.Assert(GameObject == null, "this case, GameObject must be null");
+            Debug.Assert(info != null, "ContractInfo must be not null");
 
             Inner_Execute(info);
             
             return this;
         }
 
-        public InteractionState Execute<TContractInfo>() 
+        public InteractionState Execute<TContractInfo>(GameObject gameObject) 
             where TContractInfo : BaseContractInfo
         {
-            Debug.Assert(GameObject != null, "this case, GameObject must be not null");
+            Debug.Assert(gameObject != null, "GameObject must be not null");
             
-            if (this.GameObject.TryGetComponent<CollisionInteraction>(out var com) &&
+            if (gameObject.TryGetComponent<CollisionInteraction>(out var com) &&
                 com.TryGetContractInfo<TContractInfo>(out var info))
             {
                 Inner_Execute(info);
@@ -141,20 +139,10 @@ namespace IndieLINY.Event
     }
     public static class CollisionInteractionUtil
     {
-        public static InteractionState CreateState(GameObject gameObject)
-        {
-            var state = new InteractionState()
-            {
-                GameObject = gameObject
-            };
-
-            return state;
-        }
         public static InteractionState CreateState()
         {
             var state = new InteractionState()
             {
-                GameObject = null
             };
 
             return state;
